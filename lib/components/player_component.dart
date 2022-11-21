@@ -47,6 +47,8 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
       MovementState.slideRight: santaSlideRight,
     };
 
+    add(CircleHitbox(radius: 100));
+
     // Set right screen boundry.
     _rightBound = gameRef.size.x - 45;
 
@@ -69,7 +71,7 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
     // Set anchor of component.
     anchor = Anchor.center;
 
-//  Default current state to idle.
+    // Default current state to idle.
     current = MovementState.idle;
   }
 
@@ -104,7 +106,7 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
     // If player is exiting up screen boundry...
     if (y <= _upBound) {
       // Set player back 1 pixel.
-      y = _upBound - 1;
+      y = _upBound + 1;
     }
 
     // Determines if the component is moving left currently.
