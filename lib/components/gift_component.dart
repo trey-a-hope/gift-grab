@@ -10,9 +10,6 @@ class GiftComponent extends SpriteComponent
   /// Height of the sprite.
   final double _spriteHeight = 200.0;
 
-  /// Speed of the gift.
-  final double speed = 500;
-
   /// Used for generating random position of gift.
   final Random _random = Random();
 
@@ -34,11 +31,6 @@ class GiftComponent extends SpriteComponent
     anchor = Anchor.center;
 
     add(CircleHitbox()..radius = 1);
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
   }
 
   @override
