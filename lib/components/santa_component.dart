@@ -10,7 +10,7 @@ enum MovementState {
   slideRight,
 }
 
-class PlayerComponent extends SpriteGroupComponent<MovementState>
+class SantaComponent extends SpriteGroupComponent<MovementState>
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
   final double _spriteHeight = 200.0;
@@ -27,7 +27,7 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
   late double _upBound;
   late double _downBound;
 
-  PlayerComponent({required this.joystick});
+  SantaComponent({required this.joystick});
 
   @override
   Future<void> onLoad() async {
@@ -46,8 +46,6 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
       MovementState.slideLeft: santaSlideLeft,
       MovementState.slideRight: santaSlideRight,
     };
-
-    add(CircleHitbox(radius: 100));
 
     // Set right screen boundry.
     _rightBound = gameRef.size.x - 45;
@@ -73,6 +71,8 @@ class PlayerComponent extends SpriteGroupComponent<MovementState>
 
     // Default current state to idle.
     current = MovementState.idle;
+
+    add(CircleHitbox()..radius = 1);
   }
 
   @override

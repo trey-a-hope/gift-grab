@@ -1,29 +1,31 @@
-import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'package:gift_grab/components/background_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
-import 'package:gift_grab/components/player_component.dart';
+import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
-  final PlayerComponent _playerComponent = PlayerComponent(joystick: joystick);
+  /// The Santa character who collects the gifts.
+  final SantaComponent _santaComponent = SantaComponent(joystick: joystick);
+
+  /// Background of snow landscape.
   final BackgroundComponent _backgroundComponent = BackgroundComponent();
+
+  /// The first gift to collect.s
+  final GiftComponent _giftComponent = GiftComponent();
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    final GiftComponent giftComponent = GiftComponent();
-
     // Add background.
     add(_backgroundComponent);
 
-    add(giftComponent);
+    // Add initial gift.
+    add(_giftComponent);
 
-    // Add player component.
-    add(_playerComponent);
-
-    add(ScreenHitbox());
+    // Add santa.
+    add(_santaComponent);
 
     // Add joystick.
     add(joystick);
