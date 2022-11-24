@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
@@ -32,8 +33,8 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   /// Represents if Santa is frozen or not.
   bool _frozen = false;
 
-  /// Countdown for how long Santa is frozen.
-  final Timer _countdown = Timer(1);
+  /// Countdown for how long Santa is frozen, (3 seconds).
+  final Timer _countdown = Timer(3);
 
   SantaComponent({required this.joystick});
 
@@ -151,10 +152,26 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    // If Santa collides with an ice block, freeze him.
+    // If collision comes from Ice Block...
     if (other is IceComponent) {
+      _freezeSanta();
+    }
+  }
+
+  /// Method for freezing Santa.
+  void _freezeSanta() {
+    // Ensure that we don't take any action if he's already frozen.
+    if (!_frozen) {
+      // Play freeze sound.
+      FlameAudio.play(Globals.freezeSound);
+
+      // Set frozen property to true.
       _frozen = true;
+
+      // Update sprite to frozen state.
       current = MovementState.frozen;
+
+      // Start frozen countdown.
       _countdown.start();
     }
   }

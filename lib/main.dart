@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   final GiftGrabGame game = GiftGrabGame();
 
-  runApp(
-    GameWidget(game: game),
-  );
+  runApp(GameWidget(game: game));
 }

@@ -1,13 +1,13 @@
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
-import 'package:flame/text.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/components/background_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/components/santa_component.dart';
+import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
@@ -30,13 +30,21 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
 
+    // Preload audio files.
+    await FlameAudio.audioCache.loadAll(
+      [
+        Globals.freezeSound,
+        Globals.itemGrabSound,
+      ],
+    );
+
     // Add background.
     add(_backgroundComponent);
 
     // Add initial gift.
     add(_giftComponent);
 
-    //  Add ice blocks.
+    // Add ice blocks.
     add(IceComponent(startPosition: Vector2(200, 200)));
     add(IceComponent(startPosition: Vector2(size.x - 200, size.y - 200)));
 
@@ -49,6 +57,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Add ScreenHitBox for boundries for ice blocks.
     add(ScreenHitbox());
 
+    // Configure TextComponent
     _scoreText = TextComponent(
       text: 'Score: $score',
       position: Vector2(40, 40),
@@ -57,6 +66,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
       ),
     );
 
+    // Add Score TextComponent.
     add(_scoreText);
   }
 

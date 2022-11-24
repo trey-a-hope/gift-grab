@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
@@ -36,7 +37,11 @@ class GiftComponent extends SpriteComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
+    // If collision comes from Santa...
     if (other is SantaComponent) {
+      // Play gift grab sound.
+      FlameAudio.play(Globals.itemGrabSound);
+
       // Remove the just collided gift.
       removeFromParent();
 

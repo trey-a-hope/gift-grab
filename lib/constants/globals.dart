@@ -1,6 +1,10 @@
 class Globals {
   Globals._();
 
+  /// Audio
+  static const String freezeSound = 'freeze-sound.wav';
+  static const String itemGrabSound = 'item-grab-sound.wav';
+
   /// Images
   static const String santaIdle = 'santa-idle.png';
   static const String santaFrozen = 'santa-frozen.png';
