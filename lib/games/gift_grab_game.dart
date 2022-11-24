@@ -1,5 +1,9 @@
 import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
+import 'package:flame/text.dart';
+import 'package:flutter/material.dart';
 import 'package:gift_grab/components/background_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
@@ -15,6 +19,12 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
 
   /// The first gift to collect.s
   final GiftComponent _giftComponent = GiftComponent();
+
+  /// Number of presents Santa has grabbed.
+  int score = 0;
+
+  /// Text UI component for score.
+  late TextComponent _scoreText;
 
   @override
   Future<void> onLoad() async {
@@ -38,5 +48,23 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
 
     // Add ScreenHitBox for boundries for ice blocks.
     add(ScreenHitbox());
+
+    _scoreText = TextComponent(
+      text: 'Score: $score',
+      position: Vector2(40, 40),
+      textRenderer: TextPaint(
+        style: TextStyle(color: BasicPalette.white.color, fontSize: 50),
+      ),
+    );
+
+    add(_scoreText);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    // Update score on the screen.
+    _scoreText.text = 'Score: $score';
   }
 }

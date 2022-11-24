@@ -40,7 +40,8 @@ class GiftComponent extends SpriteComponent
       // Remove the just collided gift.
       removeFromParent();
 
-      //TODO: Add to players score.
+      // Update Santa's score by one.
+      gameRef.score += 1;
 
       // Add a new gift to the field.
       gameRef.add(GiftComponent());
