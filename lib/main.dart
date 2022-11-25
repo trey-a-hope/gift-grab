@@ -1,9 +1,13 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
+import 'package:gift_grab/screens/main_menu.dart';
 
 void main() async {
-  final GiftGrabGame game = GiftGrabGame();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(GameWidget(game: game));
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainMenu(),
+    ),
+  );
 }
