@@ -9,6 +9,7 @@ import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
+import 'package:gift_grab/screens/game_over_menu.dart';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -45,8 +46,13 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
       repeat: true,
       onTick: () {
         if (_remainingTime == 0) {
-          //TODO: Stop game and present score, add play again option.
+          // Pause the game.
+          pauseEngine();
+
+          // Display game over menu.
+          overlays.add(GameOverMenu.ID);
         } else {
+          // Decrement time by one second.
           _remainingTime -= 1;
         }
       },
@@ -105,7 +111,6 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Add Score TextComponent.
     add(_timerText);
 
-    // TODO: Should this happen here? Start the timer...
     _timer.start();
   }
 
@@ -121,5 +126,11 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
 
     // Update timer text to remaining seconds.
     _timerText.text = 'Time: $_remainingTime secs';
+  }
+
+  /// Reset score and remaining time to default values.
+  void reset() {
+    score = 0;
+    _remainingTime = 30;
   }
 }
