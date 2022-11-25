@@ -23,12 +23,34 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Number of presents Santa has grabbed.
   int score = 0;
 
+  /// Timer for game countdown.
+  late Timer _timer;
+
+  /// Total seconds for each game.
+  int _remainingTime = 30;
+
   /// Text UI component for score.
   late TextComponent _scoreText;
+
+  /// Text UI component for timer.
+  late TextComponent _timerText;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Configure countdown timer.
+    _timer = Timer(
+      1,
+      repeat: true,
+      onTick: () {
+        if (_remainingTime == 0) {
+          //TODO: Stop game and present score, add play again option.
+        } else {
+          _remainingTime -= 1;
+        }
+      },
+    );
 
     // Preload audio files.
     await FlameAudio.audioCache.loadAll(
@@ -61,6 +83,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     _scoreText = TextComponent(
       text: 'Score: $score',
       position: Vector2(40, 40),
+      anchor: Anchor.topLeft,
       textRenderer: TextPaint(
         style: TextStyle(color: BasicPalette.white.color, fontSize: 50),
       ),
@@ -68,13 +91,35 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
 
     // Add Score TextComponent.
     add(_scoreText);
+
+    // Configure TextComponent
+    _timerText = TextComponent(
+      text: 'Time: $score',
+      position: Vector2(size.x - 40, 40),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: TextStyle(color: BasicPalette.white.color, fontSize: 50),
+      ),
+    );
+
+    // Add Score TextComponent.
+    add(_timerText);
+
+    // TODO: Should this happen here? Start the timer...
+    _timer.start();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
 
+    // Update timer.
+    _timer.update(dt);
+
     // Update score on the screen.
     _scoreText.text = 'Score: $score';
+
+    // Update timer text to remaining seconds.
+    _timerText.text = 'Time: $_remainingTime secs';
   }
 }

@@ -142,8 +142,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     else {
       _countdown.update(dt);
       if (_countdown.finished) {
-        _frozen = false;
-        current = MovementState.idle;
+        _unfreezeSanta();
       }
     }
   }
@@ -158,15 +157,15 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     }
   }
 
-  /// Method for freezing Santa.
+  /// Freeze Santa.
   void _freezeSanta() {
     // Ensure that we don't take any action if he's already frozen.
     if (!_frozen) {
-      // Play freeze sound.
-      FlameAudio.play(Globals.freezeSound);
-
       // Set frozen property to true.
       _frozen = true;
+
+      // Play freeze sound.
+      FlameAudio.play(Globals.freezeSound);
 
       // Update sprite to frozen state.
       current = MovementState.frozen;
@@ -174,5 +173,14 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
       // Start frozen countdown.
       _countdown.start();
     }
+  }
+
+  /// Unfreeze Santa.
+  void _unfreezeSanta() {
+    // Set frozen property to false.
+    _frozen = false;
+
+    // Update sprite to idle state.
+    current = MovementState.idle;
   }
 }
