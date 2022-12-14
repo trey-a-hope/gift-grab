@@ -16,10 +16,10 @@ enum MovementState {
 class SantaComponent extends SpriteGroupComponent<MovementState>
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
-  final double _spriteHeight = 200.0;
+  final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
   /// Max speed of sliding santa.
-  final double _speed = 500.0;
+  final double _speed = Globals.isTablet ? 500.0 : 250.0;
 
   /// Joystick for movement.
   final JoystickComponent joystick;

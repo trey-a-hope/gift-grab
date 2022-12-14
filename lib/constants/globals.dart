@@ -13,4 +13,6 @@ class Globals {
   static const String backgroundSprite = 'background-sprite.jpg';
   static const String giftSprite = 'gift-sprite.png';
   static const String iceSprite = 'ice-sprite.png';
+
+  static late bool isTablet;
 }

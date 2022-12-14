@@ -9,7 +9,7 @@ import 'dart:math';
 class GiftComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
-  final double _spriteHeight = 200.0;
+  final double _spriteHeight = Globals.isTablet ? 200.0 : 100.0;
 
   /// Used for generating random position of gift.
   final Random _random = Random();

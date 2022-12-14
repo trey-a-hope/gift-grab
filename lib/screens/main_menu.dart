@@ -7,6 +7,8 @@ class MainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Globals.isTablet = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -19,18 +21,18 @@ class MainMenu extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Text(
                   'Gift Grab',
                   style: TextStyle(
-                    fontSize: 100,
+                    fontSize: Globals.isTablet ? 100 : 50,
                   ),
                 ),
               ),
               SizedBox(
-                width: 400,
-                height: 100,
+                width: Globals.isTablet ? 400 : 200,
+                height: Globals.isTablet ? 100 : 50,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
@@ -39,10 +41,10 @@ class MainMenu extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'Play',
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: Globals.isTablet ? 50 : 25,
                     ),
                   ),
                 ),

@@ -9,13 +9,13 @@ import 'dart:math' as math;
 class IceComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
-  final double _spriteHeight = 200.0;
+  final double _spriteHeight = Globals.isTablet ? 200.0 : 100.0;
 
   /// Speed and direction of gift.
   late Vector2 _velocity;
 
   /// Speed of the gift.
-  final double speed = 300;
+  final double speed = Globals.isTablet ? 300 : 150;
 
   /// Angle or the gift on bounce back.
   final double degree = math.pi / 180;

@@ -21,12 +21,12 @@ class GameOverMenu extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Text(
                   'Game Over',
                   style: TextStyle(
-                    fontSize: 100,
+                    fontSize: Globals.isTablet ? 100 : 50,
                   ),
                 ),
               ),
@@ -34,24 +34,24 @@ class GameOverMenu extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Text(
                   'Score: ${gameRef.score}',
-                  style: const TextStyle(
-                    fontSize: 100,
+                  style: TextStyle(
+                    fontSize: Globals.isTablet ? 100 : 50,
                   ),
                 ),
               ),
               SizedBox(
-                width: 400,
-                height: 100,
+                width: Globals.isTablet ? 400 : 200,
+                height: Globals.isTablet ? 100 : 50,
                 child: ElevatedButton(
                   onPressed: () {
                     gameRef.overlays.remove(GameOverMenu.ID);
                     gameRef.reset();
                     gameRef.resumeEngine();
                   },
-                  child: const Text(
+                  child: Text(
                     'Play Again?',
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: Globals.isTablet ? 50 : 25,
                     ),
                   ),
                 ),

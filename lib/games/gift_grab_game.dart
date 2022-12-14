@@ -88,10 +88,13 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Configure TextComponent
     _scoreText = TextComponent(
       text: 'Score: $score',
-      position: Vector2(40, 40),
+      position: Vector2(40, 50),
       anchor: Anchor.topLeft,
       textRenderer: TextPaint(
-        style: TextStyle(color: BasicPalette.white.color, fontSize: 50),
+        style: TextStyle(
+          color: BasicPalette.white.color,
+          fontSize: Globals.isTablet ? 50 : 25,
+        ),
       ),
     );
 
@@ -101,10 +104,13 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Configure TextComponent
     _timerText = TextComponent(
       text: 'Time: $score',
-      position: Vector2(size.x - 40, 40),
+      position: Vector2(size.x - 40, 50),
       anchor: Anchor.topRight,
       textRenderer: TextPaint(
-        style: TextStyle(color: BasicPalette.white.color, fontSize: 50),
+        style: TextStyle(
+          color: BasicPalette.white.color,
+          fontSize: Globals.isTablet ? 50 : 25,
+        ),
       ),
     );
 
