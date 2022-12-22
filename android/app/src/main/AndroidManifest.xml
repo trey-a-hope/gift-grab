@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gift_grab">
+    package="com.io.gift_grab">
    <application
         android:label="gift_grab"
         android:name="${applicationName}"
