@@ -32,7 +32,7 @@ class MainMenu extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.addMenu(menu: Menu.main);
+                  gameRef.removeMenu(menu: Menu.main);
                   gameRef.resumeEngine();
                 },
                 child: Text(

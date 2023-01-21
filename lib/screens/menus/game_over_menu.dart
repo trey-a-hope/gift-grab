@@ -38,7 +38,7 @@ class GameOverMenu extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.addMenu(menu: Menu.gameOver);
+                  gameRef.removeMenu(menu: Menu.gameOver);
                   gameRef.reset();
                   gameRef.resumeEngine();
                 },
@@ -58,7 +58,7 @@ class GameOverMenu extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.addMenu(menu: Menu.gameOver);
+                  gameRef.removeMenu(menu: Menu.gameOver);
                   gameRef.reset();
                   gameRef.addMenu(menu: Menu.main);
                 },
