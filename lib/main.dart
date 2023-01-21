@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/screens/main_menu.dart';
+import 'package:gift_grab/screens/game_play.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -7,7 +7,7 @@ void main() async {
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainMenu(),
+      home: GamePlay(),
     ),
   );
 }

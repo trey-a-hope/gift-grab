@@ -15,4 +15,6 @@ class Globals {
   static const String iceSprite = 'ice-sprite.png';
 
   static late bool isTablet;
+
+  static const int timeLimitSecs = 30;
 }

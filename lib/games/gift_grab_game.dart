@@ -9,7 +9,7 @@ import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
-import 'package:gift_grab/screens/game_over_menu.dart';
+import 'package:gift_grab/screens/game_play.dart';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -28,7 +28,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   late Timer _timer;
 
   /// Total seconds for each game.
-  int _remainingTime = 30;
+  int _remainingTime = Globals.timeLimitSecs;
 
   /// Text UI component for score.
   late TextComponent _scoreText;
@@ -40,6 +40,9 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
 
+    addMenu(menu: Menu.main);
+    pauseEngine();
+
     // Configure countdown timer.
     _timer = Timer(
       1,
@@ -50,7 +53,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
           pauseEngine();
 
           // Display game over menu.
-          overlays.add(GameOverMenu.ID);
+          addMenu(menu: Menu.gameOver);
         } else {
           // Decrement time by one second.
           _remainingTime -= 1;
@@ -137,6 +140,14 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Reset score and remaining time to default values.
   void reset() {
     score = 0;
-    _remainingTime = 30;
+    _remainingTime = Globals.timeLimitSecs;
+  }
+
+  void addMenu({required Menu menu}) {
+    overlays.add(menu.name);
+  }
+
+  void removeMenu({required Menu menu}) {
+    overlays.remove(menu.name);
   }
 }
