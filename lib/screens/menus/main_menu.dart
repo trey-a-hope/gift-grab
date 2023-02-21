@@ -43,24 +43,6 @@ class MainMenu extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: Globals.isTablet ? 400 : 200,
-              height: Globals.isTablet ? 100 : 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  gameRef.addMenu(menu: Menu.settings);
-                },
-                child: Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: Globals.isTablet ? 50 : 25,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

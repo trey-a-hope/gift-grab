@@ -10,7 +10,6 @@ import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
-import 'package:gift_grab/services/hive_service.dart';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -37,14 +36,10 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Text UI component for timer.
   late TextComponent _timerText;
 
-  int difficulty =
-      0; //TODO: Find a way to update this when they start the game.
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    addMenu(menu: Menu.main);
     pauseEngine();
 
     // Configure countdown timer.

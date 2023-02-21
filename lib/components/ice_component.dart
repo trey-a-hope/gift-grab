@@ -6,8 +6,6 @@ import 'package:gift_grab/games/gift_grab_game.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'dart:math' as math;
 
-import 'package:gift_grab/services/hive_service.dart';
-
 class IceComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
@@ -29,23 +27,6 @@ class IceComponent extends SpriteComponent
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
-    int difficulty = (await HiveService.get(
-          boxName: 'settings',
-          key: 'difficulty',
-        )) ??
-        0;
-
-    switch (difficulty) {
-      case 0:
-        break;
-      case 1:
-        speed *= 1.3;
-        break;
-      case 2:
-        speed *= 1.6;
-        break;
-    }
 
     sprite = await gameRef.loadSprite(Globals.iceSprite);
 
