@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'dart:math' as math;
@@ -83,6 +84,10 @@ class FlameComponent extends SpriteComponent
         _velocity.x = _velocity.x;
         _velocity.y = -_velocity.y;
       }
+    }
+
+    if (other is SantaComponent) {
+      removeFromParent();
     }
   }
 

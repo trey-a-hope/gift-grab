@@ -32,16 +32,13 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   late double _upBound;
   late double _downBound;
 
-  /// Represents if Santa is frozen or not.
-  bool _frozen = false;
+  /// Represents if Santa is frozen.
+  bool isFrozen = false;
 
-  /// Represents if Santa is flamed up, (immunte to ice)
-  bool _flamedUp = false;
+  /// Represents if Santa is flamed up, (immune to ice).
+  bool isFlamed = false;
 
-  /// Countdown for how long Santa is frozen, (3 seconds).
-  final Timer _frozenCountdown = Timer(3);
-
-  final Timer _flameCountdown = Timer(10);
+  final Timer _frozenCountdown = Timer(Globals.frozenTimeLimit.toDouble());
 
   SantaComponent({required this.joystick});
 
@@ -98,7 +95,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     super.update(dt);
 
     // If Santa is not frozen, update position.
-    if (!_frozen) {
+    if (!isFrozen) {
       // If joystick is idle, set state to idle.
       if (joystick.direction == JoystickDirection.idle) {
         current = MovementState.idle;
@@ -142,12 +139,12 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         current = MovementState.slideRight;
       }
 
-      if (_flamedUp) {
-        _flameCountdown.update(dt);
-        if (_flameCountdown.finished) {
-          _unflameSanta();
-        }
-      }
+      // if (_flamedUp) {
+      //   _flameCountdown.update(dt);
+      //   if (_flameCountdown.finished) {
+      //     _unflameSanta();
+      //   }
+      // }
 
       // Update position.
       position.add(joystick.relativeDelta * _speed * dt);
@@ -167,43 +164,44 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
     // If collision comes from Ice Block...
     if (other is IceComponent) {
-      if (!_flamedUp) {
+      if (!isFlamed) {
         _freezeSanta();
       }
     }
 
     // If collision comes from Flame...
     if (other is FlameComponent) {
-      _flameSanta();
+      flameSanta();
     }
   }
 
   /// Flame Santa.
-  void _flameSanta() {
+  void flameSanta() {
     // Ensure that we don't take any action if he's already frozen.
-    if (!_frozen) {
+    if (!isFrozen) {
       // Set frozen property to true.
-      _flamedUp = true;
+      isFlamed = true;
 
       // Play freeze sound.
       FlameAudio.play(Globals.flameSound);
 
-      // Start frozen countdown.
-      _flameCountdown.start();
+      gameRef.add(gameRef.flameTimerText);
+
+      gameRef.flameTimer.start();
     }
   }
 
   /// Unflame Santa.
-  void _unflameSanta() {
-    _flamedUp = false;
+  void unflameSanta() {
+    isFlamed = false;
   }
 
   /// Freeze Santa.
   void _freezeSanta() {
     // Ensure that we don't take any action if he's already frozen.
-    if (!_frozen) {
+    if (!isFrozen) {
       // Set frozen property to true.
-      _frozen = true;
+      isFrozen = true;
 
       // Play freeze sound.
       FlameAudio.play(Globals.freezeSound);
@@ -219,7 +217,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   /// Unfreeze Santa.
   void _unfreezeSanta() {
     // Set frozen property to false.
-    _frozen = false;
+    isFrozen = false;
 
     // Update sprite to idle state.
     current = MovementState.idle;

@@ -31,16 +31,23 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   int score = 0;
 
   /// Total seconds for each game.
-  int _remainingTime = Globals.timeLimitSecs;
+  int _remainingTime = Globals.gameTimeLimit;
+
+  int _flameRemainingTime = Globals.flameTimeLimit;
 
   /// Timer for game countdown.
-  late Timer _timer;
+  late Timer gameTimer;
+
+  late Timer flameTimer;
 
   /// Text UI component for score.
   late TextComponent _scoreText;
 
   /// Text UI component for timer.
   late TextComponent _timerText;
+
+  /// Text UI component for flame counter.
+  late TextComponent flameTimerText;
 
   /// Time when the flame sprite appears, random.
   late int _flameTimeAppearance;
@@ -57,7 +64,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     );
 
     // Configure countdown timer.
-    _timer = Timer(
+    gameTimer = Timer(
       1,
       repeat: true,
       onTick: () {
@@ -74,6 +81,19 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
         } else {
           // Decrement time by one second.
           _remainingTime -= 1;
+        }
+      },
+    );
+
+    flameTimer = Timer(
+      1,
+      repeat: true,
+      onTick: () {
+        if (_flameRemainingTime == 0) {
+          _santaComponent.unflameSanta();
+          flameTimerText.removeFromParent();
+        } else {
+          _flameRemainingTime -= 1;
         }
       },
     );
@@ -138,28 +158,51 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Add Score TextComponent.
     add(_timerText);
 
-    _timer.start();
+    // Configure TextComponent
+    flameTimerText = TextComponent(
+      text: 'Flame Time: $_flameRemainingTime',
+      position: Vector2(size.x - 40, size.y - 100),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: TextStyle(
+          color: BasicPalette.black.color,
+          fontSize: Globals.isTablet ? 50 : 25,
+        ),
+      ),
+    );
+
+    gameTimer.start();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    // Update timer.
-    _timer.update(dt);
+    gameTimer.update(dt);
 
-    // Update score on the screen.
+    if (_santaComponent.isFlamed) {
+      flameTimer.update(dt);
+      flameTimerText.text = 'Flame Time: $_flameRemainingTime';
+    }
+
     _scoreText.text = 'Score: $score';
-
-    // Update timer text to remaining seconds.
     _timerText.text = 'Time: $_remainingTime secs';
   }
 
   /// Reset score and remaining time to default values.
   void reset() {
+    // Scores
     score = 0;
-    _remainingTime = Globals.timeLimitSecs;
+
+    // Timers
+    _remainingTime = Globals.gameTimeLimit;
+    _flameRemainingTime = Globals.flameTimeLimit;
+
+    // Sprites
     _flameComponent.removeFromParent();
+
+    // Texts
+    flameTimerText.removeFromParent();
   }
 
   void addMenu({
