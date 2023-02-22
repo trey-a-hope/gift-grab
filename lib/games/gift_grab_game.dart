@@ -4,12 +4,14 @@ import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/components/background_component.dart';
+import 'package:gift_grab/components/flame_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
+import 'dart:math';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -18,17 +20,20 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Background of snow landscape.
   final BackgroundComponent _backgroundComponent = BackgroundComponent();
 
-  /// The first gift to collect.s
+  /// The first gift to collect.
   final GiftComponent _giftComponent = GiftComponent();
+
+  /// Flame powerup.
+  final FlameComponent _flameComponent = FlameComponent();
 
   /// Number of presents Santa has grabbed.
   int score = 0;
 
-  /// Timer for game countdown.
-  late Timer _timer;
-
   /// Total seconds for each game.
   int _remainingTime = Globals.timeLimitSecs;
+
+  /// Timer for game countdown.
+  late Timer _timer;
 
   /// Text UI component for score.
   late TextComponent _scoreText;
@@ -36,11 +41,19 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Text UI component for timer.
   late TextComponent _timerText;
 
+  /// Time when the flame sprite appears, random.
+  late int _flameTimeAppearance;
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
     pauseEngine();
+
+    _flameTimeAppearance = _getRandomInt(
+      min: 10,
+      max: _remainingTime,
+    );
 
     // Configure countdown timer.
     _timer = Timer(
@@ -50,9 +63,13 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
         if (_remainingTime == 0) {
           // Pause the game.
           pauseEngine();
-
           // Display game over menu.
           addMenu(menu: Menu.gameOver);
+        } else if (_remainingTime == _flameTimeAppearance) {
+          // Display the flame sprite.
+          add(_flameComponent);
+          // Decrement time by one second.
+          _remainingTime -= 1;
         } else {
           // Decrement time by one second.
           _remainingTime -= 1;
@@ -140,13 +157,26 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   void reset() {
     score = 0;
     _remainingTime = Globals.timeLimitSecs;
+    _flameComponent.removeFromParent();
   }
 
-  void addMenu({required Menu menu}) {
+  void addMenu({
+    required Menu menu,
+  }) {
     overlays.add(menu.name);
   }
 
-  void removeMenu({required Menu menu}) {
+  void removeMenu({
+    required Menu menu,
+  }) {
     overlays.remove(menu.name);
+  }
+
+  int _getRandomInt({
+    required int min,
+    required int max,
+  }) {
+    Random rng = Random();
+    return rng.nextInt(max - min) + min;
   }
 }

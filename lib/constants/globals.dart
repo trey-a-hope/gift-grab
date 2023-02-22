@@ -13,8 +13,9 @@ class Globals {
   static const String backgroundSprite = 'background-sprite.jpg';
   static const String giftSprite = 'gift-sprite.png';
   static const String iceSprite = 'ice-sprite.png';
+  static const String flameSprite = 'flame.png';
 
   static late bool isTablet;
 
-  static const int timeLimitSecs = 30;
+  static const int timeLimitSecs = 45;
 }
