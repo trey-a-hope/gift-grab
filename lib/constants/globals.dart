@@ -4,6 +4,7 @@ class Globals {
   /// Audio
   static const String freezeSound = 'freeze-sound.wav';
   static const String itemGrabSound = 'item-grab-sound.wav';
+  static const String flameSound = 'flame-sound.wav';
 
   /// Images
   static const String santaIdle = 'santa-idle.png';

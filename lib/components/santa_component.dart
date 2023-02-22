@@ -5,6 +5,8 @@ import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
 
+import 'flame_component.dart';
+
 /// States for when santa is idle, sliding left, or sliding right.
 enum MovementState {
   idle,
@@ -33,8 +35,13 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   /// Represents if Santa is frozen or not.
   bool _frozen = false;
 
+  /// Represents if Santa is flamed up, (immunte to ice)
+  bool _flamedUp = false;
+
   /// Countdown for how long Santa is frozen, (3 seconds).
-  final Timer _countdown = Timer(3);
+  final Timer _frozenCountdown = Timer(3);
+
+  final Timer _flameCountdown = Timer(10);
 
   SantaComponent({required this.joystick});
 
@@ -135,13 +142,20 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         current = MovementState.slideRight;
       }
 
+      if (_flamedUp) {
+        _flameCountdown.update(dt);
+        if (_flameCountdown.finished) {
+          _unflameSanta();
+        }
+      }
+
       // Update position.
       position.add(joystick.relativeDelta * _speed * dt);
     }
     // Else, start timer until unfrozen.
     else {
-      _countdown.update(dt);
-      if (_countdown.finished) {
+      _frozenCountdown.update(dt);
+      if (_frozenCountdown.finished) {
         _unfreezeSanta();
       }
     }
@@ -153,8 +167,35 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
     // If collision comes from Ice Block...
     if (other is IceComponent) {
-      _freezeSanta();
+      if (!_flamedUp) {
+        _freezeSanta();
+      }
     }
+
+    // If collision comes from Flame...
+    if (other is FlameComponent) {
+      _flameSanta();
+    }
+  }
+
+  /// Flame Santa.
+  void _flameSanta() {
+    // Ensure that we don't take any action if he's already frozen.
+    if (!_frozen) {
+      // Set frozen property to true.
+      _flamedUp = true;
+
+      // Play freeze sound.
+      FlameAudio.play(Globals.flameSound);
+
+      // Start frozen countdown.
+      _flameCountdown.start();
+    }
+  }
+
+  /// Unflame Santa.
+  void _unflameSanta() {
+    _flamedUp = false;
   }
 
   /// Freeze Santa.
@@ -171,7 +212,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
       current = MovementState.frozen;
 
       // Start frozen countdown.
-      _countdown.start();
+      _frozenCountdown.start();
     }
   }
 
