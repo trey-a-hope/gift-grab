@@ -15,10 +15,12 @@ class Globals {
   static const String giftSprite = 'gift-sprite.png';
   static const String iceSprite = 'ice-sprite.png';
   static const String flameSprite = 'flame.png';
+  static const String cookieSprite = 'cookie.png';
 
   static late bool isTablet;
 
   static const int gameTimeLimit = 45;
   static const int frozenTimeLimit = 3;
   static const int flameTimeLimit = 10;
+  static const int cookieTimeLimit = 10;
 }

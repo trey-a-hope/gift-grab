@@ -10,7 +10,7 @@ import 'dart:math' as math;
 class FlameComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
-  final double _spriteHeight = Globals.isTablet ? 200.0 : 100.0;
+  final double _spriteHeight = Globals.isTablet ? 160.0 : 80.0;
 
   /// Speed and direction of gift.
   late Vector2 _velocity;

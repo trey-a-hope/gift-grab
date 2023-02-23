@@ -4,6 +4,7 @@ import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/components/background_component.dart';
+import 'package:gift_grab/components/cookie_component.dart';
 import 'package:gift_grab/components/flame_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
@@ -31,7 +32,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   int score = 0;
 
   /// Total seconds for each game.
-  int _remainingTime = Globals.gameTimeLimit;
+  static int _remainingTime = Globals.gameTimeLimit;
 
   int _flameRemainingTime = Globals.flameTimeLimit;
 
@@ -49,19 +50,23 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Text UI component for flame counter.
   late TextComponent flameTimerText;
 
-  /// Time when the flame sprite appears, random.
-  late int _flameTimeAppearance;
+  /// Time when the flame appears.
+  static int _flameTimeAppearance = _getRandomInt(
+    min: 10,
+    max: _remainingTime,
+  );
+
+  /// Time when the flame appears.
+  static int _cookieTimeAppearance = _getRandomInt(
+    min: 10,
+    max: _remainingTime,
+  );
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
     pauseEngine();
-
-    _flameTimeAppearance = _getRandomInt(
-      min: 10,
-      max: _remainingTime,
-    );
 
     // Configure countdown timer.
     gameTimer = Timer(
@@ -74,14 +79,15 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
           // Display game over menu.
           addMenu(menu: Menu.gameOver);
         } else if (_remainingTime == _flameTimeAppearance) {
-          // Display the flame sprite.
+          // Display the flame powerup.
           add(_flameComponent);
-          // Decrement time by one second.
-          _remainingTime -= 1;
-        } else {
-          // Decrement time by one second.
-          _remainingTime -= 1;
+        } else if (_remainingTime == _cookieTimeAppearance) {
+          // Display the cookie powerup.
+          add(CookieComponent());
         }
+
+        // Decrement time by one second.
+        _remainingTime -= 1;
       },
     );
 
@@ -198,6 +204,16 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     _remainingTime = Globals.gameTimeLimit;
     _flameRemainingTime = Globals.flameTimeLimit;
 
+    // Time Appearences
+    _flameTimeAppearance = _getRandomInt(
+      min: 10,
+      max: _remainingTime,
+    );
+    _cookieTimeAppearance = _getRandomInt(
+      min: 10,
+      max: _remainingTime,
+    );
+
     // Sprites
     _flameComponent.removeFromParent();
 
@@ -217,7 +233,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     overlays.remove(menu.name);
   }
 
-  int _getRandomInt({
+  static int _getRandomInt({
     required int min,
     required int max,
   }) {

@@ -1,6 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:gift_grab/components/cookie_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
@@ -21,7 +22,8 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
   /// Max speed of sliding santa.
-  final double _speed = Globals.isTablet ? 500.0 : 250.0;
+  static double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
+  static double _speed = _originalSpeed;
 
   /// Joystick for movement.
   final JoystickComponent joystick;
@@ -39,6 +41,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   bool isFlamed = false;
 
   final Timer _frozenCountdown = Timer(Globals.frozenTimeLimit.toDouble());
+  final Timer _cookieCountdown = Timer(Globals.cookieTimeLimit.toDouble());
 
   SantaComponent({required this.joystick});
 
@@ -139,12 +142,10 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         current = MovementState.slideRight;
       }
 
-      // if (_flamedUp) {
-      //   _flameCountdown.update(dt);
-      //   if (_flameCountdown.finished) {
-      //     _unflameSanta();
-      //   }
-      // }
+      _cookieCountdown.update(dt);
+      if (_cookieCountdown.finished) {
+        _resetSpeed();
+      }
 
       // Update position.
       position.add(joystick.relativeDelta * _speed * dt);
@@ -173,6 +174,21 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     if (other is FlameComponent) {
       flameSanta();
     }
+
+    // If collision comes from Cookie...
+    if (other is CookieComponent) {
+      _increaseSpeed();
+    }
+  }
+
+  void _increaseSpeed() {
+    FlameAudio.play(Globals.itemGrabSound);
+    _speed *= 2;
+    _cookieCountdown.start();
+  }
+
+  void _resetSpeed() {
+    _speed = _originalSpeed;
   }
 
   /// Flame Santa.
