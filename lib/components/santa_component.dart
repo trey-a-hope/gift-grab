@@ -182,8 +182,13 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   }
 
   void _increaseSpeed() {
+    // Play item grab sound.
     FlameAudio.play(Globals.itemGrabSound);
+
+    // Double Santa's speed.
     _speed *= 2;
+
+    // Start the speed countdown.
     _cookieCountdown.start();
   }
 
@@ -191,23 +196,20 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     _speed = _originalSpeed;
   }
 
-  /// Flame Santa.
   void flameSanta() {
-    // Ensure that we don't take any action if he's already frozen.
+    // Check if he's already frozen.
     if (!isFrozen) {
-      // Set frozen property to true.
+      // Enable flame boolean.
       isFlamed = true;
-
-      // Play freeze sound.
+      // Play flame sound.
       FlameAudio.play(Globals.flameSound);
-
+      // Add text displaying flame time count.
       gameRef.add(gameRef.flameTimerText);
-
+      // Start the flame countdown.
       gameRef.flameTimer.start();
     }
   }
 
-  /// Unflame Santa.
   void unflameSanta() {
     isFlamed = false;
   }

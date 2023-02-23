@@ -41,7 +41,7 @@ class FlameComponent extends SpriteComponent
     _velocity = Vector2(vx, vy);
 
     // Set dimensions of santa sprite.
-    width = _spriteHeight;
+    width = _spriteHeight * 0.8;
     height = _spriteHeight;
 
     // Set anchor of component.

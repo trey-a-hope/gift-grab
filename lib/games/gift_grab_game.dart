@@ -25,8 +25,9 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   final GiftComponent _giftComponent = GiftComponent();
 
   /// Flame powerup.
-  final FlameComponent _flameComponent =
-      FlameComponent(startPosition: Vector2(200, 200));
+  final FlameComponent _flameComponent = FlameComponent(
+    startPosition: Vector2(200, 200),
+  );
 
   /// Number of presents Santa has grabbed.
   int score = 0;
