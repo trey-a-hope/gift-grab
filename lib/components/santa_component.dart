@@ -1,9 +1,12 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:gift_grab/components/cookie_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
+
+import 'flame_component.dart';
 
 /// States for when santa is idle, sliding left, or sliding right.
 enum MovementState {
@@ -19,7 +22,8 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
   /// Max speed of sliding santa.
-  final double _speed = Globals.isTablet ? 500.0 : 250.0;
+  static double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
+  static double _speed = _originalSpeed;
 
   /// Joystick for movement.
   final JoystickComponent joystick;
@@ -30,11 +34,14 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   late double _upBound;
   late double _downBound;
 
-  /// Represents if Santa is frozen or not.
-  bool _frozen = false;
+  /// Represents if Santa is frozen.
+  bool isFrozen = false;
 
-  /// Countdown for how long Santa is frozen, (3 seconds).
-  final Timer _countdown = Timer(3);
+  /// Represents if Santa is flamed up, (immune to ice).
+  bool isFlamed = false;
+
+  final Timer _frozenCountdown = Timer(Globals.frozenTimeLimit.toDouble());
+  final Timer _cookieCountdown = Timer(Globals.cookieTimeLimit.toDouble());
 
   SantaComponent({required this.joystick});
 
@@ -91,7 +98,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     super.update(dt);
 
     // If Santa is not frozen, update position.
-    if (!_frozen) {
+    if (!isFrozen) {
       // If joystick is idle, set state to idle.
       if (joystick.direction == JoystickDirection.idle) {
         current = MovementState.idle;
@@ -135,13 +142,18 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         current = MovementState.slideRight;
       }
 
+      _cookieCountdown.update(dt);
+      if (_cookieCountdown.finished) {
+        _resetSpeed();
+      }
+
       // Update position.
       position.add(joystick.relativeDelta * _speed * dt);
     }
     // Else, start timer until unfrozen.
     else {
-      _countdown.update(dt);
-      if (_countdown.finished) {
+      _frozenCountdown.update(dt);
+      if (_frozenCountdown.finished) {
         _unfreezeSanta();
       }
     }
@@ -153,16 +165,61 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
     // If collision comes from Ice Block...
     if (other is IceComponent) {
-      _freezeSanta();
+      if (!isFlamed) {
+        _freezeSanta();
+      }
     }
+
+    // If collision comes from Flame...
+    if (other is FlameComponent) {
+      flameSanta();
+    }
+
+    // If collision comes from Cookie...
+    if (other is CookieComponent) {
+      _increaseSpeed();
+    }
+  }
+
+  void _increaseSpeed() {
+    // Play item grab sound.
+    FlameAudio.play(Globals.itemGrabSound);
+
+    // Double Santa's speed.
+    _speed *= 2;
+
+    // Start the speed countdown.
+    _cookieCountdown.start();
+  }
+
+  void _resetSpeed() {
+    _speed = _originalSpeed;
+  }
+
+  void flameSanta() {
+    // Check if he's already frozen.
+    if (!isFrozen) {
+      // Enable flame boolean.
+      isFlamed = true;
+      // Play flame sound.
+      FlameAudio.play(Globals.flameSound);
+      // Add text displaying flame time count.
+      gameRef.add(gameRef.flameTimerText);
+      // Start the flame countdown.
+      gameRef.flameTimer.start();
+    }
+  }
+
+  void unflameSanta() {
+    isFlamed = false;
   }
 
   /// Freeze Santa.
   void _freezeSanta() {
     // Ensure that we don't take any action if he's already frozen.
-    if (!_frozen) {
+    if (!isFrozen) {
       // Set frozen property to true.
-      _frozen = true;
+      isFrozen = true;
 
       // Play freeze sound.
       FlameAudio.play(Globals.freezeSound);
@@ -171,14 +228,14 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
       current = MovementState.frozen;
 
       // Start frozen countdown.
-      _countdown.start();
+      _frozenCountdown.start();
     }
   }
 
   /// Unfreeze Santa.
   void _unfreezeSanta() {
     // Set frozen property to false.
-    _frozen = false;
+    isFrozen = false;
 
     // Update sprite to idle state.
     current = MovementState.idle;

@@ -2,14 +2,15 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/games/gift_grab_game.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'dart:math' as math;
 
-class IceComponent extends SpriteComponent
+class FlameComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
-  final double _spriteHeight = Globals.isTablet ? 200.0 : 100.0;
+  final double _spriteHeight = Globals.isTablet ? 160.0 : 80.0;
 
   /// Speed and direction of gift.
   late Vector2 _velocity;
@@ -22,13 +23,13 @@ class IceComponent extends SpriteComponent
 
   final Vector2 startPosition;
 
-  IceComponent({required this.startPosition});
+  FlameComponent({required this.startPosition});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    sprite = await gameRef.loadSprite(Globals.iceSprite);
+    sprite = await gameRef.loadSprite(Globals.flameSprite);
 
     position = startPosition;
 
@@ -40,7 +41,7 @@ class IceComponent extends SpriteComponent
     _velocity = Vector2(vx, vy);
 
     // Set dimensions of santa sprite.
-    width = _spriteHeight;
+    width = _spriteHeight * 0.8;
     height = _spriteHeight;
 
     // Set anchor of component.
@@ -83,6 +84,10 @@ class IceComponent extends SpriteComponent
         _velocity.x = _velocity.x;
         _velocity.y = -_velocity.y;
       }
+    }
+
+    if (other is SantaComponent) {
+      removeFromParent();
     }
   }
 

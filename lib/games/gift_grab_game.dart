@@ -4,13 +4,15 @@ import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/components/background_component.dart';
+import 'package:gift_grab/components/cookie_component.dart';
+import 'package:gift_grab/components/flame_component.dart';
 import 'package:gift_grab/components/gift_component.dart';
 import 'package:gift_grab/components/ice_component.dart';
 import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
-import 'package:gift_grab/services/hive_service.dart';
+import 'dart:math';
 
 class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -19,17 +21,26 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Background of snow landscape.
   final BackgroundComponent _backgroundComponent = BackgroundComponent();
 
-  /// The first gift to collect.s
+  /// The first gift to collect.
   final GiftComponent _giftComponent = GiftComponent();
+
+  /// Flame powerup.
+  final FlameComponent _flameComponent = FlameComponent(
+    startPosition: Vector2(200, 200),
+  );
 
   /// Number of presents Santa has grabbed.
   int score = 0;
 
-  /// Timer for game countdown.
-  late Timer _timer;
-
   /// Total seconds for each game.
-  int _remainingTime = Globals.timeLimitSecs;
+  static int _remainingTime = Globals.gameTimeLimit;
+
+  int _flameRemainingTime = Globals.flameTimeLimit;
+
+  /// Timer for game countdown.
+  late Timer gameTimer;
+
+  late Timer flameTimer;
 
   /// Text UI component for score.
   late TextComponent _scoreText;
@@ -37,30 +48,59 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
   /// Text UI component for timer.
   late TextComponent _timerText;
 
-  int difficulty =
-      0; //TODO: Find a way to update this when they start the game.
+  /// Text UI component for flame counter.
+  late TextComponent flameTimerText;
+
+  /// Time when the flame appears.
+  static int _flameTimeAppearance = _getRandomInt(
+    min: 10,
+    max: _remainingTime,
+  );
+
+  /// Time when the flame appears.
+  static int _cookieTimeAppearance = _getRandomInt(
+    min: 10,
+    max: _remainingTime,
+  );
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    addMenu(menu: Menu.main);
     pauseEngine();
 
     // Configure countdown timer.
-    _timer = Timer(
+    gameTimer = Timer(
       1,
       repeat: true,
       onTick: () {
         if (_remainingTime == 0) {
           // Pause the game.
           pauseEngine();
-
           // Display game over menu.
           addMenu(menu: Menu.gameOver);
+        } else if (_remainingTime == _flameTimeAppearance) {
+          // Display the flame powerup.
+          add(_flameComponent);
+        } else if (_remainingTime == _cookieTimeAppearance) {
+          // Display the cookie powerup.
+          add(CookieComponent());
+        }
+
+        // Decrement time by one second.
+        _remainingTime -= 1;
+      },
+    );
+
+    flameTimer = Timer(
+      1,
+      repeat: true,
+      onTick: () {
+        if (_flameRemainingTime == 0) {
+          _santaComponent.unflameSanta();
+          flameTimerText.removeFromParent();
         } else {
-          // Decrement time by one second.
-          _remainingTime -= 1;
+          _flameRemainingTime -= 1;
         }
       },
     );
@@ -70,6 +110,7 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
       [
         Globals.freezeSound,
         Globals.itemGrabSound,
+        Globals.flameSound,
       ],
     );
 
@@ -124,34 +165,80 @@ class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
     // Add Score TextComponent.
     add(_timerText);
 
-    _timer.start();
+    // Configure TextComponent
+    flameTimerText = TextComponent(
+      text: 'Flame Time: $_flameRemainingTime',
+      position: Vector2(size.x - 40, size.y - 100),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: TextStyle(
+          color: BasicPalette.black.color,
+          fontSize: Globals.isTablet ? 50 : 25,
+        ),
+      ),
+    );
+
+    gameTimer.start();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    // Update timer.
-    _timer.update(dt);
+    gameTimer.update(dt);
 
-    // Update score on the screen.
+    if (_santaComponent.isFlamed) {
+      flameTimer.update(dt);
+      flameTimerText.text = 'Flame Time: $_flameRemainingTime';
+    }
+
     _scoreText.text = 'Score: $score';
-
-    // Update timer text to remaining seconds.
     _timerText.text = 'Time: $_remainingTime secs';
   }
 
   /// Reset score and remaining time to default values.
   void reset() {
+    // Scores
     score = 0;
-    _remainingTime = Globals.timeLimitSecs;
+
+    // Timers
+    _remainingTime = Globals.gameTimeLimit;
+    _flameRemainingTime = Globals.flameTimeLimit;
+
+    // Time Appearences
+    _flameTimeAppearance = _getRandomInt(
+      min: 10,
+      max: _remainingTime,
+    );
+    _cookieTimeAppearance = _getRandomInt(
+      min: 10,
+      max: _remainingTime,
+    );
+
+    // Sprites
+    _flameComponent.removeFromParent();
+
+    // Texts
+    flameTimerText.removeFromParent();
   }
 
-  void addMenu({required Menu menu}) {
+  void addMenu({
+    required Menu menu,
+  }) {
     overlays.add(menu.name);
   }
 
-  void removeMenu({required Menu menu}) {
+  void removeMenu({
+    required Menu menu,
+  }) {
     overlays.remove(menu.name);
+  }
+
+  static int _getRandomInt({
+    required int min,
+    required int max,
+  }) {
+    Random rng = Random();
+    return rng.nextInt(max - min) + min;
   }
 }
