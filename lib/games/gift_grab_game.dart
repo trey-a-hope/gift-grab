@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -14,7 +15,7 @@ import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
 import 'dart:math';
 
-class GiftGrabGame extends FlameGame with HasDraggables, HasCollisionDetection {
+class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   /// The Santa character who collects the gifts.
   final SantaComponent _santaComponent = SantaComponent(joystick: joystick);
 
