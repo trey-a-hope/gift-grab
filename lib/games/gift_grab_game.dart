@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -14,6 +15,8 @@ import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
 import 'dart:math';
+
+import 'package:nakama/nakama.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -67,6 +70,20 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Namaka stuff...
+    // final client = getNakamaClient(
+    //   host: '127.0.0.1',
+    //   ssl: false,
+    //   serverKey: 'defaultkey',
+    // );
+
+    // final session = await client.authenticateEmail(
+    //   email: 'trey.a.hope@gmail.com',
+    //   password: '123password',
+    // );
+
+    // debugPrint(session.userId);
 
     pauseEngine();
 
