@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -14,9 +13,11 @@ import 'package:gift_grab/components/santa_component.dart';
 import 'package:gift_grab/constants/globals.dart';
 import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
+import 'package:gift_grab/services/nakama_service.dart';
 import 'dart:math';
 
 import 'package:nakama/nakama.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   /// The Santa character who collects the gifts.
@@ -67,23 +68,43 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     max: _remainingTime,
   );
 
+  final NakamaAuthMethod _nakamaAuthMethod = NakamaAuthMethod.device;
+
+  final NakamaService _nakamaService = NakamaService();
+
+  Future<Session> _authenticate() async {
+    late Session session;
+
+    switch (_nakamaAuthMethod) {
+      case NakamaAuthMethod.email:
+        session = await _nakamaService.authenticateEmail(
+          email: 'trey.a.hope@gmail.com',
+          password: '123password',
+          username: 'trey.codes',
+        );
+
+        break;
+      case NakamaAuthMethod.device:
+        String? deviceId = await PlatformDeviceId.getDeviceId;
+
+        if (deviceId == null) throw Exception('Device ID is null.');
+
+        session = await _nakamaService.authenticateDevice(
+          deviceId: deviceId,
+          username: 'trey.codes',
+        );
+        break;
+    }
+
+    return session;
+  }
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Namaka stuff...
-    // final client = getNakamaClient(
-    //   host: '127.0.0.1',
-    //   ssl: false,
-    //   serverKey: 'defaultkey',
-    // );
-
-    // final session = await client.authenticateEmail(
-    //   email: 'trey.a.hope@gmail.com',
-    //   password: '123password',
-    // );
-
-    // debugPrint(session.userId);
+    Session session = await _authenticate();
+    debugPrint(session.userId);
 
     pauseEngine();
 
