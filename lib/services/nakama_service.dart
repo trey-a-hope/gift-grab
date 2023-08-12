@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:nakama/nakama.dart';
 
 enum NakamaAuthMethod {
@@ -6,35 +7,90 @@ enum NakamaAuthMethod {
 }
 
 class NakamaService {
-  late NakamaBaseClient _client;
+  NakamaAuth auth = NakamaAuth();
+
+  static const String _host = '127.0.0.1';
+  static const bool _ssl = false;
+  static const String _defaultkey = 'defaultkey';
 
   NakamaService() {
-    _client = getNakamaClient(
-      host: '127.0.0.1',
-      ssl: false,
-      serverKey: 'defaultkey',
+    // Set the Namaka client.
+    getNakamaClient(
+      host: _host,
+      ssl: _ssl,
+      serverKey: _defaultkey,
     );
   }
+}
 
-  Future<Session> authenticateEmail({
+class NakamaAuth {
+  Future createUserViaEmail({
     required String email,
     required String password,
     required String username,
   }) async {
-    return await _client.authenticateEmail(
-      email: email,
-      password: password,
-      username: username,
-    );
+    try {
+      Session session = await getNakamaClient().authenticateEmail(
+        email: email,
+        password: password,
+        username: username,
+        create: true,
+      );
+      debugPrint('Nakama UID: ${session.userId}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Future<Session> authenticateDevice({
+  Future<bool> authUserViaEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      Session session = await getNakamaClient().authenticateEmail(
+        email: email,
+        password: password,
+        create: false,
+      );
+
+      debugPrint('Nakama UID: ${session.userId}');
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future createUserViaDevice({
     required String deviceId,
     required String username,
   }) async {
-    return await _client.authenticateDevice(
-      deviceId: deviceId,
-      username: username,
-    );
+    try {
+      Session session = await getNakamaClient().authenticateDevice(
+        deviceId: deviceId,
+        username: username,
+        create: true,
+      );
+
+      debugPrint('Nakama UID: ${session.userId}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future authUserViaDevice({
+    required String deviceId,
+  }) async {
+    try {
+      Session session = await getNakamaClient().authenticateDevice(
+        deviceId: deviceId,
+        create: false,
+      );
+
+      debugPrint('Nakama UID: ${session.userId}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

@@ -15,8 +15,6 @@ import 'package:gift_grab/inputs/joystick.dart';
 import 'package:gift_grab/screens/game_play.dart';
 import 'package:gift_grab/services/nakama_service.dart';
 import 'dart:math';
-
-import 'package:nakama/nakama.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
@@ -68,43 +66,35 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     max: _remainingTime,
   );
 
-  final NakamaAuthMethod _nakamaAuthMethod = NakamaAuthMethod.device;
+  final NakamaAuthMethod _nakamaAuthMethod = NakamaAuthMethod.email;
 
   final NakamaService _nakamaService = NakamaService();
 
-  Future<Session> _authenticate() async {
-    late Session session;
-
+  Future _authenticate() async {
     switch (_nakamaAuthMethod) {
       case NakamaAuthMethod.email:
-        session = await _nakamaService.authenticateEmail(
+        await _nakamaService.auth.authUserViaEmail(
           email: 'trey.a.hope@gmail.com',
           password: '123password',
-          username: 'trey.codes',
         );
-
         break;
       case NakamaAuthMethod.device:
         String? deviceId = await PlatformDeviceId.getDeviceId;
 
         if (deviceId == null) throw Exception('Device ID is null.');
 
-        session = await _nakamaService.authenticateDevice(
+        await _nakamaService.auth.authUserViaDevice(
           deviceId: deviceId,
-          username: 'trey.codes',
         );
         break;
     }
-
-    return session;
   }
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    Session session = await _authenticate();
-    debugPrint(session.userId);
+    await _authenticate();
 
     pauseEngine();
 
