@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/constants/globals.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 
 class MenuBackgroundWidget extends StatelessWidget {
   const MenuBackgroundWidget({

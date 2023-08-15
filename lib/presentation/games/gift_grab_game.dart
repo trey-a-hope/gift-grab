@@ -4,16 +4,17 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/components/background_component.dart';
-import 'package:gift_grab/components/cookie_component.dart';
-import 'package:gift_grab/components/flame_component.dart';
-import 'package:gift_grab/components/gift_component.dart';
-import 'package:gift_grab/components/ice_component.dart';
-import 'package:gift_grab/components/santa_component.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/inputs/joystick.dart';
-import 'package:gift_grab/screens/game_play.dart';
-import 'package:gift_grab/services/nakama_service.dart';
+import 'package:gift_grab/domain/providers/providers.dart';
+import 'package:gift_grab/presentation/components/background_component.dart';
+import 'package:gift_grab/presentation/components/cookie_component.dart';
+import 'package:gift_grab/presentation/components/flame_component.dart';
+import 'package:gift_grab/presentation/components/gift_component.dart';
+import 'package:gift_grab/presentation/components/ice_component.dart';
+import 'package:gift_grab/presentation/components/santa_component.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/inputs/joystick.dart';
+import 'package:gift_grab/presentation/screens/game_play.dart';
+import 'package:gift_grab/data/services/nakama_service.dart';
 import 'dart:math';
 import 'package:platform_device_id/platform_device_id.dart';
 
@@ -66,35 +67,9 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     max: _remainingTime,
   );
 
-  final NakamaAuthMethod _nakamaAuthMethod = NakamaAuthMethod.email;
-
-  final NakamaService _nakamaService = NakamaService();
-
-  Future _authenticate() async {
-    switch (_nakamaAuthMethod) {
-      case NakamaAuthMethod.email:
-        await _nakamaService.auth.authUserViaEmail(
-          email: 'trey.a.hope@gmail.com',
-          password: '123password',
-        );
-        break;
-      case NakamaAuthMethod.device:
-        String? deviceId = await PlatformDeviceId.getDeviceId;
-
-        if (deviceId == null) throw Exception('Device ID is null.');
-
-        await _nakamaService.auth.authUserViaDevice(
-          deviceId: deviceId,
-        );
-        break;
-    }
-  }
-
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
-    await _authenticate();
 
     pauseEngine();
 

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
-import 'package:gift_grab/screens/game_play.dart';
-import 'package:gift_grab/screens/menus/menu_background_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/providers/nakama_provider.dart';
+import 'package:gift_grab/domain/providers/providers.dart';
+import 'package:gift_grab/presentation/games/gift_grab_game.dart';
+import 'package:gift_grab/presentation/screens/game_play.dart';
+import 'package:gift_grab/presentation/screens/menus/menu_background_widget.dart';
 
 class GameOverMenu extends StatelessWidget {
   final GiftGrabGame gameRef;

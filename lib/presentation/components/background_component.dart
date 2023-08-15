@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 
 class BackgroundComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame> {

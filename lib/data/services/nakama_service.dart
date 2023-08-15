@@ -8,6 +8,7 @@ enum NakamaAuthMethod {
 
 class NakamaService {
   NakamaAuth auth = NakamaAuth();
+  NakamaLeaderboards leaderboards = NakamaLeaderboards();
 
   static const String _host = '127.0.0.1';
   static const bool _ssl = false;
@@ -24,7 +25,7 @@ class NakamaService {
 }
 
 class NakamaAuth {
-  Future createUserViaEmail({
+  Future<Session> createUserViaEmail({
     required String email,
     required String password,
     required String username,
@@ -36,13 +37,16 @@ class NakamaAuth {
         username: username,
         create: true,
       );
+
       debugPrint('Nakama UID: ${session.userId}');
+
+      return session;
     } catch (e) {
-      debugPrint(e.toString());
+      throw Exception(e);
     }
   }
 
-  Future<bool> authUserViaEmail({
+  Future<Session> authUserViaEmail({
     required String email,
     required String password,
   }) async {
@@ -55,14 +59,13 @@ class NakamaAuth {
 
       debugPrint('Nakama UID: ${session.userId}');
 
-      return true;
+      return session;
     } catch (e) {
-      debugPrint(e.toString());
-      return false;
+      throw Exception(e);
     }
   }
 
-  Future createUserViaDevice({
+  Future<Session> createUserViaDevice({
     required String deviceId,
     required String username,
   }) async {
@@ -74,12 +77,14 @@ class NakamaAuth {
       );
 
       debugPrint('Nakama UID: ${session.userId}');
+
+      return session;
     } catch (e) {
-      debugPrint(e.toString());
+      throw Exception(e);
     }
   }
 
-  Future authUserViaDevice({
+  Future<Session> authUserViaDevice({
     required String deviceId,
   }) async {
     try {
@@ -89,8 +94,34 @@ class NakamaAuth {
       );
 
       debugPrint('Nakama UID: ${session.userId}');
+
+      return session;
     } catch (e) {
-      debugPrint(e.toString());
+      throw Exception(e);
+    }
+  }
+}
+
+class NakamaLeaderboards {
+  static const String _leaderboardName = 'top_gift_scores';
+
+  Future<LeaderboardRecord> writeLeaderboardRecord({
+    required Session session,
+    required int score,
+  }) async {
+    try {
+      LeaderboardRecord leaderboardRecord =
+          await getNakamaClient().writeLeaderboardRecord(
+        session: session,
+        leaderboardName: _leaderboardName,
+        score: score,
+      );
+
+      debugPrint('Leaderboard ID: ${leaderboardRecord.leaderboardId}');
+
+      return leaderboardRecord;
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }
