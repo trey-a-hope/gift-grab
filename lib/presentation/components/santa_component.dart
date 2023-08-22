@@ -1,10 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:gift_grab/components/cookie_component.dart';
-import 'package:gift_grab/components/ice_component.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
+import 'package:gift_grab/presentation/components/cookie_component.dart';
+import 'package:gift_grab/presentation/components/ice_component.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 
 import 'flame_component.dart';
 
@@ -22,7 +22,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
   /// Max speed of sliding santa.
-  static double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
+  static final double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
   static double _speed = _originalSpeed;
 
   /// Joystick for movement.

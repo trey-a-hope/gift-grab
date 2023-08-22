@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
-import 'package:gift_grab/screens/game_play.dart';
-import 'package:gift_grab/screens/menus/menu_background_widget.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/constants/screens.dart';
+import 'package:gift_grab/presentation/games/gift_grab_game.dart';
+import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 
 class GameOverMenu extends StatelessWidget {
   final GiftGrabGame gameRef;
@@ -10,7 +10,7 @@ class GameOverMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuBackgroundWidget(
+    return ScreenBackgroundWidget(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +38,7 @@ class GameOverMenu extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.removeMenu(menu: Menu.gameOver);
+                  gameRef.removeMenu(menu: Screens.gameOver);
                   gameRef.reset();
                   gameRef.resumeEngine();
                 },
@@ -58,9 +58,9 @@ class GameOverMenu extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.removeMenu(menu: Menu.gameOver);
+                  gameRef.removeMenu(menu: Screens.gameOver);
                   gameRef.reset();
-                  gameRef.addMenu(menu: Menu.main);
+                  gameRef.addMenu(menu: Screens.main);
                 },
                 child: Text(
                   'Main Menu',

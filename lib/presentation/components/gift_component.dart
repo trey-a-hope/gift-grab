@@ -1,9 +1,9 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:gift_grab/components/santa_component.dart';
-import 'package:gift_grab/constants/globals.dart';
-import 'package:gift_grab/games/gift_grab_game.dart';
+import 'package:gift_grab/presentation/components/santa_component.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'dart:math';
 
 class GiftComponent extends SpriteComponent
