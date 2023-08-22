@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/presentation/screens/game_play.dart';
+import 'package:gift_grab/presentation/screens/game_play_screen.dart';
 import 'package:gift_grab/data/services/hive_service.dart';
 
 void main() async {

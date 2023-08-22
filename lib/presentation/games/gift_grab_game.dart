@@ -4,7 +4,6 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/domain/providers/providers.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
@@ -13,10 +12,8 @@ import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
-import 'package:gift_grab/presentation/screens/game_play.dart';
-import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/presentation/screens/game_play_screen.dart';
 import 'dart:math';
-import 'package:platform_device_id/platform_device_id.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   /// The Santa character who collects the gifts.
