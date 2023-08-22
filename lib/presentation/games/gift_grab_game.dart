@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:gift_grab/data/constants/screens.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
@@ -12,7 +13,6 @@ import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
-import 'package:gift_grab/presentation/screens/game_play_screen.dart';
 import 'dart:math';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
@@ -79,7 +79,7 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
           // Pause the game.
           pauseEngine();
           // Display game over menu.
-          addMenu(menu: Menu.gameOver);
+          addMenu(menu: Screens.gameOver);
         } else if (_remainingTime == _flameTimeAppearance) {
           // Display the flame powerup.
           add(_flameComponent);
@@ -224,13 +224,13 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   }
 
   void addMenu({
-    required Menu menu,
+    required Screens menu,
   }) {
     overlays.add(menu.name);
   }
 
   void removeMenu({
-    required Menu menu,
+    required Screens menu,
   }) {
     overlays.remove(menu.name);
   }

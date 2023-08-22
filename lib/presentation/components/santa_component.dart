@@ -22,7 +22,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
   /// Max speed of sliding santa.
-  static double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
+  static final double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
   static double _speed = _originalSpeed;
 
   /// Joystick for movement.
