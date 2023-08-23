@@ -4,9 +4,9 @@ import 'package:gift_grab/data/constants/screens.dart';
 import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 
-class GameOverMenu extends StatelessWidget {
+class GameOverScreen extends StatelessWidget {
   final GiftGrabGame gameRef;
-  const GameOverMenu({Key? key, required this.gameRef}) : super(key: key);
+  const GameOverScreen({Key? key, required this.gameRef}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

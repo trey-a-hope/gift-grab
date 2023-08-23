@@ -27,9 +27,9 @@ void main() async {
             overlayBuilderMap: {
               Screens.gameOver.name:
                   (BuildContext context, GiftGrabGame gameRef) =>
-                      GameOverMenu(gameRef: gameRef),
+                      GameOverScreen(gameRef: gameRef),
               Screens.main.name: (BuildContext context, GiftGrabGame gameRef) =>
-                  MainMenu(gameRef: gameRef),
+                  MainMenuScreen(gameRef: gameRef),
             },
           );
         },

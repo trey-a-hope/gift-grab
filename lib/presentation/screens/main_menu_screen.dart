@@ -4,9 +4,9 @@ import 'package:gift_grab/data/constants/screens.dart';
 import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 
-class MainMenu extends StatelessWidget {
+class MainMenuScreen extends StatelessWidget {
   final GiftGrabGame gameRef;
-  const MainMenu({
+  const MainMenuScreen({
     Key? key,
     required this.gameRef,
   }) : super(key: key);
