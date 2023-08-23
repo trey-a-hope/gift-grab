@@ -17,6 +17,10 @@ dependencies:
   path_provider: ^2.0.11
   toggle_switch: ^2.0.1
 
+  nakama: ^0.1.6  
+  flutter_riverpod: ^2.3.6
+  platform_device_id: ^1.0.1  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
