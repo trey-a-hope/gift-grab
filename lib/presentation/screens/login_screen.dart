@@ -1,3 +1,4 @@
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -21,6 +22,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
+    checkDeviceType(context);
     return ScreenBackgroundWidget(
       child: Center(
         child: Column(
@@ -82,5 +84,18 @@ class LoginScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // Sets the global isTablet variable based on the device type/dimensions.
+  Future<void> checkDeviceType(BuildContext context) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      Globals.isTablet = iosInfo.model.contains('iPad');
+    } else {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      Globals.isTablet = (androidInfo.isPhysicalDevice &&
+          MediaQuery.of(context).size.width >= 600.0);
+    }
   }
 }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:nakama/api.dart';
 import 'package:nakama/nakama.dart';
-import 'package:nakama/src/session.dart' as NakamaSession;
+import 'package:nakama/src/session.dart' as ns;
+
+late NakamaBaseClient _nakamaClient;
 
 class NakamaService {
   NakamaAuth auth = NakamaAuth();
   NakamaLeaderboard leaderboard = NakamaLeaderboard();
 
   NakamaService() {
-    getNakamaClient(
+    _nakamaClient = getNakamaClient(
       host: '127.0.0.1',
       ssl: false,
       serverKey: 'defaultkey',
@@ -20,14 +22,14 @@ class NakamaService {
 }
 
 class NakamaAuth {
-  Future<NakamaSession.Session> _authenticateEmail({
+  Future<ns.Session> _authenticateEmail({
     required String email,
     required String password,
     required String? username,
     required bool create,
   }) async {
     try {
-      NakamaSession.Session session = await getNakamaClient().authenticateEmail(
+      ns.Session session = await _nakamaClient.authenticateEmail(
         email: email,
         password: password,
         username: username,
@@ -42,12 +44,12 @@ class NakamaAuth {
     }
   }
 
-  Future<NakamaSession.Session> createEmail({
+  Future<ns.Session> createEmail({
     required String email,
     required String password,
     required String username,
   }) async {
-    NakamaSession.Session session = await _authenticateEmail(
+    ns.Session session = await _authenticateEmail(
       email: email,
       password: password,
       username: username,
@@ -62,12 +64,12 @@ class NakamaLeaderboard {
   static const String leaderboardId = 'weekly_leaderboard';
 
   Future<LeaderboardRecord> writeLeaderboardRecord({
-    required NakamaSession.Session session,
+    required ns.Session session,
     required int score,
   }) async {
     try {
       LeaderboardRecord leaderboardRecord =
-          await getNakamaClient().writeLeaderboardRecord(
+          await _nakamaClient.writeLeaderboardRecord(
         session: session,
         leaderboardId: leaderboardId,
         score: score,
@@ -80,11 +82,11 @@ class NakamaLeaderboard {
   }
 
   Future<List<LeaderboardRecord>> listLeaderboardRecords({
-    required NakamaSession.Session session,
+    required ns.Session session,
   }) async {
     try {
       LeaderboardRecordList leaderboardRecordList =
-          await getNakamaClient().listLeaderboardRecords(
+          await _nakamaClient.listLeaderboardRecords(
         leaderboardName: leaderboardId,
         session: session,
       );
