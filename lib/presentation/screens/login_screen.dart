@@ -23,6 +23,8 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
     checkDeviceType(context);
+    final theme = Theme.of(context);
+
     return ScreenBackgroundWidget(
       child: Center(
         child: Column(
@@ -32,8 +34,10 @@ class LoginScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
                 'Login',
-                style: TextStyle(
-                  fontSize: Globals.isTablet ? 100 : 50,
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 2
+                      : theme.textTheme.displayLarge!.fontSize,
                 ),
               ),
             ),
@@ -46,7 +50,11 @@ class LoginScreen extends ConsumerWidget {
                 inputFormatters: [
                   UpperCaseTextFormatter(),
                 ],
-                style: const TextStyle(fontSize: 128),
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 2
+                      : theme.textTheme.displayLarge!.fontSize,
+                ),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),

@@ -15,6 +15,7 @@ class GameOverScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
     nakamaProvider.writeLeaderboardRecord(score: gameRef.score);
+    final theme = Theme.of(context);
     return ScreenBackgroundWidget(
       child: Center(
         child: Column(
@@ -24,8 +25,10 @@ class GameOverScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
                 'Game Over',
-                style: TextStyle(
-                  fontSize: Globals.isTablet ? 100 : 50,
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 2
+                      : theme.textTheme.displayLarge!.fontSize,
                 ),
               ),
             ),
@@ -33,8 +36,10 @@ class GameOverScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
                 'Score: ${gameRef.score}',
-                style: TextStyle(
-                  fontSize: Globals.isTablet ? 100 : 50,
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 3
+                      : theme.textTheme.displayLarge!.fontSize,
                 ),
               ),
             ),

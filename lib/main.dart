@@ -8,6 +8,7 @@ import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/screens/game_over_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
+import 'package:gift_grab/util/config/app_themes.dart';
 
 import 'presentation/screens/login_screen.dart';
 
@@ -23,6 +24,9 @@ void main() async {
   runApp(
     ProviderScope(
       child: MaterialApp(
+        theme: AppThemes.lightTheme,
+        darkTheme: AppThemes.darkTheme,
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         home: GameWidget(
           initialActiveOverlays: [Screens.login.name],

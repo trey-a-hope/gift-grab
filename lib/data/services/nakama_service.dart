@@ -9,12 +9,15 @@ class NakamaService {
   NakamaAuth auth = NakamaAuth();
   NakamaLeaderboard leaderboard = NakamaLeaderboard();
 
+  final _host = '45.55.198.38'; // ipv4 address
+  final _httpPort = 7351;
+
   NakamaService() {
     _nakamaClient = getNakamaClient(
-      host: '127.0.0.1',
+      host: _host,
       ssl: false,
       serverKey: 'defaultkey',
-      httpPort: 7350,
+      httpPort: _httpPort,
     );
 
     debugPrint('Nakama Service created.');
