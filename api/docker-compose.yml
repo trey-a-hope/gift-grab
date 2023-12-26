@@ -12,9 +12,11 @@ services:
     expose:
       - "8080"
       - "5432"
+      - "26257"
     ports:
       - "5432:5432"
       - "8080:8080"
+      - "26257:26257"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
