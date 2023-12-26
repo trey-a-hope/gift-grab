@@ -6,6 +6,7 @@ ENV CGO_ENABLED 1
 WORKDIR /backend
 COPY . .
 
+RUN go mod vendor
 RUN go build --trimpath --mod=vendor --buildmode=plugin -o ./backend.so
 
 FROM heroiclabs/nakama:3.16.0

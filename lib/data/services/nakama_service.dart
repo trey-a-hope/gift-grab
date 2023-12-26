@@ -9,7 +9,7 @@ class NakamaService {
   NakamaAuth auth = NakamaAuth();
   NakamaLeaderboard leaderboard = NakamaLeaderboard();
 
-  final _host = '45.55.198.38'; // ipv4 address
+  final _host = '24.144.85.68'; // ipv4 address
   final _httpPort = 7351;
 
   NakamaService() {
