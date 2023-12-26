@@ -6,6 +6,7 @@ services:
     environment:
       - POSTGRES_DB=nakama
       - POSTGRES_PASSWORD=localdb
+      - POSTGRES_USER=root
     volumes:
       - data:/var/lib/postgresql/data
     expose:
@@ -14,6 +15,8 @@ services:
     ports:
       - "5432:5432"
       - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres", "-d", "nakama"]
       interval: 3s
