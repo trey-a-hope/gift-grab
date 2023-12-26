@@ -26,7 +26,8 @@ services:
       retries: 5
   nakama:
     container_name: nakama
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; npm start'
+    environment:
+      - WAIT_HOSTS:postgres:5432
     image: registry.heroiclabs.com/heroiclabs/nakama:3.20.0
     entrypoint:
       - "/bin/sh"
