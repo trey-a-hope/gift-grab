@@ -1,7 +1,2 @@
 logger:
   level: "DEBUG"
-
-console:
-  port: 7351
-  username: "admin"
-  password: "password"
