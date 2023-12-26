@@ -1,4 +1,4 @@
-module heroiclabs/gift-grab
+module heroiclabs.com/gift-grab
 
 go 1.20
 
