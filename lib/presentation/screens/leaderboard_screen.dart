@@ -20,8 +20,10 @@ class LeaderboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
 
+    final theme = Theme.of(context);
+
     return ScreenBackgroundWidget(
-      child: Center(
+      child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -29,8 +31,10 @@ class LeaderboardScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
                 'Leaderboard',
-                style: TextStyle(
-                  fontSize: Globals.isTablet ? 100 : 50,
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 2
+                      : theme.textTheme.displayLarge!.fontSize,
                 ),
               ),
             ),
@@ -43,11 +47,18 @@ class LeaderboardScreen extends ConsumerWidget {
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
+                    return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data == null) {
                     return const Text('None');
                   } else {
                     List<LeaderboardRecord> leaderboardRecords = snapshot.data!;
+
+                    if (leaderboardRecords.isEmpty) {
+                      return Center(
+                        child: Text('No records for this week yet...',
+                            style: theme.textTheme.displayLarge),
+                      );
+                    }
 
                     return ListView.builder(
                       itemCount: leaderboardRecords.length,
