@@ -11,15 +11,15 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  device_info: ^2.0.0
+  device_info_plus: ^9.1.1
   flame: ^1.4.0
   flame_audio: ^2.0.5
   hive: ^2.2.3
   path_provider: ^2.0.11
   toggle_switch: ^2.0.1
-
-  nakama: ^0.1.6  
+  nakama: ^1.0.4
   flutter_riverpod: ^2.3.6
+  uuid:
 
 dev_dependencies:
   flutter_test:

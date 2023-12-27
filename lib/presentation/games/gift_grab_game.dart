@@ -38,9 +38,10 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
   int _flameRemainingTime = Globals.flameTimeLimit;
 
-  /// Timer for game countdown.
+  /// Timer for game.
   late Timer gameTimer;
 
+  /// Timer for flame power up duration.
   late Timer flameTimer;
 
   /// Text UI component for score.
@@ -54,13 +55,13 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
   /// Time when the flame appears.
   static int _flameTimeAppearance = _getRandomInt(
-    min: 10,
+    min: (_remainingTime / 2).round(),
     max: _remainingTime,
   );
 
   /// Time when the flame appears.
   static int _cookieTimeAppearance = _getRandomInt(
-    min: 10,
+    min: (_remainingTime / 2).round(),
     max: _remainingTime,
   );
 
@@ -208,11 +209,11 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
     // Time Appearences
     _flameTimeAppearance = _getRandomInt(
-      min: 10,
+      min: (_remainingTime / 2).round(),
       max: _remainingTime,
     );
     _cookieTimeAppearance = _getRandomInt(
-      min: 10,
+      min: (_remainingTime / 2).round(),
       max: _remainingTime,
     );
 
@@ -238,8 +239,6 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   static int _getRandomInt({
     required int min,
     required int max,
-  }) {
-    Random rng = Random();
-    return rng.nextInt(max - min) + min;
-  }
+  }) =>
+      Random().nextInt(max - min) + min;
 }

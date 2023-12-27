@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nakama/api.dart';
+import 'package:nakama/nakama.dart';
 
 class LeaderboardRecordWidget extends StatelessWidget {
   final LeaderboardRecord leaderboardRecord;
@@ -34,7 +34,7 @@ class LeaderboardRecordWidget extends StatelessWidget {
         height: 30,
         child: Center(
           child: Text(
-            leaderboardRecord.username.value,
+            leaderboardRecord.username ?? 'Anonymous',
             style: _style.copyWith(color: Colors.black),
           ),
         ),

@@ -19,7 +19,7 @@ class Globals {
 
   static late bool isTablet;
 
-  static const int gameTimeLimit = 45;
+  static const int gameTimeLimit = 5;
   static const int frozenTimeLimit = 3;
   static const int flameTimeLimit = 10;
   static const int cookieTimeLimit = 10;

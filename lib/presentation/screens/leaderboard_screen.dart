@@ -7,7 +7,7 @@ import 'package:gift_grab/domain/providers/providers.dart';
 import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
-import 'package:nakama/api.dart';
+import 'package:nakama/nakama.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   final GiftGrabGame gameRef;
@@ -40,7 +40,7 @@ class LeaderboardScreen extends ConsumerWidget {
             ),
             Expanded(
               child: FutureBuilder<List<LeaderboardRecord>>(
-                future: nakamaProvider.listLeaderboardRecords(),
+                future: nakamaProvider.listLeaderboardRecords(20),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
