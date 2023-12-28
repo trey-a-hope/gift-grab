@@ -7,7 +7,7 @@ import 'package:gift_grab/domain/providers/nakama_provider.dart';
 import 'package:gift_grab/domain/providers/providers.dart';
 import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
-import 'package:gift_grab/util/text_formatters/upper_case_text_formatter.dart';
+import 'package:gift_grab/util/upper_case_text_formatter.dart';
 
 class LoginScreen extends ConsumerWidget {
   final GiftGrabGame gameRef;
