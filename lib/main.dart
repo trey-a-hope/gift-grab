@@ -8,7 +8,8 @@ import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 import 'package:gift_grab/presentation/screens/game_over_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
-import 'package:gift_grab/util/config/app_themes.dart';
+import 'package:gift_grab/util/app_themes.dart';
+import 'package:gift_grab/util/device_information.dart';
 
 import 'presentation/screens/login_screen.dart';
 
@@ -19,7 +20,7 @@ void main() async {
 
   await HiveService.openHiveBox(boxName: 'settings');
 
-  Globals.isTablet = true;
+  Globals.isTablet = DeviceInformation.isTablet();
 
   runApp(
     ProviderScope(
