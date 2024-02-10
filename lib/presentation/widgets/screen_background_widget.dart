@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/util/config/globals.dart';
 
 class ScreenBackgroundWidget extends StatelessWidget {
   const ScreenBackgroundWidget({

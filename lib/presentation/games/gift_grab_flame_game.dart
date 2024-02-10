@@ -4,18 +4,22 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/screens.dart';
+import 'package:gift_grab/util/config/providers.dart';
+import 'package:gift_grab/util/config/screens.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
 import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/util/config/globals.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 import 'dart:math';
 
-class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
+class GiftGrabFlameGame extends FlameGame
+    with DragCallbacks, HasCollisionDetection {
+  GiftGrabFlameGame();
+
   /// The Santa character who collects the gifts.
   final SantaComponent _santaComponent = SantaComponent(joystick: joystick);
 
@@ -69,7 +73,7 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    pauseEngine();
+    // pauseEngine();
 
     // Configure countdown timer.
     gameTimer = Timer(
@@ -77,6 +81,12 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
       repeat: true,
       onTick: () {
         if (_remainingTime == 0) {
+          Providers.ref
+              .read(Providers.nakamaLeaderboardAsyncNotifierProvider.notifier)
+              .writeLeaderboardRecord(
+                score: score,
+              );
+
           // Pause the game.
           pauseEngine();
           // Display game over menu.
@@ -198,10 +208,15 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     _timerText.text = 'Time: $_remainingTime secs';
   }
 
-  /// Reset score and remaining time to default values.
+  /// Reset game (score, time, etc).
   void reset() {
     // Scores
     score = 0;
+
+    // Santa attributes.
+    _santaComponent.isFlamed = false;
+    _santaComponent.isFrozen = false;
+    _santaComponent.resetSpeed();
 
     // Timers
     _remainingTime = Globals.gameTimeLimit;

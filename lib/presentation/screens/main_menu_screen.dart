@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/constants/screens.dart';
-import 'package:gift_grab/presentation/games/gift_grab_game.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/util/config/globals.dart';
+import 'package:gift_grab/util/config/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:go_router/go_router.dart';
 
-class MainMenuScreen extends StatelessWidget {
-  final GiftGrabGame gameRef;
+class MainMenuScreen extends ConsumerWidget {
+  // final GiftGrabGame gameRef;
   const MainMenuScreen({
     Key? key,
-    required this.gameRef,
+    // required this.gameRef,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return ScreenBackgroundWidget(
       child: Center(
@@ -35,8 +36,11 @@ class MainMenuScreen extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.removeMenu(menu: Screens.main);
-                  gameRef.resumeEngine();
+                  // ref
+                  //     .read(Providers.gameIsActiveNotifier.notifier)
+                  //     .setIsActive(true);
+                  // ref.read(Providers.giftGrabFlameGameProvider).resumeEngine();
+                  context.goNamed(Globals.routeGame);
                 },
                 child: Text(
                   'Play',
@@ -53,10 +57,7 @@ class MainMenuScreen extends StatelessWidget {
               width: Globals.isTablet ? 400 : 200,
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
-                onPressed: () {
-                  gameRef.addMenu(menu: Screens.leaderboard);
-                  gameRef.removeMenu(menu: Screens.main);
-                },
+                onPressed: () => context.goNamed(Globals.routeLeaderboard),
                 child: Text(
                   'Leaderboard',
                   style: TextStyle(
@@ -73,11 +74,15 @@ class MainMenuScreen extends StatelessWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.addMenu(menu: Screens.login);
-                  gameRef.removeMenu(menu: Screens.main);
+                  ref
+                      .read(
+                          Providers.nakamaSessionAsyncNotifierProvider.notifier)
+                      .signOut();
+                  // gameRef.addMenu(menu: Screens.login);
+                  // gameRef.removeMenu(menu: Screens.main);
                 },
                 child: Text(
-                  'Back',
+                  'Sign Out',
                   style: TextStyle(
                     fontSize: Globals.isTablet ? 50 : 25,
                   ),

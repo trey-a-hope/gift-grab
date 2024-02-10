@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/util/config/globals.dart';
 
 final JoystickComponent joystick = JoystickComponent(
   knob: CircleComponent(

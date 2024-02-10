@@ -1,6 +1,12 @@
 class Globals {
   Globals._();
 
+  /// Routes
+  static const String routeMain = 'main';
+  static const String routeGame = 'game';
+  static const String routeLogin = 'login';
+  static const String routeLeaderboard = 'leaderboard';
+
   /// Audio
   static const String freezeSound = 'freeze-sound.wav';
   static const String itemGrabSound = 'item-grab-sound.wav';
@@ -19,7 +25,7 @@ class Globals {
 
   static late bool isTablet;
 
-  static const int gameTimeLimit = 5;
+  static const int gameTimeLimit = 3;
   static const int frozenTimeLimit = 3;
   static const int flameTimeLimit = 10;
   static const int cookieTimeLimit = 10;

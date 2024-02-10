@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/presentation/games/gift_grab_game.dart';
-import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
+import 'package:gift_grab/util/config/globals.dart';
 import 'dart:math' as math;
 
 class FlameComponent extends SpriteComponent
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
+    with HasGameRef<GiftGrabFlameGame>, CollisionCallbacks {
   /// Height of the sprite.
   final double _spriteHeight = Globals.isTablet ? 160.0 : 80.0;
 
