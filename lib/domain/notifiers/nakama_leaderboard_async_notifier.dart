@@ -6,77 +6,48 @@ import 'package:nakama/nakama.dart';
 
 class NakamaLeaderboardAsyncNotifier
     extends AsyncNotifier<List<LeaderboardRecord>> {
-  static const String leaderboardName = 'weekly_leaderboard';
+  final String _leaderboardName = 'weekly_leaderboard';
 
   @override
   FutureOr<List<LeaderboardRecord>> build() async {
-    final nakamaClient = ref.read(Providers.nakamaClientProvider);
-    final nakamaSessionAsync =
+    final nakamaSession =
         ref.read(Providers.nakamaSessionAsyncNotifierProvider);
 
-    if (nakamaSessionAsync.hasValue && nakamaSessionAsync.value != null) {
-      state = const AsyncLoading();
-
-      final session = nakamaSessionAsync.value!;
-
-      final leaderboardRecordList = await nakamaClient.listLeaderboardRecords(
-        leaderboardName: leaderboardName,
-        session: session,
-      );
-
-      final leaderboardRecords = leaderboardRecordList.records;
-
-      return leaderboardRecords;
+    if (!nakamaSession.hasValue || nakamaSession.value == null) {
+      throw Exception('No session available.');
     }
 
-    throw Exception('No session available.');
-  }
+    final leaderboardRecordList =
+        await getNakamaClient().listLeaderboardRecords(
+      limit: 10,
+      leaderboardName: _leaderboardName,
+      session: nakamaSession.value!,
+      expiry: null,
+      // ownerIds: ['7bf0f4c0-0fde-4f57-995f-f9843351679c'],
+      // ownerIds: ['d59c4636-ff71-4490-b58f-554ef1d63f43'],
+    );
 
-  Future<void> listLeaderboardRecords(int limit) async {
-    final nakamaClient = ref.read(Providers.nakamaClientProvider);
-    final nakamaSessionAsync =
-        ref.read(Providers.nakamaSessionAsyncNotifierProvider);
+    final leaderboardRecords = leaderboardRecordList.records;
 
-    if (nakamaSessionAsync.hasValue && nakamaSessionAsync.value != null) {
-      state = const AsyncLoading();
-
-      final session = nakamaSessionAsync.value!;
-      try {
-        LeaderboardRecordList leaderboardRecordList =
-            await nakamaClient.listLeaderboardRecords(
-          leaderboardName: leaderboardName,
-          session: session,
-        );
-
-        List<LeaderboardRecord> leaderboardRecords =
-            leaderboardRecordList.records;
-
-        state = AsyncData(leaderboardRecords);
-      } catch (e) {
-        state = AsyncError(e, StackTrace.current);
-      }
-    }
-
-    throw Exception('No session available.');
+    return leaderboardRecords;
   }
 
   Future<void> writeLeaderboardRecord({
     required int score,
   }) async {
     try {
-      final nakamaClient = ref.read(Providers.nakamaClientProvider);
-      final nakamaSessionAsync =
+      final nakamaSession =
           ref.read(Providers.nakamaSessionAsyncNotifierProvider);
 
-      if (nakamaSessionAsync.hasValue && nakamaSessionAsync.value != null) {
-        final session = nakamaSessionAsync.value!;
-
-        await nakamaClient.writeLeaderboardRecord(
-          session: session,
-          leaderboardName: leaderboardName,
-          score: score,
-        );
+      if (!nakamaSession.hasValue || nakamaSession.value == null) {
+        throw Exception('No session available.');
       }
+
+      await getNakamaClient().writeLeaderboardRecord(
+        session: nakamaSession.value!,
+        leaderboardName: _leaderboardName,
+        score: score,
+      );
     } catch (e) {
       throw Exception(e);
     }

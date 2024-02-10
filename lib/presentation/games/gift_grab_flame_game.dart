@@ -4,7 +4,6 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/util/config/providers.dart';
 import 'package:gift_grab/util/config/screens.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
@@ -73,20 +72,12 @@ class GiftGrabFlameGame extends FlameGame
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // pauseEngine();
-
     // Configure countdown timer.
     gameTimer = Timer(
       1,
       repeat: true,
       onTick: () {
         if (_remainingTime == 0) {
-          Providers.ref
-              .read(Providers.nakamaLeaderboardAsyncNotifierProvider.notifier)
-              .writeLeaderboardRecord(
-                score: score,
-              );
-
           // Pause the game.
           pauseEngine();
           // Display game over menu.

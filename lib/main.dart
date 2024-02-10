@@ -4,6 +4,7 @@ import 'package:gift_grab/data/services/hive_service.dart';
 import 'package:gift_grab/util/config/globals.dart';
 import 'package:gift_grab/util/config/providers.dart';
 import 'package:gift_grab/util/config/app_themes.dart';
+import 'package:nakama/nakama.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,14 @@ void main() async {
   await HiveService.openHiveBox(boxName: 'settings');
 
   Globals.isTablet = true;
+
+  getNakamaClient(
+    //'127.0.0.1'
+    host: '24.144.85.68',
+    ssl: false,
+    serverKey: 'defaultkey',
+    httpPort: 7351,
+  );
 
   runApp(
     ProviderScope(

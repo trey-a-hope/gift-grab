@@ -31,13 +31,4 @@ class Providers {
   static final giftGrabFlameGameProvider = Provider<GiftGrabFlameGame>(
     (ref) => GiftGrabFlameGame(),
   );
-
-  static final nakamaClientProvider = Provider<NakamaBaseClient>(
-    (ref) => getNakamaClient(
-      host: '127.0.0.1',
-      ssl: false,
-      serverKey: 'defaultkey',
-      httpPort: 7351,
-    ),
-  );
 }

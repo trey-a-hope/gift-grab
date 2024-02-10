@@ -15,6 +15,7 @@ class LeaderboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nakamaLeaderboardAsync =
         ref.watch(Providers.nakamaLeaderboardAsyncNotifierProvider);
+
     final theme = Theme.of(context);
 
     return ScreenBackgroundWidget(
@@ -57,37 +58,6 @@ class LeaderboardScreen extends ConsumerWidget {
                   child: CircularProgressIndicator(),
                 ),
               ),
-
-              // FutureBuilder<List<LeaderboardRecord>>(
-              //   future:
-              //       nakamaLeaderboardAsyncNotifier.listLeaderboardRecords(20),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Center(
-              //         child: CircularProgressIndicator(),
-              //       );
-              //     } else if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     } else if (!snapshot.hasData || snapshot.data == null) {
-              //       return const Text('None');
-              //     } else {
-              //       List<LeaderboardRecord> leaderboardRecords = snapshot.data!;
-
-              //       if (leaderboardRecords.isEmpty) {
-              //         return Center(
-              //           child: Text('No records for this week yet...',
-              //               style: theme.textTheme.displayLarge),
-              //         );
-              //       }
-
-              //       return ListView.builder(
-              //         itemCount: leaderboardRecords.length,
-              //         itemBuilder: ((_, index) => LeaderboardRecordWidget(
-              //             leaderboardRecord: leaderboardRecords[index])),
-              //       );
-              //     }
-              //   },
-              // ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -97,8 +67,6 @@ class LeaderboardScreen extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     context.pop();
-                    // gameRef.addMenu(menu: Screens.main);
-                    // gameRef.removeMenu(menu: Screens.leaderboard);
                   },
                   child: Text(
                     'Back',

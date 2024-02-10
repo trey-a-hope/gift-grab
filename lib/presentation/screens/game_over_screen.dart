@@ -11,11 +11,14 @@ class GameOverScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Get the game instance.
     final giftGrabFlameGame = ref.read(Providers.giftGrabFlameGameProvider);
-    final nakamaLeaderboardAsyncNotifier =
-        ref.watch(Providers.nakamaLeaderboardAsyncNotifierProvider.notifier);
-    // nakamaLeaderboardAsyncNotifier.writeLeaderboardRecord(
-    //     score: giftGrabFlameGame.score);
+
+    // Write score to leaderboard.
+    ref
+        .read(Providers.nakamaLeaderboardAsyncNotifierProvider.notifier)
+        .writeLeaderboardRecord(score: giftGrabFlameGame.score);
+
     final theme = Theme.of(context);
     return ScreenBackgroundWidget(
       child: Center(

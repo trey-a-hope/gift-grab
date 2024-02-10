@@ -18,7 +18,7 @@ dependencies:
   hive: ^2.2.3
   path_provider: ^2.0.11
   toggle_switch: ^2.0.1
-  nakama: ^1.0.4
+  nakama: ^1.0.5
   flutter_riverpod: ^2.3.6
   uuid:
 
