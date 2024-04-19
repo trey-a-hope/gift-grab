@@ -22,7 +22,6 @@ class NakamaLeaderboardAsyncNotifier
       limit: 10,
       leaderboardName: _leaderboardName,
       session: nakamaSession.value!,
-      expiry: null,
       // ownerIds: ['7bf0f4c0-0fde-4f57-995f-f9843351679c'],
       // ownerIds: ['d59c4636-ff71-4490-b58f-554ef1d63f43'],
     );
