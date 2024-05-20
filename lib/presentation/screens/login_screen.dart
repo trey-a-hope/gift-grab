@@ -1,31 +1,30 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/util/config/globals.dart';
-import 'package:gift_grab/util/config/providers.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/util/upper_case_text_formatter.dart';
 
 class LoginScreen extends ConsumerWidget {
   final TextEditingController _controller = TextEditingController();
 
   LoginScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var nakamaSession = ref.watch(Providers.nakamaSessionAsyncNotifierProvider);
-    var nakamaSessionAsyncNotifier =
-        ref.read(Providers.nakamaSessionAsyncNotifierProvider.notifier);
+    var nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
+    var nakamaAuthNotifier = ref.read(Providers.nakamaAuthProvider.notifier);
 
     checkDeviceType(context);
     final theme = Theme.of(context);
 
     return ScreenBackgroundWidget(
       child: Center(
-        child: nakamaSession.when(
-          data: (data) => data == null
+        child: nakamaAuthProvider.when(
+          data: (data) => data == false
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -71,10 +70,10 @@ class LoginScreen extends ConsumerWidget {
                           try {
                             String username = _controller.text;
 
-                            nakamaSessionAsyncNotifier.authEmailPassword(
+                            nakamaAuthNotifier.authenticateEmail(
                               email: '$username@gmail.com',
                               password: 'password',
-                              username: username,
+                              // username: username,
                             );
                           } catch (e) {
                             if (!context.mounted) return;

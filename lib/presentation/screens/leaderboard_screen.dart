@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/util/config/globals.dart';
-import 'package:gift_grab/util/config/providers.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nakamaLeaderboardAsync =
-        ref.watch(Providers.nakamaLeaderboardAsyncNotifierProvider);
+    final nakamaLeaderboardProvider =
+        ref.watch(Providers.nakamaLeaderboardProvider);
 
     final theme = Theme.of(context);
 
@@ -35,7 +35,7 @@ class LeaderboardScreen extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: nakamaLeaderboardAsync.when(
+              child: nakamaLeaderboardProvider.when(
                 data: (leaderboardRecords) {
                   if (leaderboardRecords.isEmpty) {
                     return Center(

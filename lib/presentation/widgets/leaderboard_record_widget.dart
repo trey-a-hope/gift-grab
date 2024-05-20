@@ -12,8 +12,8 @@ class LeaderboardRecordWidget extends StatelessWidget {
 
   const LeaderboardRecordWidget({
     required this.leaderboardRecord,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

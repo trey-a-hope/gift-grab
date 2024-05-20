@@ -3,8 +3,9 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
-import 'package:gift_grab/util/config/globals.dart';
 import 'dart:math' as math;
+
+import 'package:gift_grab/data/constants/globals.dart';
 
 class IceComponent extends SpriteComponent
     with HasGameRef<GiftGrabFlameGame>, CollisionCallbacks {

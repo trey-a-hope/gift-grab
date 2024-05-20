@@ -3,8 +3,8 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
-import 'package:gift_grab/util/config/globals.dart';
 import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 
 import 'flame_component.dart';
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/util/config/globals.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 
 class ScreenBackgroundWidget extends StatelessWidget {
   const ScreenBackgroundWidget({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 

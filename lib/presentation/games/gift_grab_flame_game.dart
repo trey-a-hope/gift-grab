@@ -4,16 +4,17 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/util/config/screens.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
 import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/util/config/globals.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 import 'dart:math';
+
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/constants/screens.dart';
 
 class GiftGrabFlameGame extends FlameGame
     with DragCallbacks, HasCollisionDetection {

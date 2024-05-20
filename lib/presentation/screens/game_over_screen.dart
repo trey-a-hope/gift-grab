@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/util/config/globals.dart';
-import 'package:gift_grab/util/config/screens.dart';
-import 'package:gift_grab/util/config/providers.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/constants/screens.dart';
 import 'package:go_router/go_router.dart';
 
 class GameOverScreen extends ConsumerWidget {
-  const GameOverScreen({Key? key}) : super(key: key);
+  const GameOverScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +16,7 @@ class GameOverScreen extends ConsumerWidget {
 
     // Write score to leaderboard.
     ref
-        .read(Providers.nakamaLeaderboardAsyncNotifierProvider.notifier)
+        .read(Providers.nakamaLeaderboardProvider.notifier)
         .writeLeaderboardRecord(score: giftGrabFlameGame.score);
 
     final theme = Theme.of(context);

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/util/config/globals.dart';
-import 'package:gift_grab/util/config/providers.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 
 class MainMenuScreen extends ConsumerWidget {
-  // final GiftGrabGame gameRef;
   const MainMenuScreen({
-    Key? key,
-    // required this.gameRef,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,10 +34,6 @@ class MainMenuScreen extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // ref
-                  //     .read(Providers.gameIsActiveNotifier.notifier)
-                  //     .setIsActive(true);
-                  // ref.read(Providers.giftGrabFlameGameProvider).resumeEngine();
                   context.goNamed(Globals.routeGame);
                 },
                 child: Text(
@@ -74,12 +68,7 @@ class MainMenuScreen extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  ref
-                      .read(
-                          Providers.nakamaSessionAsyncNotifierProvider.notifier)
-                      .signOut();
-                  // gameRef.addMenu(menu: Screens.login);
-                  // gameRef.removeMenu(menu: Screens.main);
+                  ref.read(Providers.nakamaAuthProvider.notifier).logout();
                 },
                 child: Text(
                   'Sign Out',
