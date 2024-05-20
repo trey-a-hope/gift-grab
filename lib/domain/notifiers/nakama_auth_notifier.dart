@@ -14,10 +14,10 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
   FutureOr<bool> build() async {
     // Initialize Nakama client.
     getNakamaClient(
-      host: Globals.nakamaHostIP,
-      ssl: false,
-      serverKey: 'defaultkey',
-      httpPort: 7350,
+      host: Globals.nakamaConfig.host,
+      ssl: Globals.nakamaConfig.ssl,
+      serverKey: Globals.nakamaConfig.serverKey,
+      httpPort: Globals.nakamaConfig.httpPort,
     );
 
     // Fetch the current session.

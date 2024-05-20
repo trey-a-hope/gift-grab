@@ -71,7 +71,8 @@ class LoginScreen extends ConsumerWidget {
                             String username = _controller.text;
 
                             nakamaAuthNotifier.authenticateEmail(
-                              email: '$username@gmail.com',
+                              email: 'trey.a.hope@gmail.com',
+                              // email: '$username@gmail.com',
                               password: 'password',
                               // username: username,
                             );

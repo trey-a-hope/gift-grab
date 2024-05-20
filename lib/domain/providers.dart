@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/domain/models/session_data_model.dart';
-import 'package:gift_grab/domain/notifiers/nakama_auth_leaderboard_notifier.dart';
+import 'package:gift_grab/domain/notifiers/nakama_leaderboard_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_auth_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_session_data_notifier.dart';
 import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
@@ -25,7 +25,7 @@ class Providers {
   static final routerProvider = Provider<GoRouter>(
     (ref) {
       final nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
-      final isAuthenticated = nakamaAuthProvider.value != null;
+      final isAuthenticated = nakamaAuthProvider.value == true;
       return appRoutes(isAuthenticated);
     },
   );

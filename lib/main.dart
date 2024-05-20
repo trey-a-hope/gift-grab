@@ -13,10 +13,10 @@ void main() async {
   Globals.isTablet = DeviceInformation.isTablet();
 
   getNakamaClient(
-    host: Globals.nakamaHostIP,
-    ssl: false,
-    serverKey: 'defaultkey',
-    httpPort: 7351,
+    host: Globals.nakamaConfig.host,
+    ssl: Globals.nakamaConfig.ssl,
+    serverKey: Globals.nakamaConfig.serverKey,
+    httpPort: Globals.nakamaConfig.httpPort,
   );
 
   runApp(

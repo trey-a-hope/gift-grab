@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -64,9 +65,7 @@ class GameOverScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const Gap(20),
             SizedBox(
               width: Globals.isTablet ? 400 : 200,
               height: Globals.isTablet ? 100 : 50,

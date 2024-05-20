@@ -1,9 +1,7 @@
 class Globals {
   Globals._();
 
-  static const bool isDebug = true;
-
-  static const String nakamaHostIP = isDebug ? '127.0.0.1' : '24.144.85.68';
+  static final nakamaConfig = _NakamaConfig();
 
   /// Routes
   static const String routeMain = 'main';
@@ -40,4 +38,16 @@ class Globals {
       hours: 1,
     ),
   );
+}
+
+class _NakamaConfig {
+  static const bool isDebug = true;
+
+  final String host = isDebug ? '127.0.0.1' : '24.144.85.68';
+
+  final int httpPort = 7351;
+
+  final String serverKey = 'defaultkey';
+
+  final bool ssl = false;
 }
