@@ -54,7 +54,7 @@ class MainMenuScreen extends ConsumerWidget {
               height: 20,
             ),
             SizedBox(
-              width: Globals.isTablet ? 400 : 200,
+              width: Globals.isTablet ? 400 : 250,
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () => context.goNamed(Globals.routeLeaderboard),

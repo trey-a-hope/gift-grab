@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/util/config/globals.dart';
 import 'package:gift_grab/util/config/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
-import 'package:gift_grab/util/text_formatters/upper_case_text_formatter.dart';
+import 'package:gift_grab/util/upper_case_text_formatter.dart';
 
 class LoginScreen extends ConsumerWidget {
   final TextEditingController _controller = TextEditingController();

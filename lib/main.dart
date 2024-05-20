@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/data/services/hive_service.dart';
-import 'package:gift_grab/util/config/globals.dart';
-import 'package:gift_grab/util/config/providers.dart';
-import 'package:gift_grab/util/config/app_themes.dart';
+import 'package:gift_grab/data/services/hive_session_service.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:nakama/nakama.dart';
+import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:gift_grab/util/device_information.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await HiveService.openHiveBox(boxName: 'settings');
-
-  Globals.isTablet = true;
+  await HiveSessionService.init();
+  Globals.isTablet = DeviceInformation.isTablet();
 
   getNakamaClient(
-    //'127.0.0.1'
-    host: '24.144.85.68',
+    host: Globals.nakamaHostIP,
     ssl: false,
     serverKey: 'defaultkey',
     httpPort: 7351,
