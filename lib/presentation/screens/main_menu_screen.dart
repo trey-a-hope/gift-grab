@@ -14,7 +14,7 @@ class MainMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
-    final packageInfo = ref.watch(Providers.packageInfoProvider);
+    // final packageInfo = ref.watch(Providers.packageInfoProvider);
 
     final theme = Theme.of(context);
 
@@ -118,25 +118,25 @@ class MainMenuScreen extends ConsumerWidget {
                   ),
                 ),
                 const Gap(50),
-                packageInfo.when(
-                  data: (info) => Text(
-                    'Version ${info.version} - Build ${info.buildNumber}',
-                    style: theme.textTheme.headlineSmall!.copyWith(
-                      fontSize: Globals.isTablet
-                          ? theme.textTheme.headlineSmall!.fontSize! * 2
-                          : theme.textTheme.headlineSmall!.fontSize,
-                    ),
-                  ),
-                  loading: () => const CircularProgressIndicator(),
-                  error: (err, stack) => Text(
-                    err.toString(),
-                    style: theme.textTheme.headlineSmall!.copyWith(
-                      fontSize: Globals.isTablet
-                          ? theme.textTheme.headlineSmall!.fontSize! * 2
-                          : theme.textTheme.headlineSmall!.fontSize,
-                    ),
-                  ),
-                ),
+                // packageInfo.when(
+                //   data: (info) => Text(
+                //     'Version ${info.version} - Build ${info.buildNumber}',
+                //     style: theme.textTheme.headlineSmall!.copyWith(
+                //       fontSize: Globals.isTablet
+                //           ? theme.textTheme.headlineSmall!.fontSize! * 2
+                //           : theme.textTheme.headlineSmall!.fontSize,
+                //     ),
+                //   ),
+                //   loading: () => const CircularProgressIndicator(),
+                //   error: (err, stack) => Text(
+                //     err.toString(),
+                //     style: theme.textTheme.headlineSmall!.copyWith(
+                //       fontSize: Globals.isTablet
+                //           ? theme.textTheme.headlineSmall!.fontSize! * 2
+                //           : theme.textTheme.headlineSmall!.fontSize,
+                //     ),
+                //   ),
+                // ),
               ],
             );
           },
