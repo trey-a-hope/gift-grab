@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
@@ -23,17 +24,23 @@ class LeaderboardScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                'Leaderboard',
-                style: theme.textTheme.displayLarge!.copyWith(
-                  fontSize: Globals.isTablet
-                      ? theme.textTheme.displayLarge!.fontSize! * 2
-                      : theme.textTheme.displayLarge!.fontSize,
-                ),
+            Text(
+              'Weekly Leaderboard',
+              style: theme.textTheme.displayLarge!.copyWith(
+                fontSize: Globals.isTablet
+                    ? theme.textTheme.displayLarge!.fontSize! * 2
+                    : theme.textTheme.displayLarge!.fontSize,
               ),
             ),
+            Text(
+              'Resets every Monday at 12:00am.',
+              style: theme.textTheme.headlineSmall!.copyWith(
+                fontSize: Globals.isTablet
+                    ? theme.textTheme.headlineSmall!.fontSize! * 2
+                    : theme.textTheme.headlineSmall!.fontSize,
+              ),
+            ),
+            const Gap(50),
             Expanded(
               child: nakamaLeaderboardProvider.when(
                 data: (leaderboardRecords) {

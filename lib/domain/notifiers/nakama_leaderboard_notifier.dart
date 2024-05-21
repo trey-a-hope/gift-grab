@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:nakama/nakama.dart';
@@ -39,7 +38,6 @@ class NakamaLeaderboardNotifier extends AsyncNotifier<List<LeaderboardRecord>> {
 
     // If session is null, return.
     if (session == null) {
-      debugPrint('Session is null, can\'t write record.');
       return;
     }
 

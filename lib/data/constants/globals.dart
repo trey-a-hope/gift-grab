@@ -2,17 +2,16 @@ class Globals {
   Globals._();
 
   static final nakamaConfig = _NakamaConfig();
-
-  /// Routes
-  static const String routeMain = 'main';
-  static const String routeGame = 'game';
-  static const String routeLogin = 'login';
-  static const String routeLeaderboard = 'leaderboard';
+  static final routes = _Routes();
+  static final timeLimits = _TimeLimits();
 
   /// Audio
   static const String freezeSound = 'freeze-sound.wav';
   static const String itemGrabSound = 'item-grab-sound.wav';
   static const String flameSound = 'flame-sound.wav';
+
+  static const String emptyProfile =
+      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
   /// Images
   static const String santaIdle = 'santa-idle.png';
@@ -27,11 +26,6 @@ class Globals {
 
   static late bool isTablet;
 
-  static const int gameTimeLimit = 3;
-  static const int frozenTimeLimit = 3;
-  static const int flameTimeLimit = 10;
-  static const int cookieTimeLimit = 10;
-
   /// One hour from now duration; used for token expiration.
   static final inOneHour = DateTime.now().add(
     const Duration(
@@ -40,10 +34,26 @@ class Globals {
   );
 }
 
-class _NakamaConfig {
-  static const bool isDebug = true;
+class _Routes {
+  final String main = 'main';
+  final String game = 'game';
+  final String login = 'login';
+  final String leaderboard = 'leaderboard';
+  final String settings = 'settings';
+  final String editProfile = 'edit_profile';
+}
 
-  final String host = isDebug ? '127.0.0.1' : '24.144.85.68';
+class _TimeLimits {
+  final int round = 60;
+  final int frozen = 3;
+  final int flame = 10;
+  final int cookie = 10;
+}
+
+class _NakamaConfig {
+  static const bool _isLocal = false;
+
+  final String host = _isLocal ? '127.0.0.1' : '24.144.85.68';
 
   final int httpPort = 7351;
 

@@ -15,6 +15,7 @@ class ScreenBackgroundWidget extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
+            opacity: 0.70,
             image: AssetImage("assets/images/${Globals.backgroundSprite}"),
             fit: BoxFit.cover,
           ),

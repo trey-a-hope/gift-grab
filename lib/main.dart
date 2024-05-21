@@ -6,6 +6,7 @@ import 'package:gift_grab/domain/providers.dart';
 import 'package:nakama/nakama.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/util/device_information.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,12 +22,14 @@ void main() async {
 
   runApp(
     ProviderScope(
-      child: MaterialApp(
-        theme: AppThemes.lightTheme,
-        darkTheme: AppThemes.darkTheme,
-        themeMode: ThemeMode.system,
-        debugShowCheckedModeBanner: false,
-        home: const GiftGrabApp(),
+      child: ToastificationWrapper(
+        child: MaterialApp(
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          home: const GiftGrabApp(),
+        ),
       ),
     ),
   );

@@ -14,6 +14,8 @@ class MainMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
+    final packageInfo = ref.watch(Providers.packageInfoProvider);
+
     final theme = Theme.of(context);
 
     return ScreenBackgroundWidget(
@@ -21,7 +23,7 @@ class MainMenuScreen extends ConsumerWidget {
         child: sessionData.when(
           data: (session) {
             if (session == null) {
-              context.goNamed(Globals.routeLogin);
+              context.goNamed(Globals.routes.login);
               return const SizedBox();
             }
 
@@ -37,8 +39,19 @@ class MainMenuScreen extends ConsumerWidget {
                   ),
                 ),
                 const Gap(20),
+                if (session.avatarUrl != null) ...[
+                  CircleAvatar(
+                    radius: 100,
+                    backgroundImage: NetworkImage(
+                      session.avatarUrl!.isNotEmpty
+                          ? session.avatarUrl!
+                          : Globals.emptyProfile,
+                    ),
+                  ),
+                ],
+                const Gap(20),
                 Text(
-                  'Welcome Back, ${session.email}',
+                  'Welcome Back, ${session.username}',
                   style: theme.textTheme.displayLarge!.copyWith(
                     fontSize: Globals.isTablet
                         ? theme.textTheme.bodyLarge!.fontSize! * 2
@@ -50,9 +63,7 @@ class MainMenuScreen extends ConsumerWidget {
                   width: Globals.isTablet ? 400 : 200,
                   height: Globals.isTablet ? 100 : 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                      context.goNamed(Globals.routeGame);
-                    },
+                    onPressed: () => context.goNamed(Globals.routes.game),
                     child: Text(
                       'Play',
                       style: TextStyle(
@@ -66,9 +77,24 @@ class MainMenuScreen extends ConsumerWidget {
                   width: Globals.isTablet ? 400 : 250,
                   height: Globals.isTablet ? 100 : 50,
                   child: ElevatedButton(
-                    onPressed: () => context.goNamed(Globals.routeLeaderboard),
+                    onPressed: () =>
+                        context.goNamed(Globals.routes.leaderboard),
                     child: Text(
                       'Leaderboard',
+                      style: TextStyle(
+                        fontSize: Globals.isTablet ? 50 : 25,
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(20),
+                SizedBox(
+                  width: Globals.isTablet ? 400 : 250,
+                  height: Globals.isTablet ? 100 : 50,
+                  child: ElevatedButton(
+                    onPressed: () => context.goNamed(Globals.routes.settings),
+                    child: Text(
+                      'Settings',
                       style: TextStyle(
                         fontSize: Globals.isTablet ? 50 : 25,
                       ),
@@ -88,6 +114,26 @@ class MainMenuScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: Globals.isTablet ? 50 : 25,
                       ),
+                    ),
+                  ),
+                ),
+                const Gap(50),
+                packageInfo.when(
+                  data: (info) => Text(
+                    'Version ${info.version} - Build ${info.buildNumber}',
+                    style: theme.textTheme.headlineSmall!.copyWith(
+                      fontSize: Globals.isTablet
+                          ? theme.textTheme.headlineSmall!.fontSize! * 2
+                          : theme.textTheme.headlineSmall!.fontSize,
+                    ),
+                  ),
+                  loading: () => const CircularProgressIndicator(),
+                  error: (err, stack) => Text(
+                    err.toString(),
+                    style: theme.textTheme.headlineSmall!.copyWith(
+                      fontSize: Globals.isTablet
+                          ? theme.textTheme.headlineSmall!.fontSize! * 2
+                          : theme.textTheme.headlineSmall!.fontSize,
                     ),
                   ),
                 ),

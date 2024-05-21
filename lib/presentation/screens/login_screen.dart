@@ -1,108 +1,64 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/util/upper_case_text_formatter.dart';
 
 class LoginScreen extends ConsumerWidget {
-  final TextEditingController _controller = TextEditingController();
+  // final TextEditingController _controller = TextEditingController();
+  static const _usernameFormField = 'Username';
 
-  LoginScreen({
+  const LoginScreen({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
-    var nakamaAuthNotifier = ref.read(Providers.nakamaAuthProvider.notifier);
 
     checkDeviceType(context);
-    final theme = Theme.of(context);
 
     return ScreenBackgroundWidget(
       child: Center(
         child: nakamaAuthProvider.when(
           data: (data) => data == false
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 50),
-                      child: Text(
-                        'Login',
-                        style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: Globals.isTablet
-                              ? theme.textTheme.displayLarge!.fontSize! * 2
-                              : theme.textTheme.displayLarge!.fontSize,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: TextFormField(
-                        controller: _controller,
-                        textAlign: TextAlign.center,
-                        maxLength: 4,
-                        inputFormatters: [
-                          UpperCaseTextFormatter(),
-                        ],
-                        style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: Globals.isTablet
-                              ? theme.textTheme.displayLarge!.fontSize! * 2
-                              : theme.textTheme.displayLarge!.fontSize,
-                        ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          filled: true,
-                          fillColor: Colors.black.withOpacity(0.1),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: Globals.isTablet ? 400 : 200,
-                      height: Globals.isTablet ? 100 : 50,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            String username = _controller.text;
-
-                            nakamaAuthNotifier.authenticateEmail(
-                              email: 'trey.a.hope@gmail.com',
-                              // email: '$username@gmail.com',
-                              password: 'password',
-                              // username: username,
-                            );
-                          } catch (e) {
-                            if (!context.mounted) return;
-                            final scaffoldMessenger =
-                                ScaffoldMessenger.of(context);
-                            scaffoldMessenger.showMaterialBanner(
-                              MaterialBanner(
-                                content: Text(e.toString()),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => scaffoldMessenger
-                                        .hideCurrentMaterialBanner(),
-                                    child: const Text('DISMISS'),
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(
-                            fontSize: Globals.isTablet ? 50 : 25,
-                          ),
-                        ),
-                      ),
+              ? FlutterLogin(
+                  title: 'Gift Grab',
+                  theme: LoginTheme(
+                    primaryColor: Colors.blueAccent,
+                    accentColor: Colors.white,
+                  ),
+                  additionalSignupFields: const [
+                    UserFormField(
+                      icon: Icon(Icons.face),
+                      keyName: _usernameFormField,
                     ),
                   ],
+                  onSignup: (data) async {
+                    if (data.name == null ||
+                        data.password == null ||
+                        data.additionalSignupData == null) {
+                      return 'Email/Password/Username cannot be null...';
+                    }
+
+                    return _onSignUp(
+                      email: data.name!,
+                      password: data.password!,
+                      username: data.additionalSignupData![_usernameFormField]!,
+                      ref: ref,
+                    );
+                  },
+                  onRecoverPassword: (email) {
+                    //TODO: Send email...
+                    return null;
+                  },
+                  onLogin: (data) => _onLogin(
+                    email: data.name,
+                    password: data.password,
+                    ref: ref,
+                  ),
                 )
               : const Text('Bro, you are logged in!'),
           loading: () => const Center(
@@ -123,6 +79,44 @@ class LoginScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<String?> _onSignUp({
+    required String email,
+    required String password,
+    required WidgetRef ref,
+    required String username,
+  }) async {
+    try {
+      await ref.read(Providers.nakamaAuthProvider.notifier).authenticateEmail(
+            email: email,
+            password: password,
+            username: username,
+            create: true,
+          );
+
+      return null;
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  Future<String?> _onLogin({
+    required String email,
+    required String password,
+    required WidgetRef ref,
+  }) async {
+    try {
+      await ref.read(Providers.nakamaAuthProvider.notifier).authenticateEmail(
+            email: email,
+            password: password,
+            create: false,
+          );
+
+      return null;
+    } catch (error) {
+      return error.toString();
+    }
   }
 
   // Sets the global isTablet variable based on the device type/dimensions.

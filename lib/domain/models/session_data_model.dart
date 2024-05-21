@@ -4,11 +4,13 @@ class SessionData {
   final String username;
   final String email;
   final DateTime expiresAt;
+  final String? avatarUrl;
 
   SessionData({
     required this.uid,
     required this.username,
     required this.email,
     required this.expiresAt,
+    this.avatarUrl,
   });
 }

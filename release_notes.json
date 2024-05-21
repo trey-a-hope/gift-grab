@@ -1,6 +1,6 @@
 [
     {
         "language": "en-US",
-        "text": "Bug fixes and improvements..."
+        "text": "* Fixed session logic.\n* Added a leaderboard.\nAdded new edit profile page."
     }
 ]

@@ -30,12 +30,15 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
   Future authenticateEmail({
     required String email,
     required String password,
+    required bool create,
+    String? username,
   }) async {
     // Authenticate with email and password.
     final session = await getNakamaClient().authenticateEmail(
       email: email,
       password: password,
-      create: true,
+      username: username,
+      create: create,
       vars: {
         'email': email,
       },

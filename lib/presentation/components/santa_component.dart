@@ -40,8 +40,8 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   /// Represents if Santa is flamed up, (immune to ice).
   bool isFlamed = false;
 
-  final Timer _frozenCountdown = Timer(Globals.frozenTimeLimit.toDouble());
-  final Timer _cookieCountdown = Timer(Globals.cookieTimeLimit.toDouble());
+  final Timer _frozenCountdown = Timer(Globals.timeLimits.frozen.toDouble());
+  final Timer _cookieCountdown = Timer(Globals.timeLimits.cookie.toDouble());
 
   SantaComponent({required this.joystick});
 

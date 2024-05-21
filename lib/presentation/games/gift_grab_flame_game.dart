@@ -38,9 +38,9 @@ class GiftGrabFlameGame extends FlameGame
   int score = 0;
 
   /// Total seconds for each game.
-  static int _remainingTime = Globals.gameTimeLimit;
+  static int _remainingTime = Globals.timeLimits.round;
 
-  int _flameRemainingTime = Globals.flameTimeLimit;
+  int _flameRemainingTime = Globals.timeLimits.flame;
 
   /// Timer for game.
   late Timer gameTimer;
@@ -211,8 +211,8 @@ class GiftGrabFlameGame extends FlameGame
     _santaComponent.resetSpeed();
 
     // Timers
-    _remainingTime = Globals.gameTimeLimit;
-    _flameRemainingTime = Globals.flameTimeLimit;
+    _remainingTime = Globals.timeLimits.round;
+    _flameRemainingTime = Globals.timeLimits.flame;
 
     // Time Appearences
     _flameTimeAppearance = _getRandomInt(
