@@ -1,10 +1,9 @@
-import 'package:device_info_plus/device_info_plus.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 
 class LoginScreen extends ConsumerWidget {
   // final TextEditingController _controller = TextEditingController();
@@ -18,13 +17,14 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
 
-    checkDeviceType(context);
-
     return ScreenBackgroundWidget(
       child: Center(
         child: nakamaAuthProvider.when(
           data: (data) => data == false
               ? FlutterLogin(
+                  // logo: const AssetImage(
+                  //   "assets/images/${Globals.giftSprite}",
+                  // ),
                   title: 'Gift Grab',
                   theme: LoginTheme(
                     primaryColor: Colors.blueAccent,
@@ -116,19 +116,6 @@ class LoginScreen extends ConsumerWidget {
       return null;
     } catch (error) {
       return error.toString();
-    }
-  }
-
-  // Sets the global isTablet variable based on the device type/dimensions.
-  Future<void> checkDeviceType(BuildContext context) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      Globals.isTablet = iosInfo.model.contains('iPad');
-    } else {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      Globals.isTablet = (androidInfo.isPhysicalDevice &&
-          MediaQuery.of(context).size.width >= 600.0);
     }
   }
 }

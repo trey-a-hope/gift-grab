@@ -5,13 +5,11 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:nakama/nakama.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
-import 'package:gift_grab/util/device_information.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveSessionService.init();
-  Globals.isTablet = DeviceInformation.isTablet();
 
   getNakamaClient(
     host: Globals.nakamaConfig.host,
@@ -40,6 +38,8 @@ class GiftGrabApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    checkDeviceType(context);
+
     final router = ref.watch(Providers.routerProvider);
 
     return MaterialApp.router(
@@ -53,4 +53,14 @@ class GiftGrabApp extends ConsumerWidget {
       routeInformationProvider: router.routeInformationProvider,
     );
   }
+}
+
+/// Sets the global isTablet variable based on the device type/dimensions.
+Future<void> checkDeviceType(BuildContext context) async {
+  // The equivalent of the "smallestWidth" qualifier on Android.
+  final shortestSide = MediaQuery.of(context).size.shortestSide;
+
+  // Determine if we should use mobile layout or not, 600 here is
+  // a common breakpoint for a typical 7-inch tablet.
+  Globals.isTablet = shortestSide >= 600;
 }

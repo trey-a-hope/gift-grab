@@ -58,11 +58,16 @@ class LeaderboardRecordWidget extends ConsumerWidget {
             height: 50,
             child: Center(
               child: Text(
-                '${user.username} with ${leaderboardRecord.score} gifts!',
-                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                '${user.username} - ${leaderboardRecord.score}',
+                style: Globals.isTablet
+                    ? Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )
+                    : Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
               ),
             ),
           ),
