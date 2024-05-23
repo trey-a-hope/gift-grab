@@ -62,5 +62,5 @@ Future<void> checkDeviceType(BuildContext context) async {
 
   // Determine if we should use mobile layout or not, 600 here is
   // a common breakpoint for a typical 7-inch tablet.
-  Globals.isTablet = shortestSide >= 600;
+  Globals.isTablet = shortestSide >= 700;
 }

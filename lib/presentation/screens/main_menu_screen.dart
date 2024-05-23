@@ -5,6 +5,7 @@ import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({
@@ -14,6 +15,8 @@ class MainMenuScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
+    final selectedAvatar = ref.watch(Providers.selectedAvatarProvider);
+
     // final packageInfo = ref.watch(Providers.packageInfoProvider);
 
     final theme = Theme.of(context);
@@ -39,13 +42,19 @@ class MainMenuScreen extends ConsumerWidget {
                   ),
                 ),
                 const Gap(20),
-                if (session.avatarUrl != null) ...[
-                  CircleAvatar(
+                if (selectedAvatar != null) ...[
+                  Lottie.asset(
+                    selectedAvatar.path,
+                    height: 200,
+                  ),
+                ],
+
+                if (session.avatar == null ||
+                    LottieAvatar.findByName(session.avatar) == null) ...[
+                  const CircleAvatar(
                     radius: 100,
                     backgroundImage: NetworkImage(
-                      session.avatarUrl!.isNotEmpty
-                          ? session.avatarUrl!
-                          : Globals.emptyProfile,
+                      Globals.emptyProfile,
                     ),
                   ),
                 ],

@@ -1,7 +1,7 @@
 name: gift_grab
 description: Game made using Flame where users grab presents to increase their scores.
 publish_to: "none"
-version: 1.1.1+11
+version: 1.1.2+12
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
@@ -42,3 +42,4 @@ flutter:
   assets:
     - assets/audio/
     - assets/images/
+    - assets/lotties/

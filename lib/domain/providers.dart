@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/models/session_data_model.dart';
 import 'package:gift_grab/domain/notifiers/nakama_leaderboard_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_auth_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_session_data_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_users_notifier.dart';
+import 'package:gift_grab/domain/notifiers/selected_avatar_notifier.dart';
 // import 'package:gift_grab/domain/notifiers/package_info_notifier.dart';
 import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
@@ -40,6 +42,10 @@ class Providers {
       return appRoutes(isAuthenticated);
     },
   );
+
+  static final selectedAvatarProvider =
+      NotifierProvider<SelectedAvatarNotifier, LottieAvatar?>(
+          SelectedAvatarNotifier.new);
 
   static final giftGrabFlameGameProvider = Provider<GiftGrabFlameGame>(
     (ref) => GiftGrabFlameGame(),

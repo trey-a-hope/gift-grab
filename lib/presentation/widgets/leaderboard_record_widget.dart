@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nakama/nakama.dart';
 
 class LeaderboardRecordWidget extends ConsumerWidget {
@@ -40,6 +43,16 @@ class LeaderboardRecordWidget extends ConsumerWidget {
           throw Exception('User is null...');
         }
 
+        LottieAvatar? lottieAvatar;
+        if (leaderboardRecord.metadata != null) {
+          final metaData = json.decode(
+            leaderboardRecord.metadata!,
+          );
+          lottieAvatar = LottieAvatar.findByName(
+            metaData['avatar'],
+          );
+        }
+
         return ListTile(
           leading: CircleAvatar(
             radius: _avatarRadius,
@@ -71,14 +84,14 @@ class LeaderboardRecordWidget extends ConsumerWidget {
               ),
             ),
           ),
-          trailing: CircleAvatar(
-            radius: _avatarRadius,
-            backgroundImage: NetworkImage(
-              user.avatarUrl!.isNotEmpty
-                  ? user.avatarUrl!
-                  : Globals.emptyProfile,
-            ),
-          ),
+          trailing: lottieAvatar != null
+              ? LottieBuilder.asset(lottieAvatar.path)
+              : CircleAvatar(
+                  radius: _avatarRadius,
+                  backgroundImage: const NetworkImage(
+                    Globals.emptyProfile,
+                  ),
+                ),
         );
       },
     );

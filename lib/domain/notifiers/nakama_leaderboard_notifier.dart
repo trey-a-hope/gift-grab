@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:nakama/nakama.dart';
 
 class NakamaLeaderboardNotifier extends AsyncNotifier<List<LeaderboardRecord>> {
@@ -46,6 +48,11 @@ class NakamaLeaderboardNotifier extends AsyncNotifier<List<LeaderboardRecord>> {
       session: session,
       leaderboardName: _leaderboardName,
       score: score,
+      metadata: jsonEncode(
+        {
+          'avatar': ref.read(Providers.selectedAvatarProvider)?.name,
+        },
+      ),
     );
 
     // Get leaderboard records.

@@ -41,13 +41,40 @@ class _Routes {
   final String leaderboard = 'leaderboard';
   final String settings = 'settings';
   final String editProfile = 'edit_profile';
+  final String pickAvatar = 'pick_avatar';
 }
 
 class _TimeLimits {
-  final int round = 60;
+  final int round = 30;
   final int frozen = 3;
   final int flame = 10;
   final int cookie = 10;
+}
+
+enum LottieAvatar {
+  candyCane('candy_cane', 'Candy Cane', 'assets/lotties/candy_cane.json'),
+  present('present', 'Present', 'assets/lotties/present.json');
+
+  const LottieAvatar(
+    this.name,
+    this.displayName,
+    this.path,
+  );
+
+  final String name;
+  final String displayName;
+  final String path;
+
+  static LottieAvatar? findByName(String? name) {
+    switch (name) {
+      case 'candy_cane':
+        return LottieAvatar.candyCane;
+      case 'present':
+        return LottieAvatar.present;
+    }
+
+    return null;
+  }
 }
 
 class _NakamaConfig {
@@ -60,4 +87,7 @@ class _NakamaConfig {
   final String serverKey = 'defaultkey';
 
   final bool ssl = false;
+
+  final String avatarsCollection = 'avatars';
+  final String avatarDoc = 'avatar';
 }
