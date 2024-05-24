@@ -4,6 +4,7 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:grpc/src/shared/status.dart';
 
 class LoginScreen extends ConsumerWidget {
   // final TextEditingController _controller = TextEditingController();
@@ -96,8 +97,9 @@ class LoginScreen extends ConsumerWidget {
           );
 
       return null;
-    } catch (error) {
-      return error.toString();
+    } catch (e) {
+      var error = e as GrpcError;
+      return error.message;
     }
   }
 
@@ -114,8 +116,11 @@ class LoginScreen extends ConsumerWidget {
           );
 
       return null;
-    } catch (error) {
-      return error.toString();
+    } catch (e) {
+      var error = e as GrpcError;
+      return error.message;
+
+      // https://heroiclabs.com/docs/nakama/server-framework/go-runtime/
     }
   }
 }

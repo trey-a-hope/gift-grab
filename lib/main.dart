@@ -16,7 +16,6 @@ void main() async {
     ssl: Globals.nakamaConfig.ssl,
     serverKey: Globals.nakamaConfig.serverKey,
     httpPort: Globals.nakamaConfig.httpPort,
-    grpcPort: Globals.nakamaConfig.httpPort,
   );
 
   runApp(
