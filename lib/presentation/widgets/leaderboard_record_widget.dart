@@ -1,51 +1,99 @@
-import 'package:flutter/material.dart';
-import 'package:nakama/api.dart';
+import 'dart:convert';
 
-class LeaderboardRecordWidget extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/providers.dart';
+import 'package:lottie/lottie.dart';
+import 'package:nakama/nakama.dart';
+
+class LeaderboardRecordWidget extends ConsumerWidget {
   final LeaderboardRecord leaderboardRecord;
 
-  static const TextStyle _style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 21,
-    color: Colors.white,
-  );
+  final double _avatarRadius = 30;
 
   const LeaderboardRecordWidget({
     required this.leaderboardRecord,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          '${leaderboardRecord.rank}',
-          style: _style,
-        ),
-      ),
-      title: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.white,
-        ),
-        height: 30,
-        child: Center(
-          child: Text(
-            leaderboardRecord.username.value,
-            style: _style.copyWith(color: Colors.black),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ownerId = leaderboardRecord.ownerId;
+    if (ownerId == null) {
+      throw Exception('Rank Does Not Have Owner ID...');
+    }
+
+    return FutureBuilder<User>(
+      future: ref.read(Providers.nakamaUsersProvider.notifier).getUser(
+            uid: ownerId,
           ),
-        ),
-      ),
-      trailing: CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: Text(
-          '${leaderboardRecord.score}',
-          style: _style,
-        ),
-      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+
+        final user = snapshot.data;
+
+        if (user == null) {
+          throw Exception('User is null...');
+        }
+
+        LottieAvatar? lottieAvatar;
+        if (leaderboardRecord.metadata != null) {
+          final metaData = json.decode(
+            leaderboardRecord.metadata!,
+          );
+          lottieAvatar = LottieAvatar.findByName(
+            metaData['avatar'],
+          );
+        }
+
+        return ListTile(
+          leading: CircleAvatar(
+            radius: _avatarRadius,
+            backgroundColor: Colors.blue,
+            child: Text(
+              '${leaderboardRecord.rank}',
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+          ),
+          title: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+            height: 50,
+            child: Center(
+              child: Text(
+                '${user.username} - ${leaderboardRecord.score}',
+                style: Globals.isTablet
+                    ? Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )
+                    : Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+              ),
+            ),
+          ),
+          trailing: lottieAvatar != null
+              ? LottieBuilder.asset(lottieAvatar.path)
+              : CircleAvatar(
+                  radius: _avatarRadius,
+                  backgroundImage: const NetworkImage(
+                    Globals.emptyProfile,
+                  ),
+                ),
+        );
+      },
     );
   }
 }

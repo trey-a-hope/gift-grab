@@ -3,9 +3,9 @@ import 'package:gift_grab/data/constants/globals.dart';
 
 class ScreenBackgroundWidget extends StatelessWidget {
   const ScreenBackgroundWidget({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -15,11 +15,12 @@ class ScreenBackgroundWidget extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
+            opacity: 0.70,
             image: AssetImage("assets/images/${Globals.backgroundSprite}"),
             fit: BoxFit.cover,
           ),
         ),
-        child: child,
+        child: SafeArea(child: child),
       ),
     );
   }

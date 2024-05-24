@@ -1,7 +1,7 @@
 name: gift_grab
 description: Game made using Flame where users grab presents to increase their scores.
 publish_to: "none"
-version: 1.0.9+9
+version: 1.1.5+15
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
@@ -10,22 +10,31 @@ dependencies:
   flutter:
     sdk: flutter
 
+  build_runner: ^2.1.8
   cupertino_icons: ^1.0.2
-  device_info: ^2.0.0
   flame: ^1.4.0
   flame_audio: ^2.0.5
-  hive: ^2.2.3
-  path_provider: ^2.0.11
-  toggle_switch: ^2.0.1
-
-  nakama: ^0.1.6  
+  flutter_login: ^4.1.1
   flutter_riverpod: ^2.3.6
+  gap: ^3.0.1
+  go_router: ^14.1.2
+  hive: ^2.2.3
+  hive_generator: ^2.0.1
+  intl: ^0.19.0
+  jwt_decoder: ^2.0.1
+  lottie: ^3.1.2
+  nakama: ^1.1.0
+  # package_info_plus: ^8.0.0
+  path_provider: ^2.1.3
+  toastification: ^2.0.0
+  toggle_switch: ^2.0.1
+  uuid:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true
@@ -33,3 +42,4 @@ flutter:
   assets:
     - assets/audio/
     - assets/images/
+    - assets/lotties/

@@ -1,109 +1,126 @@
-import 'package:device_info/device_info.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/constants/screens.dart';
-import 'package:gift_grab/domain/providers/nakama_provider.dart';
-import 'package:gift_grab/domain/providers/providers.dart';
-import 'package:gift_grab/presentation/games/gift_grab_game.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
-import 'package:gift_grab/util/upper_case_text_formatter.dart';
+import 'package:grpc/src/shared/status.dart';
 
 class LoginScreen extends ConsumerWidget {
-  final GiftGrabGame gameRef;
+  // final TextEditingController _controller = TextEditingController();
+  static const _usernameFormField = 'Username';
 
-  final TextEditingController _controller = TextEditingController();
-
-  LoginScreen({
-    Key? key,
-    required this.gameRef,
-  }) : super(key: key);
+  const LoginScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
-    checkDeviceType(context);
-    final theme = Theme.of(context);
+    var nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
 
     return ScreenBackgroundWidget(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                'Login',
-                style: theme.textTheme.displayLarge!.copyWith(
-                  fontSize: Globals.isTablet
-                      ? theme.textTheme.displayLarge!.fontSize! * 2
-                      : theme.textTheme.displayLarge!.fontSize,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextFormField(
-                controller: _controller,
-                textAlign: TextAlign.center,
-                maxLength: 4,
-                inputFormatters: [
-                  UpperCaseTextFormatter(),
-                ],
-                style: theme.textTheme.displayLarge!.copyWith(
-                  fontSize: Globals.isTablet
-                      ? theme.textTheme.displayLarge!.fontSize! * 2
-                      : theme.textTheme.displayLarge!.fontSize,
-                ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+        child: nakamaAuthProvider.when(
+          data: (data) => data == false
+              ? FlutterLogin(
+                  // logo: const AssetImage(
+                  //   "assets/images/${Globals.giftSprite}",
+                  // ),
+                  title: 'Gift Grab',
+                  theme: LoginTheme(
+                    primaryColor: Colors.blueAccent,
+                    accentColor: Colors.white,
                   ),
-                  filled: true,
-                  fillColor: Colors.black.withOpacity(0.1),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: Globals.isTablet ? 400 : 200,
-              height: Globals.isTablet ? 100 : 50,
-              child: ElevatedButton(
-                onPressed: () async {
-                  String username = _controller.text;
+                  additionalSignupFields: const [
+                    UserFormField(
+                      icon: Icon(Icons.face),
+                      keyName: _usernameFormField,
+                    ),
+                  ],
+                  onSignup: (data) async {
+                    if (data.name == null ||
+                        data.password == null ||
+                        data.additionalSignupData == null) {
+                      return 'Email/Password/Username cannot be null...';
+                    }
 
-                  await nakamaProvider.createEmail(
-                    email: '$username@gmail.com',
-                    password: 'password',
-                    username: username,
-                  );
-
-                  gameRef.addMenu(menu: Screens.main);
-                  gameRef.removeMenu(menu: Screens.login);
-                },
-                child: Text(
-                  'Submit',
-                  style: TextStyle(
-                    fontSize: Globals.isTablet ? 50 : 25,
+                    return _onSignUp(
+                      email: data.name!,
+                      password: data.password!,
+                      username: data.additionalSignupData![_usernameFormField]!,
+                      ref: ref,
+                    );
+                  },
+                  onRecoverPassword: (email) {
+                    //TODO: Send email...
+                    return null;
+                  },
+                  onLogin: (data) => _onLogin(
+                    email: data.name,
+                    password: data.password,
+                    ref: ref,
                   ),
-                ),
-              ),
+                )
+              : const Text('Bro, you are logged in!'),
+          loading: () => const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+              ],
             ),
-          ],
+          ),
+          error: (Object e, StackTrace stackTrace) => Text(
+            e.toString(),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 50,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // Sets the global isTablet variable based on the device type/dimensions.
-  Future<void> checkDeviceType(BuildContext context) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      Globals.isTablet = iosInfo.model.contains('iPad');
-    } else {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      Globals.isTablet = (androidInfo.isPhysicalDevice &&
-          MediaQuery.of(context).size.width >= 600.0);
+  Future<String?> _onSignUp({
+    required String email,
+    required String password,
+    required WidgetRef ref,
+    required String username,
+  }) async {
+    try {
+      await ref.read(Providers.nakamaAuthProvider.notifier).authenticateEmail(
+            email: email,
+            password: password,
+            username: username,
+            create: true,
+          );
+
+      return null;
+    } catch (e) {
+      var error = e as GrpcError;
+      return error.message;
+    }
+  }
+
+  Future<String?> _onLogin({
+    required String email,
+    required String password,
+    required WidgetRef ref,
+  }) async {
+    try {
+      await ref.read(Providers.nakamaAuthProvider.notifier).authenticateEmail(
+            email: email,
+            password: password,
+            create: false,
+          );
+
+      return null;
+    } catch (e) {
+      var error = e as GrpcError;
+      return error.message;
+
+      // https://heroiclabs.com/docs/nakama/server-framework/go-runtime/
     }
   }
 }

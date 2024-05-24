@@ -3,8 +3,8 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
+import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/games/gift_grab_game.dart';
 
 import 'flame_component.dart';
 
@@ -17,7 +17,7 @@ enum MovementState {
 }
 
 class SantaComponent extends SpriteGroupComponent<MovementState>
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
+    with HasGameRef<GiftGrabFlameGame>, CollisionCallbacks {
   /// Height of the sprite.
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 
@@ -40,8 +40,8 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   /// Represents if Santa is flamed up, (immune to ice).
   bool isFlamed = false;
 
-  final Timer _frozenCountdown = Timer(Globals.frozenTimeLimit.toDouble());
-  final Timer _cookieCountdown = Timer(Globals.cookieTimeLimit.toDouble());
+  final Timer _frozenCountdown = Timer(Globals.timeLimits.frozen.toDouble());
+  final Timer _cookieCountdown = Timer(Globals.timeLimits.cookie.toDouble());
 
   SantaComponent({required this.joystick});
 
@@ -144,7 +144,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
       _cookieCountdown.update(dt);
       if (_cookieCountdown.finished) {
-        _resetSpeed();
+        resetSpeed();
       }
 
       // Update position.
@@ -192,7 +192,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     _cookieCountdown.start();
   }
 
-  void _resetSpeed() {
+  void resetSpeed() {
     _speed = _originalSpeed;
   }
 

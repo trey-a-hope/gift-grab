@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
+import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/screens.dart';
-import 'package:gift_grab/domain/providers/nakama_provider.dart';
-import 'package:gift_grab/domain/providers/providers.dart';
-import 'package:gift_grab/presentation/games/gift_grab_game.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class GameOverScreen extends ConsumerWidget {
-  final GiftGrabGame gameRef;
-  const GameOverScreen({Key? key, required this.gameRef}) : super(key: key);
+  const GameOverScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    NakamaProvider nakamaProvider = ref.watch(Providers.nakamaProvider);
-    nakamaProvider.writeLeaderboardRecord(score: gameRef.score);
+    // Get the game instance.
+    final giftGrabFlameGame = ref.read(Providers.giftGrabFlameGameProvider);
+
+    // Write score to leaderboard.
+    ref
+        .read(Providers.nakamaLeaderboardProvider.notifier)
+        .writeLeaderboardRecord(score: giftGrabFlameGame.score);
+
     final theme = Theme.of(context);
     return ScreenBackgroundWidget(
       child: Center(
@@ -35,7 +40,7 @@ class GameOverScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
-                'Score: ${gameRef.score}',
+                'Score: ${giftGrabFlameGame.score}',
                 style: theme.textTheme.displayLarge!.copyWith(
                   fontSize: Globals.isTablet
                       ? theme.textTheme.displayLarge!.fontSize! * 3
@@ -48,9 +53,9 @@ class GameOverScreen extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.removeMenu(menu: Screens.gameOver);
-                  gameRef.reset();
-                  gameRef.resumeEngine();
+                  giftGrabFlameGame.removeMenu(menu: Screens.gameOver);
+                  giftGrabFlameGame.reset();
+                  giftGrabFlameGame.resumeEngine();
                 },
                 child: Text(
                   'Play Again?',
@@ -60,17 +65,17 @@ class GameOverScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const Gap(20),
             SizedBox(
               width: Globals.isTablet ? 400 : 200,
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  gameRef.removeMenu(menu: Screens.gameOver);
-                  gameRef.reset();
-                  gameRef.addMenu(menu: Screens.main);
+                  giftGrabFlameGame.removeMenu(menu: Screens.gameOver);
+                  giftGrabFlameGame.reset();
+                  giftGrabFlameGame.resumeEngine();
+
+                  context.pop();
                 },
                 child: Text(
                   'Main Menu',

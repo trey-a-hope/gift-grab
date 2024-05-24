@@ -4,18 +4,22 @@ import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/screens.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
 import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 import 'dart:math';
 
-class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/constants/screens.dart';
+
+class GiftGrabFlameGame extends FlameGame
+    with DragCallbacks, HasCollisionDetection {
+  GiftGrabFlameGame();
+
   /// The Santa character who collects the gifts.
   final SantaComponent _santaComponent = SantaComponent(joystick: joystick);
 
@@ -34,13 +38,14 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   int score = 0;
 
   /// Total seconds for each game.
-  static int _remainingTime = Globals.gameTimeLimit;
+  static int _remainingTime = Globals.timeLimits.round;
 
-  int _flameRemainingTime = Globals.flameTimeLimit;
+  int _flameRemainingTime = Globals.timeLimits.flame;
 
-  /// Timer for game countdown.
+  /// Timer for game.
   late Timer gameTimer;
 
+  /// Timer for flame power up duration.
   late Timer flameTimer;
 
   /// Text UI component for score.
@@ -54,21 +59,19 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
   /// Time when the flame appears.
   static int _flameTimeAppearance = _getRandomInt(
-    min: 10,
+    min: (_remainingTime / 2).round(),
     max: _remainingTime,
   );
 
   /// Time when the flame appears.
   static int _cookieTimeAppearance = _getRandomInt(
-    min: 10,
+    min: (_remainingTime / 2).round(),
     max: _remainingTime,
   );
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
-    pauseEngine();
 
     // Configure countdown timer.
     gameTimer = Timer(
@@ -197,22 +200,27 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     _timerText.text = 'Time: $_remainingTime secs';
   }
 
-  /// Reset score and remaining time to default values.
+  /// Reset game (score, time, etc).
   void reset() {
     // Scores
     score = 0;
 
+    // Santa attributes.
+    _santaComponent.isFlamed = false;
+    _santaComponent.isFrozen = false;
+    _santaComponent.resetSpeed();
+
     // Timers
-    _remainingTime = Globals.gameTimeLimit;
-    _flameRemainingTime = Globals.flameTimeLimit;
+    _remainingTime = Globals.timeLimits.round;
+    _flameRemainingTime = Globals.timeLimits.flame;
 
     // Time Appearences
     _flameTimeAppearance = _getRandomInt(
-      min: 10,
+      min: (_remainingTime / 2).round(),
       max: _remainingTime,
     );
     _cookieTimeAppearance = _getRandomInt(
-      min: 10,
+      min: (_remainingTime / 2).round(),
       max: _remainingTime,
     );
 
@@ -238,8 +246,6 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   static int _getRandomInt({
     required int min,
     required int max,
-  }) {
-    Random rng = Random();
-    return rng.nextInt(max - min) + min;
-  }
+  }) =>
+      Random().nextInt(max - min) + min;
 }
