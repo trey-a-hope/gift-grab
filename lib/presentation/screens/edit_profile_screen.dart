@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
@@ -43,27 +44,11 @@ class EditProfileScreen extends ConsumerWidget {
                   ),
                 ),
                 const Gap(50),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextFormField(
-                    controller: _controller,
-                    textAlign: TextAlign.center,
-                    // maxLength: 10,
-                    onChanged: (val) => _controller.text = val,
-                    style: theme.textTheme.displayLarge!.copyWith(
-                      fontSize: Globals.isTablet
-                          ? theme.textTheme.displayLarge!.fontSize! * 2
-                          : theme.textTheme.displayLarge!.fontSize,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      hintText: 'Enter username...',
-                      filled: true,
-                      fillColor: Colors.black.withOpacity(0.1),
-                    ),
-                  ),
+                GGInputFieldWidget(
+                  onChanged: (val) {
+                    _controller.text = val;
+                  },
+                  hintText: 'Enter username...',
                 ),
                 const Gap(20),
                 SizedBox(

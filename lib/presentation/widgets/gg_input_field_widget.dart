@@ -28,6 +28,7 @@ class _GGInputFieldWidgetState extends State<GGInputFieldWidget> {
     return TextFormField(
       controller: _controller,
       textAlign: TextAlign.center,
+      textInputAction: TextInputAction.done,
       maxLines: widget.maxLines,
       maxLength: widget.maxLength,
       onChanged: widget.onChanged,
