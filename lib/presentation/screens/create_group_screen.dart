@@ -16,8 +16,20 @@ class CreateGroupScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
+  static const int _minCount = 2;
+  static const int _maxCount = 10;
+
+  /// Name of the group.
   String? _name;
+
+  /// Description of the group.
   String? _description;
+
+  /// How many people are allowed in the group.
+  int _groupCount = _minCount;
+
+  /// Is the group open to the public.
+  bool _isOpen = true;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +71,49 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                 ),
               ),
             ),
-
-            ///TODO: Added int slider for number of users allowed.
-            ///TODO: Add open/closed checkbox for inviting people to room.
+            const Gap(20),
+            Text(
+              'Max Group Count',
+              style: theme.textTheme.displaySmall!.copyWith(
+                fontSize: Globals.isTablet
+                    ? theme.textTheme.displaySmall!.fontSize! * 2
+                    : theme.textTheme.displaySmall!.fontSize,
+              ),
+            ),
+            const Gap(20),
+            Slider(
+              value: _groupCount.toDouble(),
+              min: _minCount.toDouble(),
+              max: _maxCount.toDouble(),
+              divisions: _maxCount - _minCount,
+              label: '$_groupCount',
+              onChanged: (groupCount) {
+                setState(
+                  () => _groupCount = groupCount.toInt(),
+                );
+              },
+            ),
+            const Gap(20),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Public Group',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                  Switch(
+                    value: _isOpen,
+                    onChanged: (val) => setState(
+                      () => _isOpen = val,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Gap(20),
             GGButtonWidget(
               title: 'Submit',
@@ -71,6 +123,8 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                     .createGroup(
                       name: _name ?? '???',
                       description: _description ?? 'XXX',
+                      maxCount: _groupCount,
+                      open: _isOpen,
                     );
 
                 if (!context.mounted) return;

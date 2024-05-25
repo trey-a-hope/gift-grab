@@ -18,12 +18,17 @@ class ClanDetailsWidget extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return ListTile(
+      leading: CircleAvatar(
+        child: Text(
+          '${group.edgeCount}/${group.maxCount}',
+        ),
+      ),
       title: Text(
         group.name ?? 'No Name',
         style: theme.textTheme.displayMedium,
       ),
       subtitle: Text(
-        '"${group.description ?? 'No Description'}"',
+        '"${group.description ?? 'No Description'}"\n(${group.open != null && group.open! ? 'Public' : 'Private'} Group)',
         style: theme.textTheme.bodyLarge!.copyWith(
           color: Colors.white,
         ),
