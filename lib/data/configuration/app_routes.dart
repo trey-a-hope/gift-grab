@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/group_details_screen.dart';
 import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
@@ -45,6 +46,23 @@ GoRouter appRoutes(bool isAuthenticated) {
                 path: Globals.routes.createGroup,
                 name: Globals.routes.createGroup,
                 builder: (context, state) => const CreateGroupScreen(),
+              ),
+              GoRoute(
+                path: '${Globals.routes.groupDetails}/:groupId',
+                name: Globals.routes.groupDetails,
+                builder: (context, state) {
+                  final groupId = state.pathParameters['groupId'];
+
+                  if (groupId == null) {
+                    throw Exception(
+                      'The group id when changing routes is null.',
+                    );
+                  }
+
+                  return GroupDetailsScreen(
+                    groupId: groupId,
+                  );
+                },
               ),
             ],
           ),

@@ -44,6 +44,7 @@ class _Routes {
   final String groups = 'groups';
   final String pickAvatar = 'pick_avatar';
   final String createGroup = 'create_group';
+  final String groupDetails = 'group_details';
 }
 
 class _TimeLimits {

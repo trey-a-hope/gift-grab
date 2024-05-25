@@ -29,6 +29,38 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
     return groupList.groups;
   }
 
+  Future joinGroup({required Group group}) async {
+    // Fetch the current session.
+    final session = await _hiveSessionService.sessionActive();
+
+    // If session is null, return empty list.
+    if (session == null) {
+      return;
+    }
+
+    try {
+      await getNakamaClient().joinGroup(
+        session: session,
+        groupId: group.id,
+      );
+
+      ModalService.showToast(
+        title: 'You have joined "${group.name}".',
+        toastificationType: ToastificationType.success,
+        icon: const Icon(Icons.check),
+        primaryColor: Colors.green,
+      );
+    } catch (e) {
+      final error = e as GrpcError;
+      ModalService.showToast(
+        title: error.message ?? 'Unknown Error',
+        toastificationType: ToastificationType.error,
+        icon: const Icon(Icons.error),
+        primaryColor: Colors.red,
+      );
+    }
+  }
+
   Future deleteGroup({
     required Group group,
   }) async {

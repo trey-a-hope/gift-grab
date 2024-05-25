@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 
 class ClanDetailsWidget extends ConsumerWidget {
@@ -18,6 +20,10 @@ class ClanDetailsWidget extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return ListTile(
+      onTap: () => context.goNamed(
+        Globals.routes.groupDetails,
+        pathParameters: {'groupId': group.id},
+      ),
       leading: CircleAvatar(
         child: Text(
           '${group.edgeCount}/${group.maxCount}',
@@ -44,7 +50,16 @@ class ClanDetailsWidget extends ConsumerWidget {
                         group: group,
                       ),
             )
-          : null,
+          : IconButton(
+              icon: const Icon(
+                Icons.group,
+                color: Colors.blue,
+              ),
+              onPressed: () =>
+                  ref.read(Providers.nakamaGroupsProvider.notifier).joinGroup(
+                        group: group,
+                      ),
+            ),
     );
   }
 }

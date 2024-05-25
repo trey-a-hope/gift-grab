@@ -38,13 +38,24 @@ class GroupsScreen extends ConsumerWidget {
             if (currentUid != null) ...[
               Expanded(
                 child: groups.when(
-                  data: (list) => ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (c, i) => ClanDetailsWidget(
-                      group: list[i],
-                      currentUserId: currentUid,
-                     ),
-                  ),
+                  data: (list) => list.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No Groups :(',
+                            style: theme.textTheme.displayLarge!.copyWith(
+                              fontSize: Globals.isTablet
+                                  ? theme.textTheme.displayLarge!.fontSize! * 2
+                                  : theme.textTheme.displayLarge!.fontSize,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: list.length,
+                          itemBuilder: (c, i) => ClanDetailsWidget(
+                            group: list[i],
+                            currentUserId: currentUid,
+                          ),
+                        ),
                   error: (err, stack) => Text(
                     err.toString(),
                   ),

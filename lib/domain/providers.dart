@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/models/session_data_model.dart';
+import 'package:gift_grab/domain/notifiers/nakama_group_members_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_groups_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_leaderboard_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_auth_notifier.dart';
@@ -52,6 +53,10 @@ class Providers {
   static final selectedAvatarProvider =
       NotifierProvider<SelectedAvatarNotifier, LottieAvatar?>(
           SelectedAvatarNotifier.new);
+
+  static final nakamaGroupMembersProvider = AsyncNotifierProvider.family
+      .autoDispose<NakamaGroupMembersNotifier, List<GroupUser>, String>(
+          NakamaGroupMembersNotifier.new);
 
   static final giftGrabFlameGameProvider = Provider<GiftGrabFlameGame>(
     (ref) => GiftGrabFlameGame(),
