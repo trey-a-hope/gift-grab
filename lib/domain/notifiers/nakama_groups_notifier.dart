@@ -29,6 +29,48 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
     return groupList.groups;
   }
 
+  Future deleteGroup({
+    required Group group,
+  }) async {
+    // Fetch the current session.
+    final session = await _hiveSessionService.sessionActive();
+
+    // If session is null, return empty list.
+    if (session == null) {
+      return;
+    }
+
+    try {
+      await getNakamaClient().deleteGroup(
+        session: session,
+        groupId: group.id,
+      );
+
+      // Get current list of groups.
+      final currentList = state.value!.toList();
+
+      // Remove group from the FE.
+      currentList.removeWhere((g) => g.id == group.id);
+
+      state = AsyncData(currentList);
+
+      ModalService.showToast(
+        title: 'Group "${group.name}" deleted.',
+        toastificationType: ToastificationType.success,
+        icon: const Icon(Icons.check),
+        primaryColor: Colors.green,
+      );
+    } catch (e) {
+      final error = e as GrpcError;
+      ModalService.showToast(
+        title: error.message ?? 'Unknown Error',
+        toastificationType: ToastificationType.error,
+        icon: const Icon(Icons.error),
+        primaryColor: Colors.red,
+      );
+    }
+  }
+
   Future createGroup({
     required String name,
     String? description,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/domain/providers.dart';
 import 'package:nakama/nakama.dart';
-import 'package:toastification/toastification.dart';
 
-class ClanDetailsWidget extends StatelessWidget {
+class ClanDetailsWidget extends ConsumerWidget {
   final Group group;
   final String currentUserId;
 
@@ -14,7 +14,7 @@ class ClanDetailsWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return ListTile(
@@ -34,12 +34,10 @@ class ClanDetailsWidget extends StatelessWidget {
                 Icons.delete,
                 color: Colors.red,
               ),
-              onPressed: () => ModalService.showToast(
-                title: 'TODO: Delete group "${group.name}"...',
-                toastificationType: ToastificationType.error,
-                icon: const Icon(Icons.error),
-                primaryColor: Colors.red,
-              ),
+              onPressed: () =>
+                  ref.read(Providers.nakamaGroupsProvider.notifier).deleteGroup(
+                        group: group,
+                      ),
             )
           : null,
     );

@@ -65,12 +65,18 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             const Gap(20),
             GGButtonWidget(
               title: 'Submit',
-              onPressed: () async => await ref
-                  .read(Providers.nakamaGroupsProvider.notifier)
-                  .createGroup(
-                    name: _name ?? '???',
-                    description: _description ?? 'XXX',
-                  ),
+              onPressed: () async {
+                await ref
+                    .read(Providers.nakamaGroupsProvider.notifier)
+                    .createGroup(
+                      name: _name ?? '???',
+                      description: _description ?? 'XXX',
+                    );
+
+                if (!context.mounted) return;
+
+                context.pop();
+              },
             ),
             const Gap(20),
             GGButtonWidget(

@@ -43,7 +43,7 @@ class GroupsScreen extends ConsumerWidget {
                     itemBuilder: (c, i) => ClanDetailsWidget(
                       group: list[i],
                       currentUserId: currentUid,
-                    ),
+                     ),
                   ),
                   error: (err, stack) => Text(
                     err.toString(),
