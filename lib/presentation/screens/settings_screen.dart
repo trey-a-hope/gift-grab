@@ -16,35 +16,36 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return ScreenBackgroundWidget(
-        child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Settings',
-            style: theme.textTheme.displayLarge!.copyWith(
-              fontSize: Globals.isTablet
-                  ? theme.textTheme.displayLarge!.fontSize! * 2
-                  : theme.textTheme.displayLarge!.fontSize,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Settings',
+              style: theme.textTheme.displayLarge!.copyWith(
+                fontSize: Globals.isTablet
+                    ? theme.textTheme.displayLarge!.fontSize! * 2
+                    : theme.textTheme.displayLarge!.fontSize,
+              ),
             ),
-          ),
-          const Gap(50),
-          GGButtonWidget(
-            title: 'Edit Profile',
-            onPressed: () => context.goNamed(Globals.routes.editProfile),
-          ),
-          const Gap(20),
-          GGButtonWidget(
-            title: 'Pick Avatar',
-            onPressed: () => context.goNamed(Globals.routes.pickAvatar),
-          ),
-          const Gap(20),
-          GGButtonWidget(
-            title: 'Back',
-            onPressed: () => context.pop(),
-          ),
-        ],
+            const Gap(50),
+            GGButtonWidget(
+              title: 'Edit Profile',
+              onPressed: () => context.goNamed(Globals.routes.editProfile),
+            ),
+            const Gap(20),
+            GGButtonWidget(
+              title: 'Pick Avatar',
+              onPressed: () => context.goNamed(Globals.routes.pickAvatar),
+            ),
+            const Gap(20),
+            GGButtonWidget(
+              title: 'Back',
+              onPressed: () => context.pop(),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

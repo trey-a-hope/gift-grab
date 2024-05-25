@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
@@ -33,6 +35,18 @@ GoRouter appRoutes(bool isAuthenticated) {
             path: Globals.routes.leaderboard,
             name: Globals.routes.leaderboard,
             builder: (context, state) => const LeaderboardScreen(),
+          ),
+          GoRoute(
+            path: Globals.routes.groups,
+            name: Globals.routes.groups,
+            builder: (context, state) => const GroupsScreen(),
+            routes: [
+              GoRoute(
+                path: Globals.routes.createGroup,
+                name: Globals.routes.createGroup,
+                builder: (context, state) => const CreateGroupScreen(),
+              ),
+            ],
           ),
           GoRoute(
             path: Globals.routes.settings,

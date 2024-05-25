@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
@@ -68,64 +69,33 @@ class MainMenuScreen extends ConsumerWidget {
                   ),
                 ),
                 const Gap(50),
-                SizedBox(
-                  width: Globals.isTablet ? 400 : 200,
-                  height: Globals.isTablet ? 100 : 50,
-                  child: ElevatedButton(
-                    onPressed: () => context.goNamed(Globals.routes.game),
-                    child: Text(
-                      'Play',
-                      style: TextStyle(
-                        fontSize: Globals.isTablet ? 50 : 25,
-                      ),
-                    ),
-                  ),
+                GGButtonWidget(
+                  title: 'Play',
+                  onPressed: () => context.goNamed(Globals.routes.game),
                 ),
                 const Gap(20),
-                SizedBox(
-                  width: Globals.isTablet ? 400 : 250,
-                  height: Globals.isTablet ? 100 : 50,
-                  child: ElevatedButton(
-                    onPressed: () =>
-                        context.goNamed(Globals.routes.leaderboard),
-                    child: Text(
-                      'Leaderboard',
-                      style: TextStyle(
-                        fontSize: Globals.isTablet ? 50 : 25,
-                      ),
-                    ),
-                  ),
+                GGButtonWidget(
+                  title: 'Leaderboard',
+                  onPressed: () => context.goNamed(Globals.routes.leaderboard),
                 ),
                 const Gap(20),
-                SizedBox(
-                  width: Globals.isTablet ? 400 : 250,
-                  height: Globals.isTablet ? 100 : 50,
-                  child: ElevatedButton(
-                    onPressed: () => context.goNamed(Globals.routes.settings),
-                    child: Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontSize: Globals.isTablet ? 50 : 25,
-                      ),
-                    ),
-                  ),
+                GGButtonWidget(
+                  title: 'Groups',
+                  onPressed: () => context.goNamed(Globals.routes.groups),
                 ),
                 const Gap(20),
-                SizedBox(
-                  width: Globals.isTablet ? 400 : 200,
-                  height: Globals.isTablet ? 100 : 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ref.read(Providers.nakamaAuthProvider.notifier).logout();
-                    },
-                    child: Text(
-                      'Sign Out',
-                      style: TextStyle(
-                        fontSize: Globals.isTablet ? 50 : 25,
-                      ),
-                    ),
-                  ),
+                GGButtonWidget(
+                  title: 'Settings',
+                  onPressed: () => context.goNamed(Globals.routes.settings),
                 ),
+
+                const Gap(20),
+                GGButtonWidget(
+                  title: 'Sign Out',
+                  onPressed: () =>
+                      ref.read(Providers.nakamaAuthProvider.notifier).logout(),
+                ),
+
                 const Gap(50),
                 // packageInfo.when(
                 //   data: (info) => Text(

@@ -41,7 +41,9 @@ class _Routes {
   final String leaderboard = 'leaderboard';
   final String settings = 'settings';
   final String editProfile = 'edit_profile';
+  final String groups = 'groups';
   final String pickAvatar = 'pick_avatar';
+  final String createGroup = 'create_group';
 }
 
 class _TimeLimits {

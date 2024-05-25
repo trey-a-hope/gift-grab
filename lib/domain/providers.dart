@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/models/session_data_model.dart';
+import 'package:gift_grab/domain/notifiers/nakama_groups_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_leaderboard_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_auth_notifier.dart';
 import 'package:gift_grab/domain/notifiers/nakama_session_data_notifier.dart';
@@ -30,6 +31,11 @@ class Providers {
   static final nakamaSessionDataProvider =
       AsyncNotifierProvider<NakamaSessionDataNotifier, SessionData?>(
           NakamaSessionDataNotifier.new);
+
+  static final nakamaGroupsProvider =
+      AsyncNotifierProvider<NakamaGroupsNotifier, List<Group>>(
+    NakamaGroupsNotifier.new,
+  );
 
   // static final packageInfoProvider =
   //     AsyncNotifierProvider<PackageInfoNotifier, PackageInfo>(
