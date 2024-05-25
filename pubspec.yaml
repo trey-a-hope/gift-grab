@@ -1,7 +1,7 @@
 name: gift_grab
 description: Game made using Flame where users grab presents to increase their scores.
 publish_to: "none"
-version: 1.1.6+156
+version: 1.1.6+157
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
