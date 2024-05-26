@@ -7,11 +7,11 @@ import 'package:nakama/nakama.dart';
 
 class ClanDetailsWidget extends ConsumerWidget {
   final Group group;
-  final String currentUserId;
+  final bool isOwner;
 
   const ClanDetailsWidget({
     required this.group,
-    required this.currentUserId,
+    required this.isOwner,
     super.key,
   });
 
@@ -39,7 +39,7 @@ class ClanDetailsWidget extends ConsumerWidget {
           color: Colors.white,
         ),
       ),
-      trailing: group.creatorId == currentUserId
+      trailing: isOwner
           ? IconButton(
               icon: const Icon(
                 Icons.delete,

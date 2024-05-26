@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:nakama/nakama.dart';
 import 'package:grpc/src/shared/status.dart';
-import 'package:toastification/toastification.dart';
 
 /// Provides a list of groups based on group search criteria.
 class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
@@ -44,19 +42,13 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
         groupId: group.id,
       );
 
-      ModalService.showToast(
+      ModalService.showSuccess(
         title: 'You have joined "${group.name}".',
-        toastificationType: ToastificationType.success,
-        icon: const Icon(Icons.check),
-        primaryColor: Colors.green,
       );
     } catch (e) {
       final error = e as GrpcError;
-      ModalService.showToast(
+      ModalService.showError(
         title: error.message ?? 'Unknown Error',
-        toastificationType: ToastificationType.error,
-        icon: const Icon(Icons.error),
-        primaryColor: Colors.red,
       );
     }
   }
@@ -86,19 +78,13 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
 
       state = AsyncData(currentList);
 
-      ModalService.showToast(
+      ModalService.showSuccess(
         title: 'Group "${group.name}" deleted.',
-        toastificationType: ToastificationType.success,
-        icon: const Icon(Icons.check),
-        primaryColor: Colors.green,
       );
     } catch (e) {
       final error = e as GrpcError;
-      ModalService.showToast(
+      ModalService.showError(
         title: error.message ?? 'Unknown Error',
-        toastificationType: ToastificationType.error,
-        icon: const Icon(Icons.error),
-        primaryColor: Colors.red,
       );
     }
   }
@@ -126,11 +112,8 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
         open: open,
       );
 
-      ModalService.showToast(
+      ModalService.showSuccess(
         title: 'Group "${newGroup.name}" created.',
-        toastificationType: ToastificationType.success,
-        icon: const Icon(Icons.check),
-        primaryColor: Colors.green,
       );
 
       final cur = state.value!;
@@ -138,11 +121,8 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
       state = AsyncData([...cur, newGroup]);
     } catch (e) {
       final error = e as GrpcError;
-      ModalService.showToast(
+      ModalService.showError(
         title: error.message ?? 'Unknown Error',
-        toastificationType: ToastificationType.error,
-        icon: const Icon(Icons.lock_clock),
-        primaryColor: Colors.red,
       );
     }
     return;

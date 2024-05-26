@@ -3,6 +3,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 
 class GGInputFieldWidget extends StatefulWidget {
   final Function(String)? onChanged;
+  final String? initialValue;
   final String? hintText;
   final int? maxLength;
   final int? maxLines;
@@ -10,6 +11,7 @@ class GGInputFieldWidget extends StatefulWidget {
   const GGInputFieldWidget({
     super.key,
     required this.onChanged,
+    this.initialValue,
     this.hintText,
     this.maxLength,
     this.maxLines,
@@ -20,13 +22,12 @@ class GGInputFieldWidget extends StatefulWidget {
 }
 
 class _GGInputFieldWidgetState extends State<GGInputFieldWidget> {
-  final _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return TextFormField(
-      controller: _controller,
+      initialValue: widget.initialValue,
       textAlign: TextAlign.center,
       textInputAction: TextInputAction.done,
       maxLines: widget.maxLines,

@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/models/session_hive_model.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:hive/hive.dart';
 import 'package:nakama/nakama.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:toastification/toastification.dart';
 
 /// Handles persisting session data.
 class HiveSessionService {
@@ -44,11 +42,8 @@ class HiveSessionService {
         // Update cached session with the refreshed session.
         putSession(session: session);
       } catch (e) {
-        ModalService.showToast(
+        ModalService.showError(
           title: 'Your session is stale, reauthenticate now...',
-          toastificationType: ToastificationType.error,
-          icon: const Icon(Icons.lock_clock),
-          primaryColor: Colors.red,
         );
         // Couldn't refresh the session so reauthenticate.
         return null;

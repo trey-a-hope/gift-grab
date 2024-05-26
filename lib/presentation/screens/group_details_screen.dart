@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nakama/nakama.dart';
 
 import '../widgets/screen_background_widget.dart';
 
@@ -20,8 +18,7 @@ class GroupDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final members = ref.watch(Providers.nakamaGroupMembersProvider(groupId));
+    final members = ref.watch(Providers.nakamaGroupUsersProvider(groupId));
 
     return ScreenBackgroundWidget(
       child: Center(

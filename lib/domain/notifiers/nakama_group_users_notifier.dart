@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:nakama/nakama.dart';
 
-class NakamaGroupMembersNotifier
+class NakamaGroupUsersNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<GroupUser>, String> {
   /// HiveSessionService instance.
   final _hiveSessionService = HiveSessionService();

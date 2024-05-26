@@ -8,7 +8,6 @@ import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:toastification/toastification.dart';
 
 class PickAvatarScreen extends ConsumerWidget {
   const PickAvatarScreen({super.key});
@@ -76,11 +75,8 @@ class PickAvatarScreen extends ConsumerWidget {
                     .read(Providers.selectedAvatarProvider.notifier)
                     .save();
 
-                ModalService.showToast(
+                ModalService.showSuccess(
                   title: 'Avatar updated.',
-                  toastificationType: ToastificationType.success,
-                  icon: const Icon(Icons.check),
-                  primaryColor: Colors.green,
                 );
 
                 if (!context.mounted) return;

@@ -4,8 +4,30 @@ import 'package:toastification/toastification.dart';
 
 /// Displays various, flexible modals.
 class ModalService {
+  static void showSuccess({
+    required String title,
+  }) {
+    _showToast(
+      title: title,
+      toastificationType: ToastificationType.success,
+      icon: const Icon(Icons.check),
+      primaryColor: Colors.green,
+    );
+  }
+
+  static void showError({
+    required String title,
+  }) {
+    _showToast(
+      title: title,
+      toastificationType: ToastificationType.error,
+      icon: const Icon(Icons.error),
+      primaryColor: Colors.red,
+    );
+  }
+
   /// Shows a brief, customizable toast.
-  static void showToast({
+  static void _showToast({
     required String title,
     required ToastificationType toastificationType,
     required Widget icon,
