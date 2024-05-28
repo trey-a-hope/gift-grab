@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,7 +35,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

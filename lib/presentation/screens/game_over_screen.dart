@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/screens.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +21,7 @@ class GameOverScreen extends ConsumerWidget {
         .writeLeaderboardRecord(score: giftGrabFlameGame.score);
 
     final theme = Theme.of(context);
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

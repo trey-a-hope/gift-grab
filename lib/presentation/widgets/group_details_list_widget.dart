@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/clan_details_widget.dart';
+import 'package:gift_grab/presentation/widgets/group_details_widget.dart';
 import 'package:nakama/nakama.dart';
 
-class ClanDetailsListWidget extends StatelessWidget {
+class GroupDetailsListWidget extends StatelessWidget {
   final List<Group> groups;
   final String currentUid;
 
-  const ClanDetailsListWidget({
+  const GroupDetailsListWidget({
     required this.groups,
     required this.currentUid,
     super.key,
@@ -16,6 +16,7 @@ class ClanDetailsListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return groups.isEmpty
         ? Center(
             child: Text(
@@ -29,7 +30,7 @@ class ClanDetailsListWidget extends StatelessWidget {
           )
         : ListView.builder(
             itemCount: groups.length,
-            itemBuilder: (c, i) => ClanDetailsWidget(
+            itemBuilder: (c, i) => GroupDetailsWidget(
               group: groups[i],
               isOwner: groups[i].creatorId == currentUid,
             ),

@@ -5,7 +5,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
@@ -16,7 +16,7 @@ class PickAvatarScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedAvatar = ref.watch(Providers.selectedAvatarProvider);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

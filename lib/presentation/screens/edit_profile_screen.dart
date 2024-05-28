@@ -4,9 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
+// ignore: implementation_imports, depend_on_referenced_packages
 import 'package:grpc/src/shared/status.dart';
 
 class EditProfileScreen extends ConsumerWidget {
@@ -22,7 +23,7 @@ class EditProfileScreen extends ConsumerWidget {
 
     final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: sessionData.when(
           data: (data) {

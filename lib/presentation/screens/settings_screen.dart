@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +15,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

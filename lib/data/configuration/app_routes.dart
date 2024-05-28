@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
@@ -11,6 +13,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/pick_avatar_screen.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 GoRouter appRoutes(bool isAuthenticated) {
   return GoRouter(
@@ -48,20 +51,20 @@ GoRouter appRoutes(bool isAuthenticated) {
                 builder: (context, state) => const CreateGroupScreen(),
               ),
               GoRoute(
-                path: '${Globals.routes.groupDetails}/:groupId',
+                path: '${Globals.routes.groupDetails}/:group',
                 name: Globals.routes.groupDetails,
                 builder: (context, state) {
-                  final groupId = state.pathParameters['groupId'];
+                  final param = state.pathParameters['group'];
 
-                  if (groupId == null) {
+                  if (param == null) {
                     throw Exception(
-                      'The group id when changing routes is null.',
+                      'The group when changing routes is null.',
                     );
                   }
 
-                  return GroupDetailsScreen(
-                    groupId: groupId,
-                  );
+                  final group = Group.fromJson(jsonDecode(param));
+
+                  return GroupDetailsScreen(group: group);
                 },
               ),
             ],

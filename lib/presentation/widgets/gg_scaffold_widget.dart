@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 
-class ScreenBackgroundWidget extends StatelessWidget {
-  const ScreenBackgroundWidget({
+class GGScaffoldWidget extends StatelessWidget {
+  const GGScaffoldWidget({
     super.key,
     required this.child,
   });

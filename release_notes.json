@@ -1,6 +1,6 @@
 [
     {
         "language": "en-US",
-        "text": "* Added group creation."
+        "text": "* Moved group details to the details screen. * GroupDetailsWidget more simple now."
     }
 ]

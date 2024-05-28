@@ -19,8 +19,10 @@ class NakamaGroupUsersNotifier
       return [];
     }
 
-    final groupList = await getNakamaClient()
-        .listGroupUsers(session: session, groupId: groupId);
+    final groupList = await getNakamaClient().listGroupUsers(
+      session: session,
+      groupId: groupId,
+    );
 
     return groupList.groupUsers;
   }

@@ -5,30 +5,36 @@ import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
-import '../widgets/screen_background_widget.dart';
+import '../widgets/gg_scaffold_widget.dart';
 
 class GroupDetailsScreen extends ConsumerWidget {
-  final String groupId;
+  final Group group;
 
   const GroupDetailsScreen({
-    required this.groupId,
+    required this.group,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final members = ref.watch(Providers.nakamaGroupUsersProvider(groupId));
+    final members = ref.watch(Providers.nakamaGroupUsersProvider(group.id));
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              groupId,
+              group.name ?? 'No Name...',
+              style: Theme.of(context).textTheme.displayLarge,
             ),
             const Gap(20),
+            Text(
+              group.description ?? 'No Description...',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             Expanded(
               child: members.when(
                 data: (data) => data.isEmpty

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
@@ -22,7 +22,7 @@ class MainMenuScreen extends ConsumerWidget {
 
     final theme = Theme.of(context);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: sessionData.when(
           data: (session) {

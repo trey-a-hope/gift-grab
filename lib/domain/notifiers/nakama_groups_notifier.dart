@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:nakama/nakama.dart';
+// ignore: implementation_imports, depend_on_referenced_packages
 import 'package:grpc/src/shared/status.dart';
 
 /// Provides a list of groups based on group search criteria.

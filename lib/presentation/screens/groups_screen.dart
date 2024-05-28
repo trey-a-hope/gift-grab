@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
-import 'package:gift_grab/presentation/widgets/clan_details_list_widget.dart';
+import 'package:gift_grab/presentation/widgets/group_details_list_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 
@@ -45,7 +45,7 @@ class _GroupsScreenState extends ConsumerState<GroupsScreen>
 
     String? currentUid = session.value?.uid;
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +67,7 @@ class _GroupsScreenState extends ConsumerState<GroupsScreen>
                   controller: _tabController,
                   children: [
                     groups.when(
-                      data: (list) => ClanDetailsListWidget(
+                      data: (list) => GroupDetailsListWidget(
                         groups: list,
                         currentUid: currentUid,
                       ),
@@ -83,7 +83,7 @@ class _GroupsScreenState extends ConsumerState<GroupsScreen>
                         final myGroups = myUserGroups
                             .map((myUserGroup) => myUserGroup.group)
                             .toList();
-                        return ClanDetailsListWidget(
+                        return GroupDetailsListWidget(
                           groups: myGroups,
                           currentUid: currentUid,
                         );
