@@ -93,4 +93,6 @@ class _NakamaConfig {
 
   final String avatarsCollection = 'avatars';
   final String avatarDoc = 'avatar';
+
+  final String rpcAccountDeleteId = 'account_delete_id';
 }

@@ -34,6 +34,7 @@ class NakamaSessionDataNotifier extends AsyncNotifier<SessionData?> {
       key: session.userId,
       userId: session.userId,
     );
+
     // Get avatar.
     String? avatar;
     if (avatarRes != null) {

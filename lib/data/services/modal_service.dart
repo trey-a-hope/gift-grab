@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/widgets/confirmation_widget.dart';
+import 'package:gift_grab/presentation/widgets/input_match_confirmation_widget.dart';
 import 'package:toastification/toastification.dart';
 
 /// Displays various, flexible modals.
@@ -57,4 +59,39 @@ class ModalService {
       closeOnClick: true,
     );
   }
+
+  static Future<bool?> showConfirmation({
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) async =>
+      await showDialog<bool>(
+        useRootNavigator: false,
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => ConfirmationWidget(
+          title: title,
+          message: message,
+        ),
+      );
+
+  static Future<bool?> showInputMatchConfirmation({
+    required BuildContext context,
+    required String title,
+    required String hintText,
+    required String match,
+  }) =>
+      showDialog<bool>(
+        useRootNavigator: false,
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => Material(
+          color: Colors.transparent,
+          child: InputMatchConfirmationWidget(
+            hintText: hintText,
+            title: title,
+            match: match,
+          ),
+        ),
+      );
 }

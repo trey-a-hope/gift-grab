@@ -1,6 +1,6 @@
 [
     {
         "language": "en-US",
-        "text": "* Moved group details to the details screen. * GroupDetailsWidget more simple now."
+        "text": "* Created AccountDeleteId method on server. * Provided delete method on FE."
     }
 ]

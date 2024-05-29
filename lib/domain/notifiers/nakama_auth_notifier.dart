@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:nakama/nakama.dart';
+// ignore: implementation_imports, depend_on_referenced_packages
+import 'package:grpc/src/shared/status.dart';
 
 /// Provider used to check if the user is authenticated.
 class NakamaAuthNotifier extends AsyncNotifier<bool> {
@@ -52,6 +55,35 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
 
     // Set authenticated state to true.
     state = const AsyncData(true);
+  }
+
+  /// Delete account.
+  Future deleteAccount() async {
+    // Fetch the current session.
+    final session = await _hiveSessionService.sessionActive();
+
+    if (session == null) {
+      return;
+    }
+
+    try {
+      // Delete account of currently active user.
+      await getNakamaClient().rpc(
+        session: session,
+        id: Globals.nakamaConfig.rpcAccountDeleteId,
+      );
+
+      // Clear session from local storage.
+      await _hiveSessionService.clearSession();
+
+      // Set authenticated state to false.
+      state = const AsyncData(false);
+    } catch (e) {
+      final error = e as GrpcError;
+      ModalService.showError(
+        title: error.message ?? 'Could not delete account at this time.',
+      );
+    }
   }
 
   /// Logout of the current session.

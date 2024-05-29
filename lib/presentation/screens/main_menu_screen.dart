@@ -89,13 +89,6 @@ class MainMenuScreen extends ConsumerWidget {
                   onPressed: () => context.goNamed(Globals.routes.settings),
                 ),
 
-                const Gap(20),
-                GGButtonWidget(
-                  title: 'Sign Out',
-                  onPressed: () =>
-                      ref.read(Providers.nakamaAuthProvider.notifier).logout(),
-                ),
-
                 const Gap(50),
                 // packageInfo.when(
                 //   data: (info) => Text(
