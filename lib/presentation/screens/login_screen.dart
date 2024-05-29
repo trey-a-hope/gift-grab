@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/domain/providers.dart';
-import 'package:gift_grab/presentation/widgets/screen_background_widget.dart';
+import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+// ignore: implementation_imports, depend_on_referenced_packages
 import 'package:grpc/src/shared/status.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -18,7 +19,7 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var nakamaAuthProvider = ref.watch(Providers.nakamaAuthProvider);
 
-    return ScreenBackgroundWidget(
+    return GGScaffoldWidget(
       child: Center(
         child: nakamaAuthProvider.when(
           data: (data) => data == false

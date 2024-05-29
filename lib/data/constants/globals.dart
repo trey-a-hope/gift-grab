@@ -41,7 +41,10 @@ class _Routes {
   final String leaderboard = 'leaderboard';
   final String settings = 'settings';
   final String editProfile = 'edit_profile';
+  final String groups = 'groups';
   final String pickAvatar = 'pick_avatar';
+  final String createGroup = 'create_group';
+  final String groupDetails = 'group_details';
 }
 
 class _TimeLimits {
@@ -90,4 +93,6 @@ class _NakamaConfig {
 
   final String avatarsCollection = 'avatars';
   final String avatarDoc = 'avatar';
+
+  final String rpcAccountDeleteId = 'account_delete_id';
 }

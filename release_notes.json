@@ -1,6 +1,6 @@
 [
     {
         "language": "en-US",
-        "text": "* Fixed session logic.\n* Added a leaderboard.\n* Added new edit profile page.\n* Users can select avatars."
+        "text": "* Created AccountDeleteId method on server. * Provided delete method on FE."
     }
 ]

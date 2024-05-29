@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/group_details_screen.dart';
+import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
@@ -8,6 +13,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/pick_avatar_screen.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 GoRouter appRoutes(bool isAuthenticated) {
   return GoRouter(
@@ -33,6 +39,35 @@ GoRouter appRoutes(bool isAuthenticated) {
             path: Globals.routes.leaderboard,
             name: Globals.routes.leaderboard,
             builder: (context, state) => const LeaderboardScreen(),
+          ),
+          GoRoute(
+            path: Globals.routes.groups,
+            name: Globals.routes.groups,
+            builder: (context, state) => const GroupsScreen(),
+            routes: [
+              GoRoute(
+                path: Globals.routes.createGroup,
+                name: Globals.routes.createGroup,
+                builder: (context, state) => const CreateGroupScreen(),
+              ),
+              GoRoute(
+                path: '${Globals.routes.groupDetails}/:group',
+                name: Globals.routes.groupDetails,
+                builder: (context, state) {
+                  final param = state.pathParameters['group'];
+
+                  if (param == null) {
+                    throw Exception(
+                      'The group when changing routes is null.',
+                    );
+                  }
+
+                  final group = Group.fromJson(jsonDecode(param));
+
+                  return GroupDetailsScreen(group: group);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: Globals.routes.settings,
