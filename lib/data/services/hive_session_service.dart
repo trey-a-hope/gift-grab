@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/models/session_hive_model.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -13,10 +14,14 @@ class HiveSessionService {
   /// Hive box instance.
   final _box = Hive.box(_boxName);
 
-  /// Intialized Hive and opens the session box.
+  /// Intialize Hive and opens the session box.
   static Future init() async {
-    final appDocumentDirectory = await getApplicationDocumentsDirectory();
-    Hive.init(appDocumentDirectory.path);
+    if (kIsWeb) {
+      Hive.init('');
+    } else {
+      final appDocumentDirectory = await getApplicationDocumentsDirectory();
+      Hive.init(appDocumentDirectory.path);
+    }
     Hive.registerAdapter(SessionHiveModelAdapter());
     await Hive.openBox(_boxName);
   }

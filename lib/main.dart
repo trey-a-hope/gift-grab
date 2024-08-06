@@ -1,16 +1,56 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/util/lifecycle_event_handler.dart';
 import 'package:nakama/nakama.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// Listens for changes to app lifecycle.
+  WidgetsBinding.instance.addObserver(
+    LifecycleEventHandler(
+      onDetach_: () async {
+        NakamaWebsocketClient.instance.close();
+      },
+      onHide_: () async {
+        debugPrint('onHide_');
+      },
+      onShow_: () async {
+        debugPrint('onHide_');
+      },
+      onResume_: () async {
+        debugPrint('onResume_');
+      },
+      onInactive_: () async {
+        debugPrint('onInactive_');
+      },
+      onPause_: () async {
+        debugPrint('onPause_');
+      },
+      onRestart_: () async {
+        debugPrint('onRsestart_');
+      },
+      onStateChange_: (v) async {
+        debugPrint('onStateChange_: ${v.name}');
+      },
+      onExitRequested_: () async {
+        debugPrint('onExitRequested_');
+        return AppExitResponse.exit;
+      },
+    ),
+  );
+
+  /// Intialize Hive and opens the session box.
   await HiveSessionService.init();
 
+  /// Set Nakama Client config.
   getNakamaClient(
     host: Globals.nakamaConfig.host,
     ssl: Globals.nakamaConfig.ssl,
@@ -38,8 +78,10 @@ class GiftGrabApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Sets the global isTablet variable based on the device type/dimensions.
     checkDeviceType(context);
 
+    // Listen to route changes.
     final router = ref.watch(Providers.routerProvider);
 
     return MaterialApp.router(

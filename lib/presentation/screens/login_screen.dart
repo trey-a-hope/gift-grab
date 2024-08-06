@@ -56,7 +56,7 @@ class LoginScreen extends ConsumerWidget {
                     //TODO: Send email...
                     return null;
                   },
-                  onLogin: (data) => _onLogin(
+                  onLogin: (data) async => await _onLogin(
                     email: data.name,
                     password: data.password,
                     ref: ref,
@@ -83,6 +83,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
+  /// Call notifier to sign-up user by email with username.
   Future<String?> _onSignUp({
     required String email,
     required String password,
@@ -99,11 +100,14 @@ class LoginScreen extends ConsumerWidget {
 
       return null;
     } catch (e) {
-      var error = e as GrpcError;
-      return error.message;
+      // var error = e as GrpcError;
+      // return error.message;
+
+      return e.toString();
     }
   }
 
+  /// Call notifier to login user by email.
   Future<String?> _onLogin({
     required String email,
     required String password,
@@ -118,10 +122,11 @@ class LoginScreen extends ConsumerWidget {
 
       return null;
     } catch (e) {
-      var error = e as GrpcError;
-      return error.message;
+      // var error = e as GrpcError;
+      // return error.message;
 
-      // https://heroiclabs.com/docs/nakama/server-framework/go-runtime/
+      return e.toString();
     }
   }
 }
+// https://heroiclabs.com/docs/nakama/server-framework/go-runtime/
