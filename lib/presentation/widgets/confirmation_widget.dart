@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +16,7 @@ class ConfirmationWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Platform.isIOS
+  Widget build(BuildContext context) => kIsWeb || Platform.isIOS
       ? CupertinoAlertDialog(
           title: Text(title),
           content: Text(message),

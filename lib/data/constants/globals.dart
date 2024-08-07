@@ -85,11 +85,11 @@ class _NakamaConfig {
 
   final String host = _isLocal ? '127.0.0.1' : '24.144.85.68';
 
-  final int httpPort = 7351;
+  final int httpPort = 7350; // If this doesn't work, use 7351.
 
   final String serverKey = 'defaultkey';
 
-  final bool ssl = false;
+  final bool ssl = true;
 
   final String avatarsCollection = 'avatars';
   final String avatarDoc = 'avatar';
