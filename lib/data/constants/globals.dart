@@ -89,7 +89,7 @@ class _NakamaConfig {
 
   final String serverKey = 'defaultkey';
 
-  final bool ssl = true;
+  final bool ssl = false;
 
   final String avatarsCollection = 'avatars';
   final String avatarDoc = 'avatar';
