@@ -83,9 +83,7 @@ enum LottieAvatar {
 class _NakamaConfig {
   static const bool _isLocal = false;
 
-  final String host = _isLocal
-      ? '127.0.0.1'
-      : 'https://radiant-fortress-74557-a19cc3a8e264.herokuapp.com/24.144.85.68';
+  final String host = _isLocal ? '127.0.0.1' : '24.144.85.68';
 
   final int httpPort = 7350; // If this doesn't work, use 7351.
 
