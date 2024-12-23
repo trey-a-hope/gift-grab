@@ -25,7 +25,7 @@ class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
       session: session,
     );
 
-    return groupList.groups;
+    return groupList.groups ?? [];
   }
 
   Future joinGroup({required Group group}) async {

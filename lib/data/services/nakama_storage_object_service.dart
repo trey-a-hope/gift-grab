@@ -9,11 +9,15 @@ class NakamaStorageObjectService {
     required String collection,
     required Map<String, dynamic> value,
   }) async {
-    await getNakamaClient().writeStorageObject(
+    await getNakamaClient().writeStorageObjects(
       session: session,
-      collection: collection,
-      key: session.userId,
-      value: jsonEncode(value),
+      objects: [
+        StorageObjectWrite(
+          collection: collection,
+          key: session.userId,
+          value: jsonEncode(value),
+        )
+      ],
     );
   }
 
@@ -24,15 +28,18 @@ class NakamaStorageObjectService {
     required String key,
     required String userId,
   }) async {
-    final storageObject = await getNakamaClient().readStorageObject(
+    final storageObject = await getNakamaClient().readStorageObjects(
       session: session,
-      collection: collection,
-      key: key,
-      userId: userId,
+      objectIds: [
+        StorageObjectId(
+          collection: collection,
+          key: key,
+        )
+      ],
     );
 
-    if (storageObject == null) return null;
+    throw UnimplementedError();
 
-    return jsonDecode(storageObject.value);
+    // return jsonDecode(storageObject);
   }
 }

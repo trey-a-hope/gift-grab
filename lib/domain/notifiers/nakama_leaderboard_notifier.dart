@@ -30,7 +30,7 @@ class NakamaLeaderboardNotifier extends AsyncNotifier<List<LeaderboardRecord>> {
     );
 
     // Return leaderboard records from list.
-    return leaderboardRecordList.records;
+    return leaderboardRecordList.records ?? [];
   }
 
   /// Write leaderboard record.
@@ -63,6 +63,6 @@ class NakamaLeaderboardNotifier extends AsyncNotifier<List<LeaderboardRecord>> {
     );
 
     // Update state with new records.
-    state = AsyncData(leaderboardRecordList.records);
+    state = AsyncData(leaderboardRecordList.records ?? []);
   }
 }

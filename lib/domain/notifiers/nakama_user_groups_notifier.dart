@@ -26,6 +26,6 @@ class NakamaUserGroupsNotifier
       userId: userId,
     );
 
-    return userGroupList.userGroups;
+    return userGroupList.userGroups ?? [];
   }
 }
