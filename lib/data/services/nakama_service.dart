@@ -1,8 +1,15 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 class NakamaService {
+  final _dio = Dio();
+
+  void authenticateEmail() {
+    _dio.post('', data: {});
+  }
+
   Future<void> auth({required String username}) async {
     try {
       const proxy =
