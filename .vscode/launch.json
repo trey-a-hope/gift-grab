@@ -6,9 +6,7 @@
             "program": "lib/main.dart",
             "request": "launch",
             "type": "dart",
-            "args": [
-                "--web-browser-flag=--disable-web-security",
-            ],
+            "args": [],
         },
     ]
 }

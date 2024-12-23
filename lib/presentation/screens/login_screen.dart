@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 // ignore: implementation_imports, depend_on_referenced_packages
@@ -21,64 +23,75 @@ class LoginScreen extends ConsumerWidget {
 
     return GGScaffoldWidget(
       child: Center(
-        child: nakamaAuthProvider.when(
-          data: (data) => data == false
-              ? FlutterLogin(
-                  // logo: const AssetImage(
-                  //   "assets/images/${Globals.giftSprite}",
-                  // ),
-                  title: 'Gift Grab',
-                  theme: LoginTheme(
-                    primaryColor: Colors.blueAccent,
-                    accentColor: Colors.white,
-                  ),
-                  additionalSignupFields: const [
-                    UserFormField(
-                      icon: Icon(Icons.face),
-                      keyName: _usernameFormField,
-                    ),
-                  ],
-                  onSignup: (data) async {
-                    if (data.name == null ||
-                        data.password == null ||
-                        data.additionalSignupData == null) {
-                      return 'Email/Password/Username cannot be null...';
-                    }
-
-                    return _onSignUp(
-                      email: data.name!,
-                      password: data.password!,
-                      username: data.additionalSignupData![_usernameFormField]!,
-                      ref: ref,
-                    );
-                  },
-                  onRecoverPassword: (email) {
-                    //TODO: Send email...
-                    return null;
-                  },
-                  onLogin: (data) async => await _onLogin(
-                    email: data.name,
-                    password: data.password,
-                    ref: ref,
-                  ),
-                )
-              : const Text('Bro, you are logged in!'),
-          loading: () => const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-              ],
-            ),
-          ),
-          error: (Object e, StackTrace stackTrace) => Text(
-            e.toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 50,
-            ),
-          ),
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await NakamaService().auth(username: 'trey.codes');
+            } catch (e) {
+              ModalService.showError(title: e.toString());
+            }
+          },
+          child: const Text('Auth!'),
         ),
+
+        //     nakamaAuthProvider.when(
+        //   data: (data) => data == false
+        //       ? FlutterLogin(
+        //           // logo: const AssetImage(
+        //           //   "assets/images/${Globals.giftSprite}",
+        //           // ),
+        //           title: 'Gift Grab',
+        //           theme: LoginTheme(
+        //             primaryColor: Colors.blueAccent,
+        //             accentColor: Colors.white,
+        //           ),
+        //           additionalSignupFields: const [
+        //             UserFormField(
+        //               icon: Icon(Icons.face),
+        //               keyName: _usernameFormField,
+        //             ),
+        //           ],
+        //           onSignup: (data) async {
+        //             if (data.name == null ||
+        //                 data.password == null ||
+        //                 data.additionalSignupData == null) {
+        //               return 'Email/Password/Username cannot be null...';
+        //             }
+
+        //             return _onSignUp(
+        //               email: data.name!,
+        //               password: data.password!,
+        //               username: data.additionalSignupData![_usernameFormField]!,
+        //               ref: ref,
+        //             );
+        //           },
+        //           onRecoverPassword: (email) {
+        //             //TODO: Send email...
+        //             return null;
+        //           },
+        //           onLogin: (data) async => await _onLogin(
+        //             email: data.name,
+        //             password: data.password,
+        //             ref: ref,
+        //           ),
+        //         )
+        //       : const Text('Bro, you are logged in!'),
+        //   loading: () => const Center(
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         CircularProgressIndicator(),
+        //       ],
+        //     ),
+        //   ),
+        //   error: (Object e, StackTrace stackTrace) => Text(
+        //     e.toString(),
+        //     style: const TextStyle(
+        //       color: Colors.black,
+        //       fontSize: 50,
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }
