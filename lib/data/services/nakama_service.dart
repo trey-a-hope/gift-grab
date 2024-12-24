@@ -1,49 +1,37 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import 'package:gift_grab/domain/models/authenticate_email_response.dart';
 
 class NakamaService {
   final _dio = Dio();
 
-  void authenticateEmail() {
-    _dio.post('', data: {});
-  }
+  final bool _isDevMode = true;
 
-  Future<void> auth({required String username}) async {
+  static const _baseUrlDev = 'http://127.0.0.1:8000';
+  static const _baseUrlProd = 'https://gift-grab-api.onrender.com';
+
+  String get _baseUrl => _isDevMode ? _baseUrlDev : _baseUrlProd;
+
+  Future<AuthenticateEmailResponse> authenticateEmail({
+    required String email,
+    required String password,
+    required String username,
+    required bool create,
+  }) async {
     try {
-      const proxy =
-          'https://radiant-fortress-74557-a19cc3a8e264.herokuapp.com/';
-      final nakamaEndpoint =
-          'http://24.144.85.68:7350/v2/account/authenticate/email?username=$username';
-
-      final proxyUrl = '$proxy$nakamaEndpoint';
-
-      final Map<String, dynamic> requestBody = {
-        "email": "trey.a.hope@gmail.com",
-        "password": "Peachy4040",
-        "create": true,
-      };
-
-      final encodedBody = json.encode(requestBody);
-
-      final response = await http.post(
-        Uri.parse(proxyUrl),
-        body: encodedBody,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ${base64Encode(utf8.encode('defaultkey:'))}',
+      final res = await _dio.post(
+        '$_baseUrl/authenticateEmail',
+        data: {
+          'email': email,
+          'password': password,
+          'username': username,
+          'create': create,
         },
       );
 
-      if (response.statusCode != 200) {
-        throw Exception(
-          response.reasonPhrase ?? 'Could not log in at this time.',
-        );
-      }
-
-      return;
+      return AuthenticateEmailResponse(
+        token: res.data['token'],
+        refreshToken: res.data['refresh_token'],
+      );
     } catch (e) {
       throw Exception(e);
     }

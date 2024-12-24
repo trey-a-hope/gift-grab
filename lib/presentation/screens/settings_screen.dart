@@ -78,9 +78,11 @@ class SettingsScreen extends ConsumerWidget {
                           return;
                         }
 
-                        await ref
-                            .read(Providers.nakamaAuthProvider.notifier)
-                            .deleteAccount();
+                        // await ref
+                        //     .read(Providers.nakamaAuthProvider.notifier)
+                        //     .deleteAccount();
+
+                        //TODO: Delete account.
                       },
                     ),
               error: (err, stack) => Text(err.toString()),

@@ -23,7 +23,7 @@ GoRouter appRoutes(bool isAuthenticated) {
       GoRoute(
         path: '/${Globals.routes.login}',
         name: Globals.routes.login,
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => LoginScreen(),
       ),
       GoRoute(
         path: '/${Globals.routes.main}',
