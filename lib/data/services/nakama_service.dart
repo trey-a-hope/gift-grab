@@ -5,7 +5,7 @@ import 'package:gift_grab/domain/models/client_config.dart';
 class NakamaService {
   final _dio = Dio();
 
-  final bool _isDevMode = true;
+  final bool _isDevMode = false;
 
   static const _baseUrlDev = 'http://127.0.0.1:8000';
   static const _baseUrlProd = 'https://gift-grab-api.onrender.com';
