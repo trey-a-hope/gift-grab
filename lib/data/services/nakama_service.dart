@@ -8,7 +8,7 @@ class NakamaService {
   final bool _isDevMode = false;
 
   static const _baseUrlDev = 'http://127.0.0.1:8000';
-  static const _baseUrlProd = 'https://gift-grab-api.onrender.com';
+  static const _baseUrlProd = 'https://apikama.onrender.com/';
 
   String get _baseUrl => _isDevMode ? _baseUrlDev : _baseUrlProd;
 
