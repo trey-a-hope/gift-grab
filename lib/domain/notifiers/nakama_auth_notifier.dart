@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -28,6 +29,11 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
         return false;
       }
 
+      // Save the uid of the jwt.
+      final uid = jwt['uid'];
+      await storage.write(value: 'uid', key: uid);
+      debugPrint('UID: $uid');
+
       return true;
     } catch (e) {
       throw Exception(e);
@@ -37,6 +43,7 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
   Future logout() async {
     await storage.delete(key: 'token');
     await storage.delete(key: 'refreshToken');
+    await storage.delete(key: 'uid');
     // Set authenticated state to false.
     state = const AsyncData(false);
   }

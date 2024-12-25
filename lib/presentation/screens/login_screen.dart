@@ -4,7 +4,6 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/domain/notifiers/auth_notifier.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 // ignore: implementation_imports, depend_on_referenced_packages
@@ -15,9 +14,7 @@ class LoginScreen extends ConsumerWidget {
 
   final storage = const FlutterSecureStorage();
 
-  final _authService = AuthService();
-
-  LoginScreen({
+  const LoginScreen({
     super.key,
   });
 
