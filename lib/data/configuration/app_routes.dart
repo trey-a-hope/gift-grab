@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
-import 'package:gift_grab/presentation/screens/group_details_screen.dart';
 import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
@@ -13,7 +10,6 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/pick_avatar_screen.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nakama/nakama.dart';
 
 GoRouter appRoutes(bool isAuthenticated) {
   return GoRouter(
@@ -61,10 +57,11 @@ GoRouter appRoutes(bool isAuthenticated) {
                       'The group when changing routes is null.',
                     );
                   }
+                  throw UnimplementedError();
 
-                  final group = Group.fromJson(jsonDecode(param));
+                  // final group = Group.fromJson(jsonDecode(param));
 
-                  return GroupDetailsScreen(group: group);
+                  // return GroupDetailsScreen(group: group);
                 },
               ),
             ],

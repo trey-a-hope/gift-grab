@@ -107,12 +107,14 @@ class LoginScreen extends ConsumerWidget {
     required String username,
   }) async {
     try {
-      final res = await NakamaService().authenticateEmail(
+      final res = await NakamaService().signUp(
         email: email,
         password: password,
-        username: 'trey.codes',
-        create: false,
+        username: username,
       );
+
+      await storage.write(key: 'token', value: res.token);
+      await ref.read(Providers.nakamaAuthProvider.notifier).check();
 
       return null;
     } catch (e) {
@@ -130,16 +132,12 @@ class LoginScreen extends ConsumerWidget {
     required WidgetRef ref,
   }) async {
     try {
-      final res = await NakamaService().authenticateEmail(
+      final res = await NakamaService().login(
         email: email,
         password: password,
-        username: 'trey.codes',
-        create: false,
       );
 
-      await storage.write(key: 'refreshToken', value: res.refreshToken);
-
-      debugPrint('Refresh Token: ${res.refreshToken}, Token: ${res.token}');
+      await storage.write(key: 'token', value: res.token);
 
       await ref.read(Providers.nakamaAuthProvider.notifier).check();
 

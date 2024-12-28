@@ -15,6 +15,8 @@ class MainMenuScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final accountAsync = ref.watch(Providers.nakamaAccountProvider);
+
     // final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
     // final selectedAvatar = ref.watch(Providers.selectedAvatarProvider);
 
@@ -53,14 +55,19 @@ class MainMenuScreen extends ConsumerWidget {
             //   ),
             // ],
             const Gap(20),
-            Text(
-              'Welcome Back, Trey',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.bodyLarge!.fontSize! * 2
-                    : theme.textTheme.bodyLarge!.fontSize,
+            accountAsync.when(
+              data: (account) => Text(
+                'Welcome back ${account.username}',
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.bodyLarge!.fontSize! * 2
+                      : theme.textTheme.bodyLarge!.fontSize,
+                ),
               ),
+              error: (err, stack) => Text(err.toString()),
+              loading: () => CircularProgressIndicator(),
             ),
+
             const Gap(50),
             GGButtonWidget(
               title: 'Play',

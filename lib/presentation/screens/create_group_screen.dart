@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
@@ -118,14 +117,14 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
             GGButtonWidget(
               title: 'Submit',
               onPressed: () async {
-                await ref
-                    .read(Providers.nakamaGroupsProvider.notifier)
-                    .createGroup(
-                      name: _name ?? '???',
-                      description: _description ?? 'XXX',
-                      maxCount: _groupCount,
-                      open: _isOpen,
-                    );
+                // await ref
+                //     .read(Providers.nakamaGroupsProvider.notifier)
+                //     .createGroup(
+                //       name: _name ?? '???',
+                //       description: _description ?? 'XXX',
+                //       maxCount: _groupCount,
+                //       open: _isOpen,
+                //     );
 
                 if (!context.mounted) return;
 

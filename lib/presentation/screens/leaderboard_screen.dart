@@ -14,79 +14,80 @@ class LeaderboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nakamaLeaderboardProvider =
-        ref.watch(Providers.nakamaLeaderboardProvider);
+    throw UnimplementedError();
+    // final nakamaLeaderboardProvider =
+    //     ref.watch(Providers.nakamaLeaderboardProvider);
 
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
 
-    return GGScaffoldWidget(
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Weekly Leaderboard',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displayLarge!.fontSize! * 2
-                    : theme.textTheme.displayLarge!.fontSize,
-              ),
-            ),
-            Text(
-              'Resets every Monday at 12:00am.',
-              style: theme.textTheme.headlineSmall!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.headlineSmall!.fontSize! * 2
-                    : theme.textTheme.headlineSmall!.fontSize,
-              ),
-            ),
-            const Gap(50),
-            Expanded(
-              child: nakamaLeaderboardProvider.when(
-                data: (leaderboardRecords) {
-                  if (leaderboardRecords.isEmpty) {
-                    return Center(
-                      child: Text('No records for this week yet...',
-                          style: theme.textTheme.displayLarge),
-                    );
-                  }
+    // return GGScaffoldWidget(
+    //   child: SafeArea(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         Text(
+    //           'Weekly Leaderboard',
+    //           style: theme.textTheme.displayLarge!.copyWith(
+    //             fontSize: Globals.isTablet
+    //                 ? theme.textTheme.displayLarge!.fontSize! * 2
+    //                 : theme.textTheme.displayLarge!.fontSize,
+    //           ),
+    //         ),
+    //         Text(
+    //           'Resets every Monday at 12:00am.',
+    //           style: theme.textTheme.headlineSmall!.copyWith(
+    //             fontSize: Globals.isTablet
+    //                 ? theme.textTheme.headlineSmall!.fontSize! * 2
+    //                 : theme.textTheme.headlineSmall!.fontSize,
+    //           ),
+    //         ),
+    //         const Gap(50),
+    //         Expanded(
+    //           child: nakamaLeaderboardProvider.when(
+    //             data: (leaderboardRecords) {
+    //               if (leaderboardRecords.isEmpty) {
+    //                 return Center(
+    //                   child: Text('No records for this week yet...',
+    //                       style: theme.textTheme.displayLarge),
+    //                 );
+    //               }
 
-                  return ListView.builder(
-                    itemCount: leaderboardRecords.length,
-                    itemBuilder: ((_, index) => LeaderboardRecordWidget(
-                          leaderboardRecord: leaderboardRecords[index],
-                        )),
-                  );
-                },
-                error: (error, stackTrace) => Text(
-                  'Error: ${error.toString()}',
-                ),
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: SizedBox(
-                width: Globals.isTablet ? 400 : 200,
-                height: Globals.isTablet ? 100 : 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  child: Text(
-                    'Back',
-                    style: TextStyle(
-                      fontSize: Globals.isTablet ? 50 : 25,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+    //               return ListView.builder(
+    //                 itemCount: leaderboardRecords.length,
+    //                 itemBuilder: ((_, index) => LeaderboardRecordWidget(
+    //                       leaderboardRecord: leaderboardRecords[index],
+    //                     )),
+    //               );
+    //             },
+    //             error: (error, stackTrace) => Text(
+    //               'Error: ${error.toString()}',
+    //             ),
+    //             loading: () => const Center(
+    //               child: CircularProgressIndicator(),
+    //             ),
+    //           ),
+    //         ),
+    //         Padding(
+    //           padding: const EdgeInsets.symmetric(vertical: 20),
+    //           child: SizedBox(
+    //             width: Globals.isTablet ? 400 : 200,
+    //             height: Globals.isTablet ? 100 : 50,
+    //             child: ElevatedButton(
+    //               onPressed: () {
+    //                 context.pop();
+    //               },
+    //               child: Text(
+    //                 'Back',
+    //                 style: TextStyle(
+    //                   fontSize: Globals.isTablet ? 50 : 25,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

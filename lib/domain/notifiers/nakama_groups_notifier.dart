@@ -1,131 +1,116 @@
-import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/data/services/hive_session_service.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
-import 'package:nakama/nakama.dart';
-// ignore: implementation_imports, depend_on_referenced_packages
-import 'package:grpc/src/shared/status.dart';
+// import 'dart:async';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:gift_grab/data/services/hive_session_service.dart';
+// import 'package:gift_grab/data/services/modal_service.dart';
+// import 'package:nakama/nakama.dart';
+// // ignore: implementation_imports, depend_on_referenced_packages
+// import 'package:grpc/src/shared/status.dart';
 
-/// Provides a list of groups based on group search criteria.
-class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
-  /// HiveSessionService instance.
-  final _hiveSessionService = HiveSessionService();
+// /// Provides a list of groups based on group search criteria.
+// class NakamaGroupsNotifier extends AsyncNotifier<List<Group>> {
+//   @override
+//   FutureOr<List<Group>> build() async {
+//     throw UnimplementedError();
+//   }
 
-  @override
-  FutureOr<List<Group>> build() async {
-    // Fetch the current session.
-    final session = await _hiveSessionService.sessionActive();
+//   // Future joinGroup({required Group group}) async {
+//   //   // Fetch the current session.
+//   //   final session = await _hiveSessionService.sessionActive();
 
-    // If session is null, return empty list.
-    if (session == null) {
-      return [];
-    }
+//   //   // If session is null, return empty list.
+//   //   if (session == null) {
+//   //     return;
+//   //   }
 
-    final groupList = await getNakamaClient().listGroups(
-      session: session,
-    );
+//   //   try {
+//   //     await getNakamaClient().joinGroup(
+//   //       session: session,
+//   //       groupId: group.id,
+//   //     );
 
-    return groupList.groups ?? [];
-  }
+//   //     ModalService.showSuccess(
+//   //       title: 'You have joined "${group.name}".',
+//   //     );
+//   //   } catch (e) {
+//   //     final error = e as GrpcError;
+//   //     ModalService.showError(
+//   //       title: error.message ?? 'Unknown Error',
+//   //     );
+//   //   }
+//   // }
 
-  Future joinGroup({required Group group}) async {
-    // Fetch the current session.
-    final session = await _hiveSessionService.sessionActive();
+//   // Future deleteGroup({
+//   //   required Group group,
+//   // }) async {
+//   //   // Fetch the current session.
+//   //   final session = await _hiveSessionService.sessionActive();
 
-    // If session is null, return empty list.
-    if (session == null) {
-      return;
-    }
+//   //   // If session is null, return empty list.
+//   //   if (session == null) {
+//   //     return;
+//   //   }
 
-    try {
-      await getNakamaClient().joinGroup(
-        session: session,
-        groupId: group.id,
-      );
+//   //   try {
+//   //     await getNakamaClient().deleteGroup(
+//   //       session: session,
+//   //       groupId: group.id,
+//   //     );
 
-      ModalService.showSuccess(
-        title: 'You have joined "${group.name}".',
-      );
-    } catch (e) {
-      final error = e as GrpcError;
-      ModalService.showError(
-        title: error.message ?? 'Unknown Error',
-      );
-    }
-  }
+//   //     // Get current list of groups.
+//   //     final currentList = state.value!.toList();
 
-  Future deleteGroup({
-    required Group group,
-  }) async {
-    // Fetch the current session.
-    final session = await _hiveSessionService.sessionActive();
+//   //     // Remove group from the FE.
+//   //     currentList.removeWhere((g) => g.id == group.id);
 
-    // If session is null, return empty list.
-    if (session == null) {
-      return;
-    }
+//   //     state = AsyncData(currentList);
 
-    try {
-      await getNakamaClient().deleteGroup(
-        session: session,
-        groupId: group.id,
-      );
+//   //     ModalService.showSuccess(
+//   //       title: 'Group "${group.name}" deleted.',
+//   //     );
+//   //   } catch (e) {
+//   //     final error = e as GrpcError;
+//   //     ModalService.showError(
+//   //       title: error.message ?? 'Unknown Error',
+//   //     );
+//   //   }
+//   // }
 
-      // Get current list of groups.
-      final currentList = state.value!.toList();
+//   // Future createGroup({
+//   //   required String name,
+//   //   String? description,
+//   //   int? maxCount,
+//   //   bool? open,
+//   // }) async {
+//   //   // Fetch the current session.
+//   //   final session = await _hiveSessionService.sessionActive();
 
-      // Remove group from the FE.
-      currentList.removeWhere((g) => g.id == group.id);
+//   //   // If session is null, return empty list.
+//   //   if (session == null) {
+//   //     return;
+//   //   }
 
-      state = AsyncData(currentList);
+//   //   try {
+//   //     final newGroup = await getNakamaClient().createGroup(
+//   //       session: session,
+//   //       name: name,
+//   //       description: description,
+//   //       maxCount: maxCount,
+//   //       open: open,
+//   //     );
 
-      ModalService.showSuccess(
-        title: 'Group "${group.name}" deleted.',
-      );
-    } catch (e) {
-      final error = e as GrpcError;
-      ModalService.showError(
-        title: error.message ?? 'Unknown Error',
-      );
-    }
-  }
+//   //     ModalService.showSuccess(
+//   //       title: 'Group "${newGroup.name}" created.',
+//   //     );
 
-  Future createGroup({
-    required String name,
-    String? description,
-    int? maxCount,
-    bool? open,
-  }) async {
-    // Fetch the current session.
-    final session = await _hiveSessionService.sessionActive();
+//   //     final cur = state.value!;
 
-    // If session is null, return empty list.
-    if (session == null) {
-      return;
-    }
-
-    try {
-      final newGroup = await getNakamaClient().createGroup(
-        session: session,
-        name: name,
-        description: description,
-        maxCount: maxCount,
-        open: open,
-      );
-
-      ModalService.showSuccess(
-        title: 'Group "${newGroup.name}" created.',
-      );
-
-      final cur = state.value!;
-
-      state = AsyncData([...cur, newGroup]);
-    } catch (e) {
-      final error = e as GrpcError;
-      ModalService.showError(
-        title: error.message ?? 'Unknown Error',
-      );
-    }
-    return;
-  }
-}
+//   //     state = AsyncData([...cur, newGroup]);
+//   //   } catch (e) {
+//   //     final error = e as GrpcError;
+//   //     ModalService.showError(
+//   //       title: error.message ?? 'Unknown Error',
+//   //     );
+//   //   }
+//   //   return;
+//   // }
+// }

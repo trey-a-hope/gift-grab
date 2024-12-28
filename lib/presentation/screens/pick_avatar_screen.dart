@@ -14,85 +14,86 @@ class PickAvatarScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedAvatar = ref.watch(Providers.selectedAvatarProvider);
+    throw UnimplementedError();
+    // final selectedAvatar = ref.watch(Providers.selectedAvatarProvider);
 
-    return GGScaffoldWidget(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Gap(50),
-          Text(
-            'Pick Avatar',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          const Gap(50),
-          Text(
-            'Double tap an avatar to select it.',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: GridView.count(
-                crossAxisCount: 4,
-                childAspectRatio: 1.0,
-                padding: const EdgeInsets.all(4.0),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                children: <Widget>[
-                  for (int i = 0; i < LottieAvatar.values.length; i++) ...[
-                    GestureDetector(
-                      child: Column(
-                        children: [
-                          Lottie.asset(
-                            LottieAvatar.values[i].path,
-                            height: 100,
-                          ),
-                          if (LottieAvatar.values[i] == selectedAvatar) ...[
-                            Text(
-                              LottieAvatar.values[i].displayName,
-                              style: Theme.of(context).textTheme.displayLarge!,
-                            ),
-                          ]
-                        ],
-                      ),
-                      onTap: () async {
-                        ref
-                            .read(Providers.selectedAvatarProvider.notifier)
-                            .select(LottieAvatar.values[i]);
-                      },
-                    ),
-                  ]
-                ],
-              ),
-            ),
-          ),
-          if (selectedAvatar != null) ...[
-            GGButtonWidget(
-              title: 'Confirm',
-              onPressed: () async {
-                await ref
-                    .read(Providers.selectedAvatarProvider.notifier)
-                    .save();
+    // return GGScaffoldWidget(
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       const Gap(50),
+    //       Text(
+    //         'Pick Avatar',
+    //         style: Theme.of(context).textTheme.displayLarge,
+    //       ),
+    //       const Gap(50),
+    //       Text(
+    //         'Double tap an avatar to select it.',
+    //         style: Theme.of(context).textTheme.displayLarge,
+    //       ),
+    //       Expanded(
+    //         child: Padding(
+    //           padding: const EdgeInsets.all(24),
+    //           child: GridView.count(
+    //             crossAxisCount: 4,
+    //             childAspectRatio: 1.0,
+    //             padding: const EdgeInsets.all(4.0),
+    //             mainAxisSpacing: 4.0,
+    //             crossAxisSpacing: 4.0,
+    //             children: <Widget>[
+    //               for (int i = 0; i < LottieAvatar.values.length; i++) ...[
+    //                 GestureDetector(
+    //                   child: Column(
+    //                     children: [
+    //                       Lottie.asset(
+    //                         LottieAvatar.values[i].path,
+    //                         height: 100,
+    //                       ),
+    //                       if (LottieAvatar.values[i] == selectedAvatar) ...[
+    //                         Text(
+    //                           LottieAvatar.values[i].displayName,
+    //                           style: Theme.of(context).textTheme.displayLarge!,
+    //                         ),
+    //                       ]
+    //                     ],
+    //                   ),
+    //                   onTap: () async {
+    //                     ref
+    //                         .read(Providers.selectedAvatarProvider.notifier)
+    //                         .select(LottieAvatar.values[i]);
+    //                   },
+    //                 ),
+    //               ]
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //       if (selectedAvatar != null) ...[
+    //         GGButtonWidget(
+    //           title: 'Confirm',
+    //           onPressed: () async {
+    //             await ref
+    //                 .read(Providers.selectedAvatarProvider.notifier)
+    //                 .save();
 
-                ModalService.showSuccess(
-                  title: 'Avatar updated.',
-                );
+    //             ModalService.showSuccess(
+    //               title: 'Avatar updated.',
+    //             );
 
-                if (!context.mounted) return;
+    //             if (!context.mounted) return;
 
-                context.pop();
-              },
-            ),
-            const Gap(20),
-          ],
-          GGButtonWidget(
-            title: 'Back',
-            onPressed: () => context.pop(),
-          ),
-          const Gap(20),
-        ],
-      ),
-    );
+    //             context.pop();
+    //           },
+    //         ),
+    //         const Gap(20),
+    //       ],
+    //       GGButtonWidget(
+    //         title: 'Back',
+    //         onPressed: () => context.pop(),
+    //       ),
+    //       const Gap(20),
+    //     ],
+    //   ),
+    // );
   }
 }

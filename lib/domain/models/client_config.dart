@@ -20,4 +20,12 @@ class ClientConfig {
         "grpcPort": grpcPort,
         "httpPort": httpPort,
       };
+
+  @override
+  String toString() => [
+        host,
+        httpPort.toString(),
+        ssl ? "1" : "0",
+        serverKey,
+      ].join(":");
 }

@@ -17,7 +17,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final session = ref.watch(Providers.nakamaSessionDataProvider);
+    // final session = ref.watch(Providers.nakamaSessionDataProvider);
 
     return GGScaffoldWidget(
       child: Center(
@@ -60,35 +60,35 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             const Gap(20),
-            session.when(
-              data: (data) => data == null
-                  ? const SizedBox()
-                  : GGButtonWidget(
-                      title: 'Delete Profile',
-                      onPressed: () async {
-                        final confirm =
-                            await ModalService.showInputMatchConfirmation(
-                          context: context,
-                          title: 'Delete Account?',
-                          hintText: 'Enter your email to confirm.',
-                          match: data.email,
-                        );
+            // session.when(
+            //   data: (data) => data == null
+            //       ? const SizedBox()
+            //       : GGButtonWidget(
+            //           title: 'Delete Profile',
+            //           onPressed: () async {
+            //             final confirm =
+            //                 await ModalService.showInputMatchConfirmation(
+            //               context: context,
+            //               title: 'Delete Account?',
+            //               hintText: 'Enter your email to confirm.',
+            //               match: data.email,
+            //             );
 
-                        if (confirm == null || confirm == false) {
-                          return;
-                        }
+            //             if (confirm == null || confirm == false) {
+            //               return;
+            //             }
 
-                        // await ref
-                        //     .read(Providers.nakamaAuthProvider.notifier)
-                        //     .deleteAccount();
+            //             // await ref
+            //             //     .read(Providers.nakamaAuthProvider.notifier)
+            //             //     .deleteAccount();
 
-                        //TODO: Delete account.
-                      },
-                    ),
-              error: (err, stack) => Text(err.toString()),
-              loading: () => const CircularProgressIndicator(),
-            ),
-            const Gap(20),
+            //             //TODO: Delete account.
+            //           },
+            //         ),
+            //   error: (err, stack) => Text(err.toString()),
+            //   loading: () => const CircularProgressIndicator(),
+            // ),
+            // const Gap(20),
             GGButtonWidget(
               title: 'Back',
               onPressed: () => context.pop(),

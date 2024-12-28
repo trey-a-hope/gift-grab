@@ -5,9 +5,16 @@ import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nakama/nakama.dart';
 
 import '../widgets/gg_scaffold_widget.dart';
+
+class Group {
+  final String name;
+  final String description;
+  final List members;
+
+  Group({required this.name, required this.description, required this.members});
+}
 
 class GroupDetailsScreen extends ConsumerWidget {
   final Group group;
@@ -19,8 +26,6 @@ class GroupDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final members = ref.watch(Providers.nakamaGroupUsersProvider(group.id));
-
     return GGScaffoldWidget(
       child: Center(
         child: Column(
@@ -35,26 +40,26 @@ class GroupDetailsScreen extends ConsumerWidget {
               group.description ?? 'No Description...',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Expanded(
-              child: members.when(
-                data: (data) => data.isEmpty
-                    ? const Center(
-                        child: Text('No Members'),
-                      )
-                    : ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (c, i) => GroupMemberDetailsWidget(
-                          groupUser: data[i],
-                        ),
-                      ),
-                error: (err, stack) => Center(
-                  child: Text(
-                    err.toString(),
-                  ),
-                ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-              ),
-            ),
+            // Expanded(
+            //   child: members.when(
+            //     data: (data) => data.isEmpty
+            //         ? const Center(
+            //             child: Text('No Members'),
+            //           )
+            //         : ListView.builder(
+            //             itemCount: data.length,
+            //             itemBuilder: (c, i) => GroupMemberDetailsWidget(
+            //               groupUser: data[i],
+            //             ),
+            //           ),
+            //     error: (err, stack) => Center(
+            //       child: Text(
+            //         err.toString(),
+            //       ),
+            //     ),
+            //     loading: () => const Center(child: CircularProgressIndicator()),
+            //   ),
+            // ),
             GGButtonWidget(
               title: 'Back',
               onPressed: () => context.pop(),

@@ -7,8 +7,6 @@ import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
-// ignore: implementation_imports, depend_on_referenced_packages
-import 'package:grpc/src/shared/status.dart';
 
 class EditProfileScreen extends ConsumerWidget {
   final _controller = TextEditingController();
@@ -21,17 +19,13 @@ class EditProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final sessionData = ref.watch(Providers.nakamaSessionDataProvider);
+    final accountAysnc = ref.watch(Providers.nakamaAccountProvider);
 
     return GGScaffoldWidget(
       child: Center(
-        child: sessionData.when(
-          data: (data) {
-            if (data == null) {
-              throw Exception('Data Null');
-            }
-
-            _controller.text = data.username;
+        child: accountAysnc.when(
+          data: (account) {
+            _controller.text = account.username;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -97,24 +91,21 @@ class EditProfileScreen extends ConsumerWidget {
 
   void _attemptSaveUsername(BuildContext context, WidgetRef ref) async {
     try {
-      await ref
-          .read(Providers.nakamaSessionDataProvider.notifier)
-          .updateUsername(
-            newUsername: _controller.text,
-          );
+      // await ref
+      //     .read(Providers.nakamaSessionDataProvider.notifier)
+      //     .updateUsername(
+      //       newUsername: _controller.text,
+      //     );
 
-      if (!context.mounted) return;
+      // if (!context.mounted) return;
 
-      ModalService.showSuccess(
-        title: 'Username has been updated.',
-      );
+      // ModalService.showSuccess(
+      //   title: 'Username has been updated.',
+      // );
 
-      context.pop();
+      // context.pop();
     } catch (e) {
-      final error = e as GrpcError;
-      ModalService.showError(
-        title: error.message ?? 'Unknown Error',
-      );
+      ModalService.showError(title: e.toString());
     }
   }
 }

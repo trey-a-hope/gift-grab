@@ -33,87 +33,89 @@ class _GroupsScreenState extends ConsumerState<GroupsScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final session = ref.read(Providers.nakamaSessionDataProvider);
-    if (!session.hasValue) {
-      return const CircularProgressIndicator();
-    }
+    throw UnimplementedError();
 
-    final groups = ref.watch(Providers.nakamaGroupsProvider);
-    final myUserGroups = ref.watch(
-      Providers.nakamaUserGroupsProvider(session.value!.uid),
-    );
+    // final session = ref.read(Providers.nakamaSessionDataProvider);
+    // if (!session.hasValue) {
+    //   return const CircularProgressIndicator();
+    // }
 
-    String? currentUid = session.value?.uid;
+    // final groups = ref.watch(Providers.nakamaGroupsProvider);
+    // final myUserGroups = ref.watch(
+    //   Providers.nakamaUserGroupsProvider(session.value!.uid),
+    // );
 
-    return GGScaffoldWidget(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TabBar(
-              labelColor: Colors.white,
-              labelStyle: theme.textTheme.displayLarge,
-              indicatorColor: Colors.white,
-              unselectedLabelColor: Colors.grey,
-              controller: _tabController,
-              tabs: const [
-                Text('All Groups'),
-                Text('My Groups'),
-              ],
-            ),
-            if (currentUid != null) ...[
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    groups.when(
-                      data: (list) => GroupDetailsListWidget(
-                        groups: list,
-                        currentUid: currentUid,
-                      ),
-                      error: (err, stack) => Text(
-                        err.toString(),
-                      ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                    myUserGroups.when(
-                      data: (myUserGroups) {
-                        final myGroups = myUserGroups
-                            .map((myUserGroup) => myUserGroup.group)
-                            .toList();
-                        return GroupDetailsListWidget(
-                          groups: myGroups,
-                          currentUid: currentUid,
-                        );
-                      },
-                      error: (err, stack) => Text(
-                        err.toString(),
-                      ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            const Gap(20),
-            GGButtonWidget(
-              title: 'Create Group',
-              onPressed: () => context.goNamed(
-                Globals.routes.createGroup,
-              ),
-            ),
-            const Gap(20),
-            GGButtonWidget(
-              title: 'Back',
-              onPressed: () => context.pop(),
-            ),
-          ],
-        ),
-      ),
-    );
+    // String? currentUid = session.value?.uid;
+
+    // return GGScaffoldWidget(
+    //   child: Center(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         TabBar(
+    //           labelColor: Colors.white,
+    //           labelStyle: theme.textTheme.displayLarge,
+    //           indicatorColor: Colors.white,
+    //           unselectedLabelColor: Colors.grey,
+    //           controller: _tabController,
+    //           tabs: const [
+    //             Text('All Groups'),
+    //             Text('My Groups'),
+    //           ],
+    //         ),
+    //         if (currentUid != null) ...[
+    //           Expanded(
+    //             child: TabBarView(
+    //               controller: _tabController,
+    //               children: [
+    //                 groups.when(
+    //                   data: (list) => GroupDetailsListWidget(
+    //                     groups: list,
+    //                     currentUid: currentUid,
+    //                   ),
+    //                   error: (err, stack) => Text(
+    //                     err.toString(),
+    //                   ),
+    //                   loading: () => const Center(
+    //                     child: CircularProgressIndicator(),
+    //                   ),
+    //                 ),
+    //                 myUserGroups.when(
+    //                   data: (myUserGroups) {
+    //                     final myGroups = myUserGroups
+    //                         .map((myUserGroup) => myUserGroup.group)
+    //                         .toList();
+    //                     return GroupDetailsListWidget(
+    //                       groups: myGroups,
+    //                       currentUid: currentUid,
+    //                     );
+    //                   },
+    //                   error: (err, stack) => Text(
+    //                     err.toString(),
+    //                   ),
+    //                   loading: () => const Center(
+    //                     child: CircularProgressIndicator(),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //         const Gap(20),
+    //         GGButtonWidget(
+    //           title: 'Create Group',
+    //           onPressed: () => context.goNamed(
+    //             Globals.routes.createGroup,
+    //           ),
+    //         ),
+    //         const Gap(20),
+    //         GGButtonWidget(
+    //           title: 'Back',
+    //           onPressed: () => context.pop(),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

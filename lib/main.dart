@@ -6,7 +6,6 @@ import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/util/lifecycle_event_handler.dart';
-import 'package:nakama/nakama.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:toastification/toastification.dart';
 
@@ -16,9 +15,7 @@ void main() async {
   /// Listens for changes to app lifecycle.
   WidgetsBinding.instance.addObserver(
     LifecycleEventHandler(
-      onDetach_: () async {
-        NakamaWebsocketClient.instance.close();
-      },
+      onDetach_: () async {},
       onHide_: () async {
         debugPrint('onHide_');
       },
@@ -45,17 +42,6 @@ void main() async {
         return AppExitResponse.exit;
       },
     ),
-  );
-
-  /// Intialize Hive and opens the session box.
-  await HiveSessionService.init();
-
-  /// Set Nakama Client config.
-  getNakamaClient(
-    host: Globals.nakamaConfig.host,
-    ssl: Globals.nakamaConfig.ssl,
-    serverKey: Globals.nakamaConfig.serverKey,
-    httpPort: Globals.nakamaConfig.httpPort,
   );
 
   runApp(

@@ -15,13 +15,13 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
 
   Future<bool> isAuthenticated() async {
     try {
-      final refreshToken = await storage.read(key: 'refreshToken');
-      if (refreshToken == null) {
+      final token = await storage.read(key: 'token');
+      if (token == null) {
         return false;
       }
 
       // Check if token is expired by decoding JWT
-      final jwt = JwtDecoder.decode(refreshToken);
+      final jwt = JwtDecoder.decode(token);
       final expiration = DateTime.fromMillisecondsSinceEpoch(jwt['exp'] * 1000);
 
       if (DateTime.now().isAfter(expiration)) {

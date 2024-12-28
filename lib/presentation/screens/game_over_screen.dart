@@ -16,9 +16,9 @@ class GameOverScreen extends ConsumerWidget {
     final giftGrabFlameGame = ref.read(Providers.giftGrabFlameGameProvider);
 
     // Write score to leaderboard.
-    ref
-        .read(Providers.nakamaLeaderboardProvider.notifier)
-        .writeLeaderboardRecord(score: giftGrabFlameGame.score);
+    // ref
+    //     .read(Providers.nakamaLeaderboardProvider.notifier)
+    //     .writeLeaderboardRecord(score: giftGrabFlameGame.score);
 
     final theme = Theme.of(context);
     return GGScaffoldWidget(
