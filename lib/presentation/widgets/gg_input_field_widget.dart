@@ -44,7 +44,7 @@ class _GGInputFieldWidgetState extends State<GGInputFieldWidget> {
         ),
         hintText: widget.hintText,
         filled: true,
-        fillColor: Colors.black.withOpacity(0.1),
+        fillColor: Colors.black.withValues(alpha: 0.1),
       ),
     );
   }

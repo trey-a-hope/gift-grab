@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gift_grab/data/services/hive_session_service.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/util/lifecycle_event_handler.dart';
