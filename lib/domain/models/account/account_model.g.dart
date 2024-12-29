@@ -11,8 +11,8 @@ _$AccountModelImpl _$$AccountModelImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       email: json['email'] as String,
       username: json['username'] as String,
-      create_time: json['create_time'] as String,
-      update_time: json['update_time'] as String?,
+      createTime: json['create_time'] as String,
+      updateTime: json['update_time'] as String?,
     );
 
 Map<String, dynamic> _$$AccountModelImplToJson(_$AccountModelImpl instance) =>
@@ -20,6 +20,6 @@ Map<String, dynamic> _$$AccountModelImplToJson(_$AccountModelImpl instance) =>
       'id': instance.id,
       'email': instance.email,
       'username': instance.username,
-      'create_time': instance.create_time,
-      'update_time': instance.update_time,
+      'create_time': instance.createTime,
+      'update_time': instance.updateTime,
     };

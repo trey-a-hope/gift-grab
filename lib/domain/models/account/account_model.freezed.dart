@@ -23,8 +23,10 @@ mixin _$AccountModel {
   String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
-  String get create_time => throw _privateConstructorUsedError;
-  String? get update_time => throw _privateConstructorUsedError;
+  @JsonKey(name: 'create_time')
+  String get createTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'update_time')
+  String? get updateTime => throw _privateConstructorUsedError;
 
   /// Serializes this AccountModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,8 +48,8 @@ abstract class $AccountModelCopyWith<$Res> {
       {String id,
       String email,
       String username,
-      String create_time,
-      String? update_time});
+      @JsonKey(name: 'create_time') String createTime,
+      @JsonKey(name: 'update_time') String? updateTime});
 }
 
 /// @nodoc
@@ -68,8 +70,8 @@ class _$AccountModelCopyWithImpl<$Res, $Val extends AccountModel>
     Object? id = null,
     Object? email = null,
     Object? username = null,
-    Object? create_time = null,
-    Object? update_time = freezed,
+    Object? createTime = null,
+    Object? updateTime = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -84,13 +86,13 @@ class _$AccountModelCopyWithImpl<$Res, $Val extends AccountModel>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      create_time: null == create_time
-          ? _value.create_time
-          : create_time // ignore: cast_nullable_to_non_nullable
+      createTime: null == createTime
+          ? _value.createTime
+          : createTime // ignore: cast_nullable_to_non_nullable
               as String,
-      update_time: freezed == update_time
-          ? _value.update_time
-          : update_time // ignore: cast_nullable_to_non_nullable
+      updateTime: freezed == updateTime
+          ? _value.updateTime
+          : updateTime // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -108,8 +110,8 @@ abstract class _$$AccountModelImplCopyWith<$Res>
       {String id,
       String email,
       String username,
-      String create_time,
-      String? update_time});
+      @JsonKey(name: 'create_time') String createTime,
+      @JsonKey(name: 'update_time') String? updateTime});
 }
 
 /// @nodoc
@@ -128,8 +130,8 @@ class __$$AccountModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? email = null,
     Object? username = null,
-    Object? create_time = null,
-    Object? update_time = freezed,
+    Object? createTime = null,
+    Object? updateTime = freezed,
   }) {
     return _then(_$AccountModelImpl(
       id: null == id
@@ -144,13 +146,13 @@ class __$$AccountModelImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      create_time: null == create_time
-          ? _value.create_time
-          : create_time // ignore: cast_nullable_to_non_nullable
+      createTime: null == createTime
+          ? _value.createTime
+          : createTime // ignore: cast_nullable_to_non_nullable
               as String,
-      update_time: freezed == update_time
-          ? _value.update_time
-          : update_time // ignore: cast_nullable_to_non_nullable
+      updateTime: freezed == updateTime
+          ? _value.updateTime
+          : updateTime // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -163,8 +165,8 @@ class _$AccountModelImpl implements _AccountModel {
       {required this.id,
       required this.email,
       required this.username,
-      required this.create_time,
-      required this.update_time});
+      @JsonKey(name: 'create_time') required this.createTime,
+      @JsonKey(name: 'update_time') required this.updateTime});
 
   factory _$AccountModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AccountModelImplFromJson(json);
@@ -176,13 +178,15 @@ class _$AccountModelImpl implements _AccountModel {
   @override
   final String username;
   @override
-  final String create_time;
+  @JsonKey(name: 'create_time')
+  final String createTime;
   @override
-  final String? update_time;
+  @JsonKey(name: 'update_time')
+  final String? updateTime;
 
   @override
   String toString() {
-    return 'AccountModel(id: $id, email: $email, username: $username, create_time: $create_time, update_time: $update_time)';
+    return 'AccountModel(id: $id, email: $email, username: $username, createTime: $createTime, updateTime: $updateTime)';
   }
 
   @override
@@ -194,16 +198,16 @@ class _$AccountModelImpl implements _AccountModel {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.create_time, create_time) ||
-                other.create_time == create_time) &&
-            (identical(other.update_time, update_time) ||
-                other.update_time == update_time));
+            (identical(other.createTime, createTime) ||
+                other.createTime == createTime) &&
+            (identical(other.updateTime, updateTime) ||
+                other.updateTime == updateTime));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, email, username, create_time, update_time);
+      Object.hash(runtimeType, id, email, username, createTime, updateTime);
 
   /// Create a copy of AccountModel
   /// with the given fields replaced by the non-null parameter values.
@@ -223,11 +227,12 @@ class _$AccountModelImpl implements _AccountModel {
 
 abstract class _AccountModel implements AccountModel {
   const factory _AccountModel(
-      {required final String id,
-      required final String email,
-      required final String username,
-      required final String create_time,
-      required final String? update_time}) = _$AccountModelImpl;
+          {required final String id,
+          required final String email,
+          required final String username,
+          @JsonKey(name: 'create_time') required final String createTime,
+          @JsonKey(name: 'update_time') required final String? updateTime}) =
+      _$AccountModelImpl;
 
   factory _AccountModel.fromJson(Map<String, dynamic> json) =
       _$AccountModelImpl.fromJson;
@@ -239,9 +244,11 @@ abstract class _AccountModel implements AccountModel {
   @override
   String get username;
   @override
-  String get create_time;
+  @JsonKey(name: 'create_time')
+  String get createTime;
   @override
-  String? get update_time;
+  @JsonKey(name: 'update_time')
+  String? get updateTime;
 
   /// Create a copy of AccountModel
   /// with the given fields replaced by the non-null parameter values.

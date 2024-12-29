@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/providers.dart';
-import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
@@ -14,7 +14,7 @@ class LeaderboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    return Center(child: Text('hello'));
     // final nakamaLeaderboardProvider =
     //     ref.watch(Providers.nakamaLeaderboardProvider);
 
@@ -24,6 +24,7 @@ class LeaderboardScreen extends ConsumerWidget {
     //   child: SafeArea(
     //     child: Column(
     //       mainAxisAlignment: MainAxisAlignment.center,
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
     //       children: [
     //         Text(
     //           'Weekly Leaderboard',
@@ -54,7 +55,7 @@ class LeaderboardScreen extends ConsumerWidget {
 
     //               return ListView.builder(
     //                 itemCount: leaderboardRecords.length,
-    //                 itemBuilder: ((_, index) => LeaderboardRecordWidget(
+    //                 itemBuilder: ((context, index) => LeaderboardRecordWidget(
     //                       leaderboardRecord: leaderboardRecords[index],
     //                     )),
     //               );

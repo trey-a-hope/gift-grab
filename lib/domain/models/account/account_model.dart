@@ -1,10 +1,3 @@
-// class GetAccountResponse {
-//   final String id;
-//   final String email;
-//   final String username;
-//   final String create_time;
-//   final String update_time;
-// }
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'account_model.freezed.dart';
@@ -20,8 +13,8 @@ class AccountModel with _$AccountModel {
     required String id,
     required String email,
     required String username,
-    required String create_time,
-    required String? update_time,
+    @JsonKey(name: 'create_time') required String createTime,
+    @JsonKey(name: 'update_time') required String? updateTime,
   }) = _AccountModel;
 
   /// Creates a AccountModel from Json map
