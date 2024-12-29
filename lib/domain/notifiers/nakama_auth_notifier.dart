@@ -11,7 +11,13 @@ class NakamaAuthNotifier extends AsyncNotifier<bool> {
   @override
   FutureOr<bool> build() async => isAuthenticated();
 
-  Future<void> check() async => state = AsyncData(await isAuthenticated());
+  Future<void> check() async {
+    final newAuthState = await isAuthenticated();
+    if (state.value != newAuthState) {
+      // Only update if changed.
+      state = AsyncData(newAuthState);
+    }
+  }
 
   Future<bool> isAuthenticated() async {
     try {
