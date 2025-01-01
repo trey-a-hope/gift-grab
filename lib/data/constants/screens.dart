@@ -1,1 +1,1 @@
-enum Screens { main, gameOver, login, leaderboard }
+enum Screens { main, gameOver, login }

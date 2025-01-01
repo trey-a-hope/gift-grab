@@ -3,7 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
-import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
+import 'package:gift_grab/gift_grab_game.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 
 import 'flame_component.dart';
@@ -17,7 +17,7 @@ enum MovementState {
 }
 
 class SantaComponent extends SpriteGroupComponent<MovementState>
-    with HasGameRef<GiftGrabFlameGame>, CollisionCallbacks {
+    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   /// Height of the sprite.
   final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
 

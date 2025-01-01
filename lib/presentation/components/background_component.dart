@@ -1,9 +1,9 @@
 import 'package:flame/components.dart';
-import 'package:gift_grab/presentation/games/gift_grab_flame_game.dart';
+import 'package:gift_grab/gift_grab_game.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 
 class BackgroundComponent extends SpriteComponent
-    with HasGameRef<GiftGrabFlameGame> {
+    with HasGameRef<GiftGrabGame> {
   @override
   Future<void> onLoad() async {
     await super.onLoad();

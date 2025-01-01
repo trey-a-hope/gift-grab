@@ -16,15 +16,34 @@ import 'dart:math';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/screens.dart';
 
-class GiftGrabFlameGame extends FlameGame
-    with DragCallbacks, HasCollisionDetection {
-  GiftGrabFlameGame();
+class GameConfig {
+  // Timing
+  static const int roundTime = 30;
+  static const int flameTime = 10;
 
-  /// The Santa character who collects the gifts.
-  final SantaComponent _santaComponent = SantaComponent(joystick: joystick);
+  // UI Positions
+  static final Vector2 scorePosition = Vector2(40, 50);
+  static final Vector2 timerPosition = Vector2(40, 100);
+  static final Vector2 flamePosition = Vector2(200, 200);
+  static final Vector2 icePosition1 = Vector2(200, 200);
+  static final Vector2 icePosition2 =
+      Vector2(600, 600); // Assuming size.x - 200
 
-  /// Background of snow landscape.
-  final BackgroundComponent _backgroundComponent = BackgroundComponent();
+  // Text Styles
+  static TextStyle get scoreStyle => TextStyle(
+        color: BasicPalette.white.color,
+        fontSize: Globals.isTablet ? 50 : 25,
+      );
+}
+
+class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
+  // Components
+  final SantaComponent _santaComponent;
+  final BackgroundComponent _backgroundComponent;
+
+  GiftGrabGame()
+      : _santaComponent = SantaComponent(joystick: joystick),
+        _backgroundComponent = BackgroundComponent() {}
 
   /// The first gift to collect.
   final GiftComponent _giftComponent = GiftComponent();
@@ -38,9 +57,9 @@ class GiftGrabFlameGame extends FlameGame
   int score = 0;
 
   /// Total seconds for each game.
-  static int _remainingTime = Globals.timeLimits.round;
+  static int _remainingTime = GameConfig.roundTime;
 
-  int _flameRemainingTime = Globals.timeLimits.flame;
+  int _flameRemainingTime = GameConfig.roundTime;
 
   /// Timer for game.
   late Timer gameTimer;
@@ -211,8 +230,8 @@ class GiftGrabFlameGame extends FlameGame
     _santaComponent.resetSpeed();
 
     // Timers
-    _remainingTime = Globals.timeLimits.round;
-    _flameRemainingTime = Globals.timeLimits.flame;
+    _remainingTime = GameConfig.roundTime;
+    _flameRemainingTime = GameConfig.flameTime;
 
     // Time Appearences
     _flameTimeAppearance = _getRandomInt(

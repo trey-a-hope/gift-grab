@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/confirmation_widget.dart';
 import 'package:gift_grab/presentation/widgets/input_match_confirmation_widget.dart';
 import 'package:toastification/toastification.dart';
 
@@ -59,21 +58,6 @@ class ModalService {
       closeOnClick: true,
     );
   }
-
-  static Future<bool?> showConfirmation({
-    required BuildContext context,
-    required String title,
-    required String message,
-  }) async =>
-      await showDialog<bool>(
-        useRootNavigator: false,
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) => ConfirmationWidget(
-          title: title,
-          message: message,
-        ),
-      );
 
   static Future<bool?> showInputMatchConfirmation({
     required BuildContext context,

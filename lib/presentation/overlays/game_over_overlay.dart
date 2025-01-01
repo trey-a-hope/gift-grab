@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/screens.dart';
 import 'package:go_router/go_router.dart';
 
-class GameOverScreen extends ConsumerWidget {
-  const GameOverScreen({super.key});
+class GameOverOverlay extends ConsumerWidget {
+  final GiftGrabGame game;
+
+  const GameOverOverlay({
+    required this.game,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Get the game instance.
-    final giftGrabFlameGame = ref.read(Providers.giftGrabFlameGameProvider);
-
-    // Write score to leaderboard.
-    ref
-        .read(Providers.nakamaLeaderboardProvider.notifier)
-        .writeLeaderboardRecord(score: giftGrabFlameGame.score);
-
     final theme = Theme.of(context);
     return GGScaffoldWidget(
       child: Center(
@@ -40,7 +37,7 @@ class GameOverScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Text(
-                'Score: ${giftGrabFlameGame.score}',
+                'Score: ${game.score}',
                 style: theme.textTheme.displayLarge!.copyWith(
                   fontSize: Globals.isTablet
                       ? theme.textTheme.displayLarge!.fontSize! * 3
@@ -53,9 +50,9 @@ class GameOverScreen extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  giftGrabFlameGame.removeMenu(menu: Screens.gameOver);
-                  giftGrabFlameGame.reset();
-                  giftGrabFlameGame.resumeEngine();
+                  game.removeMenu(menu: Screens.gameOver);
+                  game.reset();
+                  game.resumeEngine();
                 },
                 child: Text(
                   'Play Again?',
@@ -71,9 +68,9 @@ class GameOverScreen extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  giftGrabFlameGame.removeMenu(menu: Screens.gameOver);
-                  giftGrabFlameGame.reset();
-                  giftGrabFlameGame.resumeEngine();
+                  game.removeMenu(menu: Screens.gameOver);
+                  game.reset();
+                  game.resumeEngine();
 
                   context.pop();
                 },

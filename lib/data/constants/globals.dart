@@ -37,20 +37,12 @@ class Globals {
 class _Routes {
   final String main = 'main';
   final String game = 'game';
-  final String login = 'login';
-  final String leaderboard = 'leaderboard';
-  final String settings = 'settings';
-  final String editProfile = 'edit_profile';
-  final String groups = 'groups';
-  final String pickAvatar = 'pick_avatar';
-  final String createGroup = 'create_group';
-  final String groupDetails = 'group_details';
 }
 
 class _TimeLimits {
-  final int round = 30;
+  // final int round = 30;
   final int frozen = 3;
-  final int flame = 10;
+  // final int flame = 10;
   final int cookie = 10;
 }
 
