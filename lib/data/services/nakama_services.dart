@@ -20,7 +20,7 @@ class _NakamaAccountService {
   }) async {
     try {
       final res = await dio.get(
-        '${AppConfig.baseUrl}/account?server_string=${AppConfig.clientConfig.toString()}&session_token=${sessionToken}',
+        '${AppConfig.baseUrl}/account?api_key=${AppConfig.apiKey}&session_token=$sessionToken',
       );
 
       final account = AccountModel.fromJson(res.data);
@@ -40,10 +40,11 @@ class _NakamaAuthService {
   }) async {
     try {
       final res = await dio.post(
-        '${AppConfig.baseUrl}/login-email?server_string=${AppConfig.clientConfig.toString()}',
+        '${AppConfig.baseUrl}/authenticate/email?api_key=${AppConfig.apiKey}',
         data: {
           "email": email,
           "password": password,
+          "create": false,
         },
       );
 
@@ -63,11 +64,12 @@ class _NakamaAuthService {
   }) async {
     try {
       final res = await dio.post(
-        '${AppConfig.baseUrl}/signu-email?server_string=${AppConfig.clientConfig.toString()}',
+        '${AppConfig.baseUrl}/authenticate/email?api_key=${AppConfig.apiKey}',
         data: {
           "email": email,
           "password": password,
-          'username': username,
+          "create": true,
+          "username": username,
         },
       );
 
@@ -92,7 +94,7 @@ class _NakamaLeaderboardService {
   }) async {
     try {
       final res = await dio.get(
-        '${AppConfig.baseUrl}/leaderboard?server_string=${AppConfig.clientConfig.toString()}&limit=$limit&session_token=$sessionToken&leaderboard_id=$_leaderboardId',
+        '${AppConfig.baseUrl}/leaderboard?limit=$limit&session_token=$sessionToken&leaderboard_id=$_leaderboardId',
       );
 
       debugPrint(res.toString());

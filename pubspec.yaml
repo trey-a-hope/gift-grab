@@ -15,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flame: ^1.4.0
   flame_audio: ^2.0.5
+  flutter_dotenv: ^5.1.0
   flutter_login: ^5.0.0
   flutter_riverpod: ^2.3.6
   gap: ^3.0.1
@@ -48,3 +49,4 @@ flutter:
     - assets/audio/
     - assets/images/
     - assets/lotties/
+    - .env

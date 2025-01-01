@@ -25,7 +25,7 @@ class EditProfileScreen extends ConsumerWidget {
       child: Center(
         child: accountAysnc.when(
           data: (account) {
-            _controller.text = account.username;
+            _controller.text = account.user.username;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gift_grab/domain/models/user/user_model.dart';
 
 part 'account_model.freezed.dart';
 part 'account_model.g.dart';
@@ -10,11 +11,8 @@ part 'account_model.g.dart';
 class AccountModel with _$AccountModel {
   /// {@macro account_model}
   const factory AccountModel({
-    required String id,
     required String email,
-    required String username,
-    @JsonKey(name: 'create_time') required String createTime,
-    @JsonKey(name: 'update_time') required String? updateTime,
+    required UserModel user,
   }) = _AccountModel;
 
   /// Creates a AccountModel from Json map

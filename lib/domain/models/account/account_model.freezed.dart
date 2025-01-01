@@ -20,13 +20,8 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AccountModel {
-  String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
-  @JsonKey(name: 'create_time')
-  String get createTime => throw _privateConstructorUsedError;
-  @JsonKey(name: 'update_time')
-  String? get updateTime => throw _privateConstructorUsedError;
+  UserModel get user => throw _privateConstructorUsedError;
 
   /// Serializes this AccountModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,12 +39,9 @@ abstract class $AccountModelCopyWith<$Res> {
           AccountModel value, $Res Function(AccountModel) then) =
       _$AccountModelCopyWithImpl<$Res, AccountModel>;
   @useResult
-  $Res call(
-      {String id,
-      String email,
-      String username,
-      @JsonKey(name: 'create_time') String createTime,
-      @JsonKey(name: 'update_time') String? updateTime});
+  $Res call({String email, UserModel user});
+
+  $UserModelCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -67,34 +59,29 @@ class _$AccountModelCopyWithImpl<$Res, $Val extends AccountModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? email = null,
-    Object? username = null,
-    Object? createTime = null,
-    Object? updateTime = freezed,
+    Object? user = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      createTime: null == createTime
-          ? _value.createTime
-          : createTime // ignore: cast_nullable_to_non_nullable
-              as String,
-      updateTime: freezed == updateTime
-          ? _value.updateTime
-          : updateTime // ignore: cast_nullable_to_non_nullable
-              as String?,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
     ) as $Val);
+  }
+
+  /// Create a copy of AccountModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res> get user {
+    return $UserModelCopyWith<$Res>(_value.user, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
   }
 }
 
@@ -106,12 +93,10 @@ abstract class _$$AccountModelImplCopyWith<$Res>
       __$$AccountModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String email,
-      String username,
-      @JsonKey(name: 'create_time') String createTime,
-      @JsonKey(name: 'update_time') String? updateTime});
+  $Res call({String email, UserModel user});
+
+  @override
+  $UserModelCopyWith<$Res> get user;
 }
 
 /// @nodoc
@@ -127,33 +112,18 @@ class __$$AccountModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? email = null,
-    Object? username = null,
-    Object? createTime = null,
-    Object? updateTime = freezed,
+    Object? user = null,
   }) {
     return _then(_$AccountModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      createTime: null == createTime
-          ? _value.createTime
-          : createTime // ignore: cast_nullable_to_non_nullable
-              as String,
-      updateTime: freezed == updateTime
-          ? _value.updateTime
-          : updateTime // ignore: cast_nullable_to_non_nullable
-              as String?,
+      user: null == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
     ));
   }
 }
@@ -161,32 +131,19 @@ class __$$AccountModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AccountModelImpl implements _AccountModel {
-  const _$AccountModelImpl(
-      {required this.id,
-      required this.email,
-      required this.username,
-      @JsonKey(name: 'create_time') required this.createTime,
-      @JsonKey(name: 'update_time') required this.updateTime});
+  const _$AccountModelImpl({required this.email, required this.user});
 
   factory _$AccountModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AccountModelImplFromJson(json);
 
   @override
-  final String id;
-  @override
   final String email;
   @override
-  final String username;
-  @override
-  @JsonKey(name: 'create_time')
-  final String createTime;
-  @override
-  @JsonKey(name: 'update_time')
-  final String? updateTime;
+  final UserModel user;
 
   @override
   String toString() {
-    return 'AccountModel(id: $id, email: $email, username: $username, createTime: $createTime, updateTime: $updateTime)';
+    return 'AccountModel(email: $email, user: $user)';
   }
 
   @override
@@ -194,20 +151,13 @@ class _$AccountModelImpl implements _AccountModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccountModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.createTime, createTime) ||
-                other.createTime == createTime) &&
-            (identical(other.updateTime, updateTime) ||
-                other.updateTime == updateTime));
+            (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, email, username, createTime, updateTime);
+  int get hashCode => Object.hash(runtimeType, email, user);
 
   /// Create a copy of AccountModel
   /// with the given fields replaced by the non-null parameter values.
@@ -227,28 +177,16 @@ class _$AccountModelImpl implements _AccountModel {
 
 abstract class _AccountModel implements AccountModel {
   const factory _AccountModel(
-          {required final String id,
-          required final String email,
-          required final String username,
-          @JsonKey(name: 'create_time') required final String createTime,
-          @JsonKey(name: 'update_time') required final String? updateTime}) =
-      _$AccountModelImpl;
+      {required final String email,
+      required final UserModel user}) = _$AccountModelImpl;
 
   factory _AccountModel.fromJson(Map<String, dynamic> json) =
       _$AccountModelImpl.fromJson;
 
   @override
-  String get id;
-  @override
   String get email;
   @override
-  String get username;
-  @override
-  @JsonKey(name: 'create_time')
-  String get createTime;
-  @override
-  @JsonKey(name: 'update_time')
-  String? get updateTime;
+  UserModel get user;
 
   /// Create a copy of AccountModel
   /// with the given fields replaced by the non-null parameter values.

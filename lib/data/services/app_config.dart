@@ -1,17 +1,19 @@
-import 'package:gift_grab/domain/models/client_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConfig {
-  static const isDevMode = true;
+  static const isDevMode = false;
+
+  static late String apiKey;
+
+  static Future<void> init() async {
+    await dotenv.load();
+
+    apiKey =
+        isDevMode ? dotenv.env['API_KEY_DEV']! : dotenv.env['API_KEY_PROD']!;
+  }
 
   static const baseUrlDev = 'http://127.0.0.1:8000';
-  static const baseUrlProd = 'https://apikama.onrender.com/';
+  static const baseUrlProd = 'https://apikama.onrender.com';
 
   static String get baseUrl => isDevMode ? baseUrlDev : baseUrlProd;
-
-  static final clientConfig = ClientConfig(
-    host: isDevMode ? '127.0.0.1' : '24.144.85.68',
-    ssl: false,
-    serverKey: 'defaultkey',
-    httpPort: 7350,
-  );
 }

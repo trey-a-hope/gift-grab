@@ -57,7 +57,7 @@ class MainMenuScreen extends ConsumerWidget {
             const Gap(20),
             accountAsync.when(
               data: (account) => Text(
-                'Welcome back ${account.username}',
+                'Welcome back ${account.user.username}',
                 style: theme.textTheme.displayLarge!.copyWith(
                   fontSize: Globals.isTablet
                       ? theme.textTheme.bodyLarge!.fontSize! * 2
