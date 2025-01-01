@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -6,6 +7,7 @@ import 'package:gift_grab/data/services/app_config.dart';
 import 'package:gift_grab/domain/providers.dart';
 import 'package:gift_grab/util/lifecycle_event_handler.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
