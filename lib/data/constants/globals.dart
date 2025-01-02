@@ -24,7 +24,7 @@ class Globals {
   static const String flameSprite = 'flame.png';
   static const String cookieSprite = 'cookie.png';
 
-  static late bool isTablet;
+  static bool isTablet = true; // TODO: Handle this check...
 
   /// One hour from now duration; used for token expiration.
   static final inOneHour = DateTime.now().add(
@@ -36,6 +36,7 @@ class Globals {
 
 class _Routes {
   final String main = 'main';
+  final String login = 'login';
   final String game = 'game';
 }
 

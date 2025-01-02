@@ -10,7 +10,6 @@ import 'package:gift_grab/presentation/components/hud_text_components.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/domain/blocs/santa/santa_state.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
-import 'package:gift_grab/presentation/components/flame_component.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 
 class GameStateHandler extends Component

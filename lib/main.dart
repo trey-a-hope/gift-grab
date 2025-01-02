@@ -1,50 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
-import 'package:gift_grab/domain/providers.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  getNakamaClient(
+    host: '127.0.0.1',
+    ssl: false,
+    serverKey: 'defaultkey',
+    httpPort: 7350,
+  );
+
   runApp(
-    ProviderScope(
+    BlocProvider(
+      create: (context) => AuthBloc()
+        ..add(
+          CheckAuthStatusEvent(),
+        ),
       child: ToastificationWrapper(
-        child: MaterialApp(
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           theme: AppThemes.lightTheme,
           darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.system,
-          debugShowCheckedModeBanner: false,
-          home: const GiftGrabApp(),
+          themeMode: ThemeMode.dark,
+          title: 'Gift Grab',
+          routerConfig: appRoutes(),
         ),
       ),
     ),
+
+    // ToastificationWrapper(
+    //   child: MaterialApp(
+    //     theme: AppThemes.lightTheme,
+    //     darkTheme: AppThemes.darkTheme,
+    //     themeMode: ThemeMode.system,
+    //     debugShowCheckedModeBanner: false,
+    //     home: const GiftGrabApp(),
+    //   ),
+    // ),
   );
-}
-
-class GiftGrabApp extends ConsumerWidget {
-  const GiftGrabApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Sets the global isTablet variable based on the device type/dimensions.
-    checkDeviceType(context);
-
-    // Listen to route changes.
-    final router = ref.watch(Providers.routerProvider);
-
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: AppThemes.lightTheme,
-      darkTheme: AppThemes.darkTheme,
-      themeMode: ThemeMode.dark,
-      title: 'Gift Grab',
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      routeInformationProvider: router.routeInformationProvider,
-    );
-  }
 }
 
 /// Sets the global isTablet variable based on the device type/dimensions.
