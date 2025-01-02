@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:nakama/nakama.dart';
+import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 
 class LeaderboardRecordWidget extends StatelessWidget {
-  final LeaderboardRecord leaderboardRecord;
+  final LeaderboardEntry entry;
 
   final double _avatarRadius = 30;
 
   const LeaderboardRecordWidget({
-    required this.leaderboardRecord,
+    required this.entry,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final ownerId = leaderboardRecord.ownerId;
-    if (ownerId == null) {
-      throw Exception('Rank Does Not Have Owner ID...');
-    }
-
     return ListTile(
       leading: CircleAvatar(
         radius: _avatarRadius,
         backgroundColor: Colors.blue,
         child: Text(
-          '${leaderboardRecord.rank}',
+          '${entry.record.rank}',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),
@@ -37,7 +32,7 @@ class LeaderboardRecordWidget extends StatelessWidget {
         height: 50,
         child: Center(
           child: Text(
-            'UNKNOWN USER - ${leaderboardRecord.score}',
+            '${entry.user.username} - ${entry.record.score}',
             style: Globals.isTablet
                 ? Theme.of(context).textTheme.headlineLarge!.copyWith(
                       color: Colors.black,
@@ -52,8 +47,8 @@ class LeaderboardRecordWidget extends StatelessWidget {
       ),
       trailing: CircleAvatar(
         radius: _avatarRadius,
-        backgroundImage: const NetworkImage(
-          Globals.emptyProfile,
+        backgroundImage: NetworkImage(
+          entry.user.avatarUrl ?? Globals.emptyProfile,
         ),
       ),
     );

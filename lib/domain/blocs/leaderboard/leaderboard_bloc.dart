@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:nakama/nakama.dart';
 
 part 'leaderboard_event.dart';
@@ -31,7 +32,33 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
           leaderboardName: _leaderboardName,
         );
 
-        emit(LeaderboardLoaded(entries: leaderboard.records ?? []));
+        if (leaderboard.records == null) {
+          emit(LeaderboardLoaded(entries: []));
+        } else {
+          final records = leaderboard.records!;
+
+          final ownerIds = records
+              .where((record) => record.ownerId != null)
+              .map((record) => record.ownerId as String)
+              .toList();
+
+          final users = await getNakamaClient().getUsers(
+            session: session,
+            ids: ownerIds,
+          );
+
+          final results =
+              records.where((record) => record.ownerId != null).map((record) {
+            final user = users.firstWhere(
+              (u) => u.id == record.ownerId,
+              orElse: () =>
+                  throw Exception('No user found for ID: ${record.ownerId}'),
+            );
+            return LeaderboardEntry(record: record, user: user);
+          }).toList();
+
+          emit(LeaderboardLoaded(entries: results));
+        }
       }
     } catch (e) {
       emit(LeaderboardError(message: e.toString()));

@@ -29,7 +29,7 @@ class LeaderboardScreen extends StatelessWidget {
           }
 
           if (state is LeaderboardLoaded) {
-            final records = state.entries;
+            final entries = state.entries;
 
             return GGScaffoldWidget(
               child: SafeArea(
@@ -54,16 +54,16 @@ class LeaderboardScreen extends StatelessWidget {
                     ),
                     const Gap(50),
                     Expanded(
-                      child: records.isEmpty
+                      child: entries.isEmpty
                           ? Center(
                               child: Text('No records for this week yet...',
                                   style: theme.textTheme.displayLarge),
                             )
                           : ListView.builder(
-                              itemCount: records.length,
+                              itemCount: entries.length,
                               itemBuilder: ((_, index) =>
                                   LeaderboardRecordWidget(
-                                    leaderboardRecord: records[index],
+                                    entry: entries[index],
                                   )),
                             ),
                     ),

@@ -15,7 +15,7 @@ class LeaderboardLoading extends LeaderboardState {
 }
 
 class LeaderboardLoaded extends LeaderboardState {
-  final List<LeaderboardRecord> entries;
+  final List<LeaderboardEntry> entries;
 
   LeaderboardLoaded({required this.entries}) : super(isLoading: false);
 }
