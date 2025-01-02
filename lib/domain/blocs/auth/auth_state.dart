@@ -15,13 +15,7 @@ class AuthLoading extends AuthState {
 }
 
 class Authenticated extends AuthState {
-  final String token;
-
-  Authenticated({
-    required this.token,
-  }) : super(
-          isAuthenticated: true,
-        );
+  Authenticated() : super(isAuthenticated: true);
 }
 
 class Unauthenticated extends AuthState {
