@@ -44,6 +44,11 @@ class MainMenuScreen extends StatelessWidget {
               onPressed: () => context.goNamed(Globals.routes.game),
             ),
             const Gap(16),
+            GGButtonWidget(
+              title: 'Leaderboard',
+              onPressed: () => context.goNamed(Globals.routes.leaderboard),
+            ),
+            const Gap(16),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 return GGButtonWidget(

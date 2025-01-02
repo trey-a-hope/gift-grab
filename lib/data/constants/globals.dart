@@ -38,6 +38,7 @@ class _Routes {
   final String main = 'main';
   final String login = 'login';
   final String game = 'game';
+  final String leaderboard = 'leaderboard';
 }
 
 class _TimeLimits {
