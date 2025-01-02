@@ -70,18 +70,18 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   }
 
   // TODO: Add these via the the GiftGrabBloc.
-  Future<List<Component>> _createPowerUps() async {
-    return [
-      FlameComponent(
-        startPosition: Vector2(200, 200),
-      )..add(
-          FlameBlocListener<GameBloc, GameState>(
-            onNewState: (state) {
-              // Handle power-up state
-            },
-          ),
-        ),
-      // Add other power-ups
-    ];
-  }
+  // Future<List<Component>> _createPowerUps() async {
+  //   return [
+  //     FlameComponent(
+  //       startPosition: Vector2(200, 200),
+  //     )..add(
+  //         FlameBlocListener<GameBloc, GameState>(
+  //           onNewState: (state) {
+  //             // Handle power-up state
+  //           },
+  //         ),
+  //       ),
+  //     // Add other power-ups
+  //   ];
+  // }
 }

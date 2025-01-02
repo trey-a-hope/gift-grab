@@ -11,13 +11,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   Timer? _gameTimer;
 
   GameBloc()
-      : super(
-          const GameState(
-            score: initialScore,
-            remainingTime: initialTime,
-            flameRemainingTime: flameTime,
-          ),
-        ) {
+      : super(const GameState(
+          score: initialScore,
+          remainingTime: initialTime,
+          flameRemainingTime: flameTime,
+        )) {
     on<StartGame>(_onStartGame);
     on<ScorePoint>(_onScorePoint);
     on<TimerTick>(_onTimerTick);
