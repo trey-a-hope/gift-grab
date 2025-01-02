@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:gift_grab/gift_grab_game.dart';
+import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'dart:math' as math;
 
 import 'package:gift_grab/data/constants/globals.dart';

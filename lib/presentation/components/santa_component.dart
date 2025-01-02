@@ -1,14 +1,16 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:gift_grab/presentation/components/cookie_component.dart';
-import 'package:gift_grab/presentation/components/ice_component.dart';
-import 'package:gift_grab/gift_grab_game.dart';
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
+import 'package:gift_grab/domain/blocs/santa/santa_event.dart';
+import 'package:gift_grab/domain/blocs/santa/santa_state.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/game/gift_grab_game.dart';
+import 'package:gift_grab/presentation/components/cookie_component.dart';
+import 'package:gift_grab/presentation/components/flame_component.dart';
+import 'package:gift_grab/presentation/components/ice_component.dart';
 
-import 'flame_component.dart';
-
-/// States for when santa is idle, sliding left, or sliding right.
 enum MovementState {
   idle,
   slideLeft,
@@ -17,39 +19,30 @@ enum MovementState {
 }
 
 class SantaComponent extends SpriteGroupComponent<MovementState>
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  /// Height of the sprite.
-  final double _spriteHeight = Globals.isTablet ? 200.0 : 100;
-
-  /// Max speed of sliding santa.
-  static final double _originalSpeed = Globals.isTablet ? 500.0 : 250.0;
-  static double _speed = _originalSpeed;
-
-  /// Joystick for movement.
+    with
+        HasGameRef<GiftGrabGame>,
+        CollisionCallbacks,
+        FlameBlocReader<SantaBloc, SantaState> {
+  final double _spriteHeight = 200;
   final JoystickComponent joystick;
 
-  /// Screen boundries.
   late double _rightBound;
   late double _leftBound;
   late double _upBound;
   late double _downBound;
 
-  /// Represents if Santa is frozen.
-  bool isFrozen = false;
-
-  /// Represents if Santa is flamed up, (immune to ice).
-  bool isFlamed = false;
-
   final Timer _frozenCountdown = Timer(Globals.timeLimits.frozen.toDouble());
   final Timer _cookieCountdown = Timer(Globals.timeLimits.cookie.toDouble());
 
-  SantaComponent({required this.joystick});
+  SantaComponent({
+    required this.joystick,
+  });
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Sprites.
+    // Load sprites
     final Sprite santaIdle = await gameRef.loadSprite(Globals.santaIdle);
     final Sprite santaSlideLeft =
         await gameRef.loadSprite(Globals.santaSlideLeftSprite);
@@ -57,7 +50,6 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         await gameRef.loadSprite(Globals.santaSlideRightSprite);
     final Sprite santaFrozen = await gameRef.loadSprite(Globals.santaFrozen);
 
-    // Each sprite state.
     sprites = {
       MovementState.idle: santaIdle,
       MovementState.slideLeft: santaSlideLeft,
@@ -65,29 +57,18 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
       MovementState.frozen: santaFrozen,
     };
 
-    // Set right screen boundry.
+    // Set boundaries
     _rightBound = gameRef.size.x - 45;
-
-    // Set left screen boundry.
     _leftBound = 0 + 45;
-
-    // Set up screen boundry.
     _upBound = 0 + 55;
-
-    // Set down screen boundry
     _downBound = gameRef.size.y - 55;
 
-    // Set position of component to center of screen.
-    position = gameRef.size / 2;
-
-    // Set dimensions of santa sprite.
+    // Set dimensions
     width = _spriteHeight * 1.42;
     height = _spriteHeight;
-
-    // Set anchor of component.
     anchor = Anchor.center;
 
-    // Default current state to idle.
+    position = gameRef.size / 2;
     current = MovementState.idle;
 
     add(CircleHitbox()..radius = 1);
@@ -97,64 +78,46 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void update(double dt) {
     super.update(dt);
 
-    // If Santa is not frozen, update position.
-    if (!isFrozen) {
-      // If joystick is idle, set state to idle.
+    if (!bloc.state.isFrozen) {
+      // Update sprite state based on bloc state FIRST
+      current = bloc.state.movement;
+      position = bloc.state.position;
+
       if (joystick.direction == JoystickDirection.idle) {
-        current = MovementState.idle;
-        return;
-      }
+        bloc.add(UpdateSantaMovement(
+          movement: MovementState.idle,
+          position: position,
+        ));
+      } else {
+        // Handle boundaries
+        if (x >= _rightBound) x = _rightBound - 1;
+        if (x <= _leftBound) x = _leftBound + 1;
+        if (y >= _downBound) y = _downBound - 1;
+        if (y <= _upBound) y = _upBound + 1;
 
-      // If player is exiting right screen boundry...
-      if (x >= _rightBound) {
-        // Set player back 1 pixel.
-        x = _rightBound - 1;
-      }
+        // Update movement state
+        bool moveLeft = joystick.relativeDelta[0] < 0;
+        MovementState newState =
+            moveLeft ? MovementState.slideLeft : MovementState.slideRight;
 
-      // If player is exiting left screen boundry...
-      if (x <= _leftBound) {
-        // Set player back 1 pixel.
-        x = _leftBound + 1;
-      }
+        // Update position
+        Vector2 newPosition =
+            position + (joystick.relativeDelta * bloc.state.speed * dt);
 
-      // If player is exiting down screen boundry...
-      if (y >= _downBound) {
-        // Set player back 1 pixel.
-        y = _downBound - 1;
-      }
-
-      // If player is exiting up screen boundry...
-      if (y <= _upBound) {
-        // Set player back 1 pixel.
-        y = _upBound + 1;
-      }
-
-      // Determines if the component is moving left currently.
-      bool moveLeft = joystick.relativeDelta[0] < 0;
-
-      // If moving left, set state to slideLeft.
-      if (moveLeft) {
-        current = MovementState.slideLeft;
-      }
-
-      // Else, set state to slideRight.
-      else {
-        current = MovementState.slideRight;
+        bloc.add(UpdateSantaMovement(
+          movement: newState,
+          position: newPosition,
+        ));
       }
 
       _cookieCountdown.update(dt);
       if (_cookieCountdown.finished) {
-        resetSpeed();
+        bloc.add(ResetSantaSpeed());
       }
-
-      // Update position.
-      position.add(joystick.relativeDelta * _speed * dt);
-    }
-    // Else, start timer until unfrozen.
-    else {
+    } else {
       _frozenCountdown.update(dt);
       if (_frozenCountdown.finished) {
-        _unfreezeSanta();
+        bloc.add(UnfreezeSanta());
       }
     }
   }
@@ -163,81 +126,31 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    // If collision comes from Ice Block...
-    if (other is IceComponent) {
-      if (!isFlamed) {
-        _freezeSanta();
-      }
-    }
-
-    // If collision comes from Flame...
-    if (other is FlameComponent) {
-      flameSanta();
-    }
-
-    // If collision comes from Cookie...
-    if (other is CookieComponent) {
-      _increaseSpeed();
+    if (other is IceComponent && !bloc.state.isFlamed) {
+      _handleIceCollision();
+    } else if (other is FlameComponent) {
+      _handleFlameCollision();
+    } else if (other is CookieComponent) {
+      _handleCookieCollision();
     }
   }
 
-  void _increaseSpeed() {
-    // Play item grab sound.
-    FlameAudio.play(Globals.itemGrabSound);
-
-    // Double Santa's speed.
-    _speed *= 2;
-
-    // Start the speed countdown.
-    _cookieCountdown.start();
+  void _handleIceCollision() {
+    bloc.add(FreezeSanta());
+    FlameAudio.play(Globals.freezeSound);
+    _frozenCountdown.start();
   }
 
-  void resetSpeed() {
-    _speed = _originalSpeed;
-  }
-
-  void flameSanta() {
-    // Check if he's already frozen.
-    if (!isFrozen) {
-      // Enable flame boolean.
-      isFlamed = true;
-      // Play flame sound.
+  void _handleFlameCollision() {
+    if (!bloc.state.isFrozen) {
+      bloc.add(FlameSanta());
       FlameAudio.play(Globals.flameSound);
-      // Add text displaying flame time count.
-      gameRef.add(gameRef.flameTimerText);
-      // Start the flame countdown.
-      gameRef.flameTimer.start();
     }
   }
 
-  void unflameSanta() {
-    isFlamed = false;
-  }
-
-  /// Freeze Santa.
-  void _freezeSanta() {
-    // Ensure that we don't take any action if he's already frozen.
-    if (!isFrozen) {
-      // Set frozen property to true.
-      isFrozen = true;
-
-      // Play freeze sound.
-      FlameAudio.play(Globals.freezeSound);
-
-      // Update sprite to frozen state.
-      current = MovementState.frozen;
-
-      // Start frozen countdown.
-      _frozenCountdown.start();
-    }
-  }
-
-  /// Unfreeze Santa.
-  void _unfreezeSanta() {
-    // Set frozen property to false.
-    isFrozen = false;
-
-    // Update sprite to idle state.
-    current = MovementState.idle;
+  void _handleCookieCollision() {
+    bloc.add(IncreaseSantaSpeed());
+    FlameAudio.play(Globals.itemGrabSound);
+    _cookieCountdown.start();
   }
 }

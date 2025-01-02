@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:gift_grab/gift_grab_game.dart';
+import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 
 class BackgroundComponent extends SpriteComponent

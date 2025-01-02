@@ -2,7 +2,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/gift_grab_game.dart';
+// import 'package:gift_grab/presentation/components/santa_component.dart';
+import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'dart:math';
 
 import 'package:gift_grab/data/constants/globals.dart';
@@ -47,7 +48,7 @@ class GiftComponent extends SpriteComponent
       removeFromParent();
 
       // Update Santa's score by one.
-      gameRef.score += 1;
+      // gameRef.score += 1;
 
       // Add a new gift to the field.
       gameRef.add(GiftComponent());

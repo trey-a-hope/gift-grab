@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/gift_grab_game.dart';
+import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/constants/screens.dart';
 import 'package:go_router/go_router.dart';
 
-class GameOverOverlay extends ConsumerWidget {
+class GameOverOverlay extends StatelessWidget {
   final GiftGrabGame game;
 
   const GameOverOverlay({
@@ -16,8 +14,9 @@ class GameOverOverlay extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return GGScaffoldWidget(
       child: Center(
         child: Column(
@@ -50,9 +49,7 @@ class GameOverOverlay extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  game.removeMenu(menu: Screens.gameOver);
-                  game.reset();
-                  game.resumeEngine();
+                  game.resetGame!();
                 },
                 child: Text(
                   'Play Again?',
@@ -68,9 +65,9 @@ class GameOverOverlay extends ConsumerWidget {
               height: Globals.isTablet ? 100 : 50,
               child: ElevatedButton(
                 onPressed: () {
-                  game.removeMenu(menu: Screens.gameOver);
-                  game.reset();
-                  game.resumeEngine();
+                  // game.overlays.remove(Screens.gameOver.name);
+                  // game.reset();
+                  // game.resumeEngine();
 
                   context.pop();
                 },

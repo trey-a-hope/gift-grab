@@ -46,32 +46,6 @@ class _TimeLimits {
   final int cookie = 10;
 }
 
-enum LottieAvatar {
-  candyCane('candy_cane', 'Candy Cane', 'assets/lotties/candy_cane.json'),
-  present('present', 'Present', 'assets/lotties/present.json');
-
-  const LottieAvatar(
-    this.name,
-    this.displayName,
-    this.path,
-  );
-
-  final String name;
-  final String displayName;
-  final String path;
-
-  static LottieAvatar? findByName(String? name) {
-    switch (name) {
-      case 'candy_cane':
-        return LottieAvatar.candyCane;
-      case 'present':
-        return LottieAvatar.present;
-    }
-
-    return null;
-  }
-}
-
 class _NakamaConfig {
   static const bool _isLocal = false;
 
