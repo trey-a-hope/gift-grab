@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:nakama/nakama.dart';
 
 part 'auth_event.dart';
@@ -13,12 +14,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final inOneHour = DateTime.now().add(Duration(hours: 1));
 
   AuthBloc() : super(AuthInitial()) {
-    on<LoginEvent>(_handleLogin);
-    on<LogoutEvent>(_handleLogout);
-    on<CheckAuthStatusEvent>(_handleCheckAuthStatus);
+    on<LoginEvent>(_onLoginEvent);
+    on<LogoutEvent>(_onLogoutEvent);
+    on<CheckAuthStatusEvent>(_onCheckAuthStatusEvent);
   }
 
-  Future<void> _handleLogin(LoginEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
 
     try {
@@ -39,7 +40,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _handleLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onLogoutEvent(
+      LogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
 
     try {
@@ -52,47 +54,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _handleCheckAuthStatus(
+  Future<void> _onCheckAuthStatusEvent(
       CheckAuthStatusEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
 
     try {
-      String? token = await _storage.read(key: _token);
-      String? refreshToken = await _storage.read(key: _refreshToken);
+      final session = await NakamaService().getValidSession();
 
-      if (token != null && refreshToken != null) {
-        var session = Session.restore(
-          token: token,
-          refreshToken: refreshToken,
-        );
-
-        if (session == null) {
-          emit(Unauthenticated());
-        }
-
-        // Check whether a session has expired or is close to expiry.
-        if (session!.isExpired || session.hasExpired(inOneHour)) {
-          try {
-            // Attempt to refresh the existing session.
-            session = await getNakamaClient().sessionRefresh(session: session);
-
-            debugPrint('Refreshed!');
-            debugPrint(
-              'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
-            );
-
-            await _storage.write(key: _token, value: session.token);
-            await _storage.write(
-                key: _refreshToken, value: session.refreshToken);
-            emit(Authenticated());
-          } catch (e) {
-            emit(Unauthenticated());
-          }
-        } else {
-          emit(Authenticated());
-        }
-      } else {
+      if (session == null) {
         emit(Unauthenticated());
+      } else {
+        emit(Authenticated());
       }
     } catch (e) {
       emit(Unauthenticated());

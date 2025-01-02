@@ -14,16 +14,16 @@ class SantaBloc extends Bloc<SantaEvent, SantaState> {
             position: initialPosition,
           ),
         ) {
-    on<FreezeSanta>(_onFreezeSanta);
-    on<UnfreezeSanta>(_onUnfreezeSanta);
-    on<FlameSanta>(_onFlameSanta);
-    on<UnflameSanta>(_onUnflameSanta);
-    on<IncreaseSantaSpeed>(_onIncreaseSantaSpeed);
-    on<ResetSantaSpeed>(_onResetSantaSpeed);
-    on<UpdateSantaMovement>(_onUpdateSantaMovement);
+    on<FreezeSantaEvent>(_onFreezeSantaEvent);
+    on<UnfreezeSantaEvent>(_onUnfreezeSantaEvent);
+    on<FlameSantaEvent>(_onFlameSantaEvent);
+    on<UnflameSantaEvent>(_onUnflameSantaEvent);
+    on<IncreaseSantaSpeedEvent>(_onIncreaseSantaSpeedEvent);
+    on<ResetSantaSpeedEvent>(_onResetSantaSpeedEvent);
+    on<UpdateSantaMovementEvent>(_onUpdateSantaMovementEvent);
   }
 
-  void _onFreezeSanta(FreezeSanta event, Emitter<SantaState> emit) {
+  void _onFreezeSantaEvent(FreezeSantaEvent event, Emitter<SantaState> emit) {
     if (!state.isFrozen) {
       emit(state.copyWith(
         isFrozen: true,
@@ -32,34 +32,36 @@ class SantaBloc extends Bloc<SantaEvent, SantaState> {
     }
   }
 
-  void _onUnfreezeSanta(UnfreezeSanta event, Emitter<SantaState> emit) {
+  void _onUnfreezeSantaEvent(
+      UnfreezeSantaEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(
       isFrozen: false,
       movement: MovementState.idle,
     ));
   }
 
-  void _onFlameSanta(FlameSanta event, Emitter<SantaState> emit) {
+  void _onFlameSantaEvent(FlameSantaEvent event, Emitter<SantaState> emit) {
     if (!state.isFrozen) {
       emit(state.copyWith(isFlamed: true));
     }
   }
 
-  void _onUnflameSanta(UnflameSanta event, Emitter<SantaState> emit) {
+  void _onUnflameSantaEvent(UnflameSantaEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(isFlamed: false));
   }
 
-  void _onIncreaseSantaSpeed(
-      IncreaseSantaSpeed event, Emitter<SantaState> emit) {
+  void _onIncreaseSantaSpeedEvent(
+      IncreaseSantaSpeedEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(speed: state.speed * 2));
   }
 
-  void _onResetSantaSpeed(ResetSantaSpeed event, Emitter<SantaState> emit) {
+  void _onResetSantaSpeedEvent(
+      ResetSantaSpeedEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(speed: _originalSpeed));
   }
 
-  void _onUpdateSantaMovement(
-      UpdateSantaMovement event, Emitter<SantaState> emit) {
+  void _onUpdateSantaMovementEvent(
+      UpdateSantaMovementEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(
       movement: event.movement,
       position: event.position,

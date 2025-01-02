@@ -69,7 +69,7 @@ class GameOverOverlay extends StatelessWidget {
                   // game.reset();
                   // game.resumeEngine();
 
-                  context.pop();
+                  context.goNamed(Globals.routes.main);
                 },
                 child: Text(
                   'Main Menu',

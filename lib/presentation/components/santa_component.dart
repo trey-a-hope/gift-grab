@@ -84,7 +84,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
       position = bloc.state.position;
 
       if (joystick.direction == JoystickDirection.idle) {
-        bloc.add(UpdateSantaMovement(
+        bloc.add(UpdateSantaMovementEvent(
           movement: MovementState.idle,
           position: position,
         ));
@@ -104,7 +104,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
         Vector2 newPosition =
             position + (joystick.relativeDelta * bloc.state.speed * dt);
 
-        bloc.add(UpdateSantaMovement(
+        bloc.add(UpdateSantaMovementEvent(
           movement: newState,
           position: newPosition,
         ));
@@ -112,12 +112,12 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
       _cookieCountdown.update(dt);
       if (_cookieCountdown.finished) {
-        bloc.add(ResetSantaSpeed());
+        bloc.add(ResetSantaSpeedEvent());
       }
     } else {
       _frozenCountdown.update(dt);
       if (_frozenCountdown.finished) {
-        bloc.add(UnfreezeSanta());
+        bloc.add(UnfreezeSantaEvent());
       }
     }
   }
@@ -136,20 +136,20 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   }
 
   void _handleIceCollision() {
-    bloc.add(FreezeSanta());
+    bloc.add(FreezeSantaEvent());
     FlameAudio.play(Globals.freezeSound);
     _frozenCountdown.start();
   }
 
   void _handleFlameCollision() {
     if (!bloc.state.isFrozen) {
-      bloc.add(FlameSanta());
+      bloc.add(FlameSantaEvent());
       FlameAudio.play(Globals.flameSound);
     }
   }
 
   void _handleCookieCollision() {
-    bloc.add(IncreaseSantaSpeed());
+    bloc.add(IncreaseSantaSpeedEvent());
     FlameAudio.play(Globals.itemGrabSound);
     _cookieCountdown.start();
   }

@@ -9,23 +9,23 @@ abstract class SantaEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FreezeSanta extends SantaEvent {}
+class FreezeSantaEvent extends SantaEvent {}
 
-class UnfreezeSanta extends SantaEvent {}
+class UnfreezeSantaEvent extends SantaEvent {}
 
-class FlameSanta extends SantaEvent {}
+class FlameSantaEvent extends SantaEvent {}
 
-class UnflameSanta extends SantaEvent {}
+class UnflameSantaEvent extends SantaEvent {}
 
-class IncreaseSantaSpeed extends SantaEvent {}
+class IncreaseSantaSpeedEvent extends SantaEvent {}
 
-class ResetSantaSpeed extends SantaEvent {}
+class ResetSantaSpeedEvent extends SantaEvent {}
 
-class UpdateSantaMovement extends SantaEvent {
+class UpdateSantaMovementEvent extends SantaEvent {
   final MovementState movement;
   final Vector2 position;
 
-  const UpdateSantaMovement({
+  const UpdateSantaMovementEvent({
     required this.movement,
     required this.position,
   });

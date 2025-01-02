@@ -16,19 +16,19 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           remainingTime: initialTime,
           flameRemainingTime: flameTime,
         )) {
-    on<StartGame>(_onStartGame);
-    on<ScorePoint>(_onScorePoint);
-    on<TimerTick>(_onTimerTick);
-    on<ActivateFlame>(_onActivateFlame);
-    on<DeactivateFlame>(_onDeactivateFlame);
-    on<FlameTick>(_onFlameTick);
-    on<ResetGame>(_onResetGame);
+    on<StartGameEvent>(_onStartGameEvent);
+    on<ScorePointEvent>(_onScorePointEvent);
+    on<TimerTickEvent>(_onTimerTickEvent);
+    on<ActivateFlameEvent>(_onActivateFlameEvent);
+    on<DeactivateFlameEvent>(_onDeactivateFlameEvent);
+    on<FlameTickEvent>(_onFlameTickEvent);
+    on<ResetGameEvent>(_onResetGameEvent);
   }
 
   void startTimer() {
     _gameTimer = Timer.periodic(
       const Duration(seconds: 1),
-      (_) => add(TimerTick()),
+      (_) => add(TimerTickEvent()),
     );
   }
 
@@ -37,7 +37,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     _gameTimer = null;
   }
 
-  void _onStartGame(StartGame event, Emitter<GameState> emit) {
+  void _onStartGameEvent(StartGameEvent event, Emitter<GameState> emit) {
     emit(state.copyWith(
       score: initialScore,
       remainingTime: initialTime,
@@ -49,11 +49,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     startTimer();
   }
 
-  void _onScorePoint(ScorePoint event, Emitter<GameState> emit) {
+  void _onScorePointEvent(ScorePointEvent event, Emitter<GameState> emit) {
     emit(state.copyWith(score: state.score + 1));
   }
 
-  void _onTimerTick(TimerTick event, Emitter<GameState> emit) {
+  void _onTimerTickEvent(TimerTickEvent event, Emitter<GameState> emit) {
     final newTime = state.remainingTime - 1;
     if (newTime <= 0) {
       emit(
@@ -67,21 +67,23 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
   }
 
-  void _onActivateFlame(ActivateFlame event, Emitter<GameState> emit) {
+  void _onActivateFlameEvent(
+      ActivateFlameEvent event, Emitter<GameState> emit) {
     emit(state.copyWith(
       isFlameActive: true,
       flameRemainingTime: flameTime,
     ));
   }
 
-  void _onDeactivateFlame(DeactivateFlame event, Emitter<GameState> emit) {
+  void _onDeactivateFlameEvent(
+      DeactivateFlameEvent event, Emitter<GameState> emit) {
     emit(state.copyWith(
       isFlameActive: false,
       flameRemainingTime: flameTime,
     ));
   }
 
-  void _onFlameTick(FlameTick event, Emitter<GameState> emit) {
+  void _onFlameTickEvent(FlameTickEvent event, Emitter<GameState> emit) {
     if (!state.isFlameActive) return;
 
     final newTime = state.flameRemainingTime - 1;
@@ -95,7 +97,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
   }
 
-  void _onResetGame(ResetGame event, Emitter<GameState> emit) {
+  void _onResetGameEvent(ResetGameEvent event, Emitter<GameState> emit) {
     emit(const GameState(
       score: initialScore,
       remainingTime: initialTime,
