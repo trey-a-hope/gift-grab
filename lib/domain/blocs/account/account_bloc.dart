@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
@@ -8,10 +10,24 @@ part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AuthBloc authBloc;
+  late final StreamSubscription<AuthState> _authSubscription;
+
   AccountBloc({required this.authBloc}) : super(AccountInitial()) {
     on<FetchAccountEvent>(_onFetchAccount);
     on<UpdateAccountEvent>(_onUpdateAccount);
     on<DeleteAccountEvent>(_onDeleteAccount);
+
+    _authSubscription = authBloc.stream.listen((state) {
+      if (state is Authenticated) {
+        add(FetchAccountEvent());
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _authSubscription.cancel();
+    return super.close();
   }
 
   Future<void> _onFetchAccount(

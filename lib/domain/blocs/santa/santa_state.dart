@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flame/components.dart';
-import 'package:gift_grab/presentation/components/santa_component.dart';
+part of 'santa_bloc.dart';
 
 class SantaState extends Equatable {
   final bool isFrozen;

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'game_bloc.dart';
 
 abstract class GameEvent extends Equatable {
   const GameEvent();
@@ -13,7 +13,9 @@ class ScorePointEvent extends GameEvent {}
 
 class TimerTickEvent extends GameEvent {}
 
-class ActivateFlameEvent extends GameEvent {}
+class DisplayFlameEvent extends GameEvent {}
+
+class StartFlameCountdownEvent extends GameEvent {}
 
 class DeactivateFlameEvent extends GameEvent {}
 

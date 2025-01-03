@@ -1,102 +1,90 @@
 import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-// import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'dart:math' as math;
-
 import 'package:gift_grab/data/constants/globals.dart';
 
 class FlameComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  /// Height of the sprite.
-  final double _spriteHeight = Globals.isTablet ? 160.0 : 80.0;
+  static const double TABLET_HEIGHT = 160.0;
+  static const double MOBILE_HEIGHT = 80.0;
+  static const double TABLET_SPEED = 300.0;
+  static const double MOBILE_SPEED = 150.0;
+  static const double SIZE_RATIO = 0.8;
 
-  /// Speed and direction of gift.
-  late Vector2 _velocity;
-
-  /// Speed of the gift.
-  double speed = Globals.isTablet ? 300 : 150;
-
-  /// Angle or the gift on bounce back.
-  final double degree = math.pi / 180;
-
+  late final Vector2 _velocity;
   final Vector2 startPosition;
+  final double _spriteHeight;
+  final double speed;
 
-  FlameComponent({required this.startPosition});
+  FlameComponent({required this.startPosition})
+      : _spriteHeight = Globals.isTablet ? TABLET_HEIGHT : MOBILE_HEIGHT,
+        speed = Globals.isTablet ? TABLET_SPEED : MOBILE_SPEED;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
-    sprite = await gameRef.loadSprite(Globals.flameSprite);
-
-    position = startPosition;
-
-    final double spawnAngle = _getSpawnAngle();
-
-    final double vx = math.cos(spawnAngle * degree) * speed;
-    final double vy = math.sin(spawnAngle * degree) * speed;
-
-    _velocity = Vector2(vx, vy);
-
-    // Set dimensions of santa sprite.
-    width = _spriteHeight * 0.8;
-    height = _spriteHeight;
-
-    // Set anchor of component.
-    anchor = Anchor.center;
-
-    add(CircleHitbox()..radius = 1);
+    await _setupSprite();
+    _setupPhysics();
+    _setupCollision();
   }
+
+  Future<void> _setupSprite() async {
+    sprite = await gameRef.loadSprite(Globals.flameSprite);
+    width = _spriteHeight * SIZE_RATIO;
+    height = _spriteHeight;
+    anchor = Anchor.center;
+  }
+
+  void _setupPhysics() {
+    position = startPosition;
+    _velocity = _calculateInitialVelocity();
+  }
+
+  void _setupCollision() {
+    add(CircleHitbox()..radius = width / 2);
+    add(ScreenHitbox());
+  }
+
+  Vector2 _calculateInitialVelocity() {
+    final double angle = _getRandomAngle() * (math.pi / 180);
+    return Vector2(
+      math.cos(angle) * speed,
+      math.sin(angle) * speed,
+    );
+  }
+
+  double _getRandomAngle() => lerpDouble(0, 360, math.Random().nextDouble())!;
 
   @override
   void update(double dt) {
     super.update(dt);
+    _updatePosition(dt);
+    _keepInBounds();
+  }
 
+  void _updatePosition(double dt) {
     position += _velocity * dt;
+  }
+
+  void _keepInBounds() {
+    if (position.x < 0 || position.x > gameRef.size.x) {
+      _velocity.x = -_velocity.x;
+      position.x = position.x.clamp(0, gameRef.size.x);
+    }
+    if (position.y < 0 || position.y > gameRef.size.y) {
+      _velocity.y = -_velocity.y;
+      position.y = position.y.clamp(0, gameRef.size.y);
+    }
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-
-    if (other is ScreenHitbox) {
-      final Vector2 collisionPoint = intersectionPoints.first;
-
-      // Left Side Collision
-      if (collisionPoint.x == 0) {
-        _velocity.x = -_velocity.x;
-        _velocity.y = _velocity.y;
-      }
-      // Right Side Collision
-      if (collisionPoint.x == gameRef.size.x) {
-        _velocity.x = -_velocity.x;
-        _velocity.y = _velocity.y;
-      }
-      // Top Side Collision
-      if (collisionPoint.y == 0) {
-        _velocity.x = _velocity.x;
-        _velocity.y = -_velocity.y;
-      }
-      // Bottom Side Collision
-      if (collisionPoint.y == gameRef.size.y) {
-        _velocity.x = _velocity.x;
-        _velocity.y = -_velocity.y;
-      }
-    }
-
     if (other is SantaComponent) {
       removeFromParent();
     }
-  }
-
-  double _getSpawnAngle() {
-    final random = math.Random().nextDouble();
-    final spawnAngle = lerpDouble(0, 360, random)!;
-
-    return spawnAngle;
   }
 }

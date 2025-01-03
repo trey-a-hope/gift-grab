@@ -2,9 +2,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
-import 'package:gift_grab/domain/blocs/santa/santa_event.dart';
-import 'package:gift_grab/domain/blocs/santa/santa_state.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
@@ -18,11 +17,19 @@ enum MovementState {
   frozen,
 }
 
+class FlameHandler extends Component with FlameBlocReader<GameBloc, GameState> {
+  void handleFlameCollision() {
+    bloc.add(StartFlameCountdownEvent());
+  }
+}
+
 class SantaComponent extends SpriteGroupComponent<MovementState>
     with
         HasGameRef<GiftGrabGame>,
         CollisionCallbacks,
         FlameBlocReader<SantaBloc, SantaState> {
+  late final FlameHandler _flameHandler;
+
   final double _spriteHeight = 200;
   final JoystickComponent joystick;
 
@@ -41,6 +48,9 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    _flameHandler = FlameHandler();
+    await add(_flameHandler);
 
     // Load sprites
     final Sprite santaIdle = await gameRef.loadSprite(Globals.santaIdle);
@@ -143,7 +153,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
   void _handleFlameCollision() {
     if (!bloc.state.isFrozen) {
-      bloc.add(FlameSantaEvent());
+      _flameHandler.handleFlameCollision();
       FlameAudio.play(Globals.flameSound);
     }
   }

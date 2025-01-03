@@ -3,11 +3,10 @@ import 'package:flame/palette.dart' as palette;
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
-import 'package:gift_grab/domain/blocs/game/game_state.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 
 class HUDTextComponents extends PositionComponent
-    with HasGameRef<GiftGrabGame>, FlameBlocReader<GameBloc, GameState> {
+    with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
   late TextComponent _scoreText;
   late TextComponent _timerText;
   late TextComponent _flameTimerText;
@@ -17,9 +16,9 @@ class HUDTextComponents extends PositionComponent
     await super.onLoad();
 
     _timerText = TextComponent(
-      text: 'Time: ${bloc.state.remainingTime}',
-      position: Vector2(40, 50), // Left side
-      anchor: Anchor.topLeft, // Anchor to top-left
+      text: 'Time: 0',
+      position: Vector2(40, 50),
+      anchor: Anchor.topLeft,
       textRenderer: TextPaint(
         style: TextStyle(
           color: palette.BasicPalette.white.color,
@@ -29,9 +28,9 @@ class HUDTextComponents extends PositionComponent
     );
 
     _scoreText = TextComponent(
-      text: 'Score: ${bloc.state.score}',
-      position: Vector2(gameRef.size.x - 40, 50), // Right side
-      anchor: Anchor.topRight, // Anchor to top-right
+      text: 'Score: 0',
+      position: Vector2(gameRef.size.x - 40, 50),
+      anchor: Anchor.topRight,
       textRenderer: TextPaint(
         style: TextStyle(
           color: palette.BasicPalette.white.color,
@@ -41,8 +40,8 @@ class HUDTextComponents extends PositionComponent
     );
 
     _flameTimerText = TextComponent(
-      text: 'Flame Time: ${bloc.state.flameRemainingTime}',
-      position: Vector2(gameRef.size.x - 40, 100), // Below score on right
+      text: 'Flame Time: 0',
+      position: Vector2(gameRef.size.x - 40, 100),
       anchor: Anchor.topRight,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -57,17 +56,16 @@ class HUDTextComponents extends PositionComponent
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
+  void onNewState(GameState state) {
+    _scoreText.text = 'Score: ${state.score}';
+    _timerText.text = 'Time: ${state.remainingTime}';
 
-    _scoreText.text = 'Score: ${bloc.state.score}';
-    _timerText.text = 'Time: ${bloc.state.remainingTime}';
-
-    if (bloc.state.isFlameActive) {
+    if (state.isSantaFlamed) {
+      // Check this instead of isFlameActive
       if (!_flameTimerText.isMounted) {
         add(_flameTimerText);
       }
-      _flameTimerText.text = 'Flame Time: ${bloc.state.flameRemainingTime}';
+      _flameTimerText.text = 'Flame Time: ${state.flameRemainingTime}';
     } else if (_flameTimerText.isMounted) {
       _flameTimerText.removeFromParent();
     }

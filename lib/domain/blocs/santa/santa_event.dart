@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:flame/components.dart';
-import 'package:gift_grab/presentation/components/santa_component.dart';
+part of 'santa_bloc.dart';
 
 abstract class SantaEvent extends Equatable {
   const SantaEvent();
@@ -13,7 +11,7 @@ class FreezeSantaEvent extends SantaEvent {}
 
 class UnfreezeSantaEvent extends SantaEvent {}
 
-class FlameSantaEvent extends SantaEvent {}
+// class FlameSantaEvent extends SantaEvent {}
 
 class UnflameSantaEvent extends SantaEvent {}
 

@@ -30,7 +30,6 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             const Gap(16),
-            // TODO: Fetch account is only called once, so after signup it's never called again...
             BlocBuilder<AccountBloc, AccountState>(
               builder: (context, state) {
                 if (state is AccountLoaded) {

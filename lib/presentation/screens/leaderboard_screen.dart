@@ -16,24 +16,24 @@ class LeaderboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocProvider(
-      create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
-      child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const CircularProgressIndicator();
-          }
+    return GGScaffoldWidget(
+      child: SafeArea(
+        child: BlocProvider(
+          create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
+          child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const CircularProgressIndicator();
+              }
 
-          if (state is LeaderboardError) {
-            return Text('Error: ${state.message}');
-          }
+              if (state is LeaderboardError) {
+                return Text('Error: ${state.message}');
+              }
 
-          if (state is LeaderboardLoaded) {
-            final entries = state.entries;
+              if (state is LeaderboardLoaded) {
+                final entries = state.entries;
 
-            return GGScaffoldWidget(
-              child: SafeArea(
-                child: Column(
+                return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -52,7 +52,7 @@ class LeaderboardScreen extends StatelessWidget {
                             : theme.textTheme.headlineSmall!.fontSize,
                       ),
                     ),
-                    const Gap(50),
+                    const Gap(64),
                     Expanded(
                       child: entries.isEmpty
                           ? Center(
@@ -84,13 +84,13 @@ class LeaderboardScreen extends StatelessWidget {
                       ),
                     )
                   ],
-                ),
-              ),
-            );
-          }
+                );
+              }
 
-          return const SizedBox();
-        },
+              return const SizedBox();
+            },
+          ),
+        ),
       ),
     );
   }

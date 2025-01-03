@@ -3,13 +3,11 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
-import 'package:gift_grab/domain/blocs/game/game_event.dart';
-import 'package:gift_grab/domain/blocs/game/game_state.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
+import 'package:gift_grab/presentation/components/flame_spawner.dart';
 import 'package:gift_grab/presentation/components/hud_text_components.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/domain/blocs/santa/santa_state.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 
@@ -84,6 +82,7 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
               BackgroundComponent(),
               SantaComponent(joystick: joystick),
               HUDTextComponents(),
+              FlameSpawner(),
             ],
           ),
         ],

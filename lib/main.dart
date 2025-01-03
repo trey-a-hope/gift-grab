@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
           create: (context) => authBloc,
         ),
         BlocProvider<AccountBloc>(
-          create: (context) =>
-              AccountBloc(authBloc: authBloc)..add(FetchAccountEvent()),
+          create: (context) => AccountBloc(authBloc: authBloc),
         ),
       ],
       child: ToastificationWrapper(
@@ -52,21 +51,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-
-    // return BlocProvider<AuthBloc>(
-    //   create: (context) => authBloc,
-    //   child: ToastificationWrapper(
-    //     child: MaterialApp.router(
-    //       debugShowCheckedModeBanner: false,
-    //       theme: AppThemes.lightTheme,
-    //       darkTheme: AppThemes.darkTheme,
-    //       themeMode: ThemeMode.dark,
-    //       title: 'Gift Grab',
-    //       routeInformationProvider: router.routeInformationProvider,
-    //       routerDelegate: router.routerDelegate,
-    //       routeInformationParser: router.routeInformationParser,
-    //     ),
-    //   ),
-    // );
   }
 }

@@ -11,6 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static const _storage = FlutterSecureStorage();
   static const _token = 'token';
   static const _refreshToken = 'refreshToken';
+
   final inOneHour = DateTime.now().add(Duration(hours: 1));
 
   AuthBloc() : super(AuthInitial()) {
