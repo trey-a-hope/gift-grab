@@ -39,6 +39,8 @@ class _Routes {
   final String login = 'login';
   final String game = 'game';
   final String leaderboard = 'leaderboard';
+  final String settings = 'settings';
+  final String editProfile = 'edit_profile';
 }
 
 class _TimeLimits {

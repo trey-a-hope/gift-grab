@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -30,13 +30,18 @@ class MainMenuScreen extends StatelessWidget {
               ),
             ),
             const Gap(16),
-            Text(
-              'Welcome Back, Trey',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.bodyLarge!.fontSize! * 2
-                    : theme.textTheme.bodyLarge!.fontSize,
-              ),
+            // TODO: Fetch account is only called once, so after signup it's never called again...
+            BlocBuilder<AccountBloc, AccountState>(
+              builder: (context, state) {
+                if (state is AccountLoaded) {
+                  return Text(
+                    'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
+                    style: theme.textTheme.displayLarge!.copyWith(
+                        fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
+                  );
+                }
+                return SizedBox();
+              },
             ),
             const Gap(64),
             GGButtonWidget(
@@ -49,15 +54,9 @@ class MainMenuScreen extends StatelessWidget {
               onPressed: () => context.goNamed(Globals.routes.leaderboard),
             ),
             const Gap(16),
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                return GGButtonWidget(
-                  title: 'Sign Out',
-                  onPressed: () {
-                    context.read<AuthBloc>().add(LogoutEvent());
-                  },
-                );
-              },
+            GGButtonWidget(
+              title: 'Settings',
+              onPressed: () => context.goNamed(Globals.routes.settings),
             ),
             const Gap(50),
           ],

@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class StreamToListenable extends ChangeNotifier {
@@ -54,6 +56,17 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           path: '/${Globals.routes.main}/${Globals.routes.leaderboard}',
           name: Globals.routes.leaderboard,
           builder: (context, state) => const LeaderboardScreen(),
+        ),
+        GoRoute(
+          path: '/${Globals.routes.main}/${Globals.routes.settings}',
+          name: Globals.routes.settings,
+          builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path:
+              '/${Globals.routes.main}/${Globals.routes.settings}/${Globals.routes.editProfile}',
+          name: Globals.routes.editProfile,
+          builder: (context, state) => const EditProfileScreen(),
         ),
       ],
       refreshListenable: StreamToListenable([authBloc.stream]),

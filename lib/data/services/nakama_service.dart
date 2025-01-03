@@ -4,6 +4,15 @@ import 'package:nakama/nakama.dart';
 class NakamaService {
   final _storage = const FlutterSecureStorage();
 
+  Future<void> clearTokens() async {
+    try {
+      await _storage.delete(key: 'token');
+      await _storage.delete(key: 'refreshToken');
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<Session?> getValidSession() async {
     final token = await _storage.read(key: 'token');
     final refreshToken = await _storage.read(key: 'refreshToken');

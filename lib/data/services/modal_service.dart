@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/input_match_confirmation_widget.dart';
+import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 
 /// Displays various, flexible modals.
@@ -77,5 +82,49 @@ class ModalService {
             match: match,
           ),
         ),
+      );
+
+  static Future<bool?> showConfirmation({
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) async =>
+      await showDialog<bool>(
+        useRootNavigator: false,
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => kIsWeb || Platform.isIOS
+            ? CupertinoAlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: false,
+                    child: const Text('No'),
+                    onPressed: () => context.pop(false),
+                  ),
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text('Yes'),
+                    onPressed: () => context.pop(true),
+                  ),
+                ],
+              )
+            : AlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: <Widget>[
+                  TextButton(
+                    child:
+                        const Text('NO', style: TextStyle(color: Colors.black)),
+                    onPressed: () => context.pop(false),
+                  ),
+                  TextButton(
+                    child: const Text('YES',
+                        style: TextStyle(color: Colors.black)),
+                    onPressed: () => context.pop(true),
+                  ),
+                ],
+              ),
       );
 }

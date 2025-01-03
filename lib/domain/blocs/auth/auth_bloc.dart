@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc() : super(AuthInitial()) {
     on<LoginEvent>(_onLoginEvent);
+    on<SignUpEvent>(_onSignUpEvent);
     on<LogoutEvent>(_onLogoutEvent);
     on<CheckAuthStatusEvent>(_onCheckAuthStatusEvent);
   }
@@ -26,6 +27,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final session = await getNakamaClient().authenticateEmail(
         email: event.email,
         password: event.password,
+      );
+
+      debugPrint(
+        'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
+      );
+      await _storage.write(key: _token, value: session.token);
+      await _storage.write(key: _refreshToken, value: session.refreshToken);
+
+      emit(Authenticated());
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onSignUpEvent(
+      SignUpEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+
+    try {
+      final session = await getNakamaClient().authenticateEmail(
+        email: event.email,
+        password: event.password,
+        username: event.username,
+        create: true,
       );
 
       debugPrint(
