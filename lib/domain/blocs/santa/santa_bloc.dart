@@ -18,7 +18,7 @@ class SantaBloc extends Bloc<SantaEvent, SantaState> {
         ) {
     on<FreezeSantaEvent>(_onFreezeSantaEvent);
     on<UnfreezeSantaEvent>(_onUnfreezeSantaEvent);
-    // on<FlameSantaEvent>(_onFlameSantaEvent);
+    on<FlameSantaEvent>(_onFlameSantaEvent);
     on<UnflameSantaEvent>(_onUnflameSantaEvent);
     on<IncreaseSantaSpeedEvent>(_onIncreaseSantaSpeedEvent);
     on<ResetSantaSpeedEvent>(_onResetSantaSpeedEvent);
@@ -42,11 +42,11 @@ class SantaBloc extends Bloc<SantaEvent, SantaState> {
     ));
   }
 
-  // void _onFlameSantaEvent(FlameSantaEvent event, Emitter<SantaState> emit) {
-  //   if (!state.isFrozen) {
-  //     emit(state.copyWith(isFlamed: true));
-  //   }
-  // }
+  void _onFlameSantaEvent(FlameSantaEvent event, Emitter<SantaState> emit) {
+    if (!state.isFrozen) {
+      emit(state.copyWith(isFlamed: true));
+    }
+  }
 
   void _onUnflameSantaEvent(UnflameSantaEvent event, Emitter<SantaState> emit) {
     emit(state.copyWith(isFlamed: false));

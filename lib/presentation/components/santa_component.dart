@@ -5,6 +5,7 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/components/flame_component.dart';
@@ -23,12 +24,19 @@ class FlameHandler extends Component with FlameBlocReader<GameBloc, GameState> {
   }
 }
 
+class GiftHandler extends Component with FlameBlocReader<GameBloc, GameState> {
+  void handleGiftCollision() {
+    bloc.add(ScorePointEvent());
+  }
+}
+
 class SantaComponent extends SpriteGroupComponent<MovementState>
     with
         HasGameRef<GiftGrabGame>,
         CollisionCallbacks,
         FlameBlocReader<SantaBloc, SantaState> {
   late final FlameHandler _flameHandler;
+  late final GiftHandler _giftHandler;
 
   final double _spriteHeight = 200;
   final JoystickComponent joystick;
@@ -51,6 +59,9 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
 
     _flameHandler = FlameHandler();
     await add(_flameHandler);
+
+    _giftHandler = GiftHandler();
+    await add(_giftHandler);
 
     // Load sprites
     final Sprite santaIdle = await gameRef.loadSprite(Globals.santaIdle);
@@ -88,11 +99,10 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void update(double dt) {
     super.update(dt);
 
-    if (!bloc.state.isFrozen) {
-      // Update sprite state based on bloc state FIRST
-      current = bloc.state.movement;
-      position = bloc.state.position;
+    current = bloc.state.movement;
+    position = bloc.state.position;
 
+    if (!bloc.state.isFrozen) {
       if (joystick.direction == JoystickDirection.idle) {
         bloc.add(UpdateSantaMovementEvent(
           movement: MovementState.idle,
@@ -136,12 +146,14 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    if (other is IceComponent && !bloc.state.isFlamed) {
+    if (other is IceComponent && !bloc.state.isFlamed && !bloc.state.isFrozen) {
       _handleIceCollision();
     } else if (other is FlameComponent) {
       _handleFlameCollision();
     } else if (other is CookieComponent) {
       _handleCookieCollision();
+    } else if (other is GiftComponent) {
+      _handleGiftCollision();
     }
   }
 
@@ -154,6 +166,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   void _handleFlameCollision() {
     if (!bloc.state.isFrozen) {
       _flameHandler.handleFlameCollision();
+      bloc.add(FlameSantaEvent());
       FlameAudio.play(Globals.flameSound);
     }
   }
@@ -162,5 +175,10 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     bloc.add(IncreaseSantaSpeedEvent());
     FlameAudio.play(Globals.itemGrabSound);
     _cookieCountdown.start();
+  }
+
+  void _handleGiftCollision() {
+    _giftHandler.handleGiftCollision();
+    FlameAudio.play(Globals.itemGrabSound);
   }
 }

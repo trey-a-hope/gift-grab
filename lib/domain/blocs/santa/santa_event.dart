@@ -11,7 +11,7 @@ class FreezeSantaEvent extends SantaEvent {}
 
 class UnfreezeSantaEvent extends SantaEvent {}
 
-// class FlameSantaEvent extends SantaEvent {}
+class FlameSantaEvent extends SantaEvent {}
 
 class UnflameSantaEvent extends SantaEvent {}
 

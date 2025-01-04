@@ -128,6 +128,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     debugPrint('Flame time left...$newTime seconds...');
     if (newTime <= 0) {
       _flameCountdownTimer?.cancel();
+      // santaBloc.add(UnflameSantaEvent()); // Add this line
       emit(state.copyWith(
         isSantaFlamed: false,
         flameRemainingTime: flameTime,

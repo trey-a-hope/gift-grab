@@ -5,7 +5,9 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
-import 'package:gift_grab/presentation/components/flame_spawner.dart';
+import 'package:gift_grab/presentation/components/ice_component.dart';
+import 'package:gift_grab/presentation/spawners/flame_spawner.dart';
+import 'package:gift_grab/presentation/spawners/gift_spawner.dart';
 import 'package:gift_grab/presentation/components/hud_text_components.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
@@ -83,6 +85,11 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
               SantaComponent(joystick: joystick),
               HUDTextComponents(),
               FlameSpawner(),
+              GiftSpawner(),
+              IceComponent(
+                  startPosition: Vector2(size.x * 0.25, size.y * 0.25)),
+              IceComponent(
+                  startPosition: Vector2(size.x * 0.75, size.y * 0.75)),
             ],
           ),
         ],
@@ -91,20 +98,4 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
     await add(joystick);
   }
-
-  // TODO: Add these via the the GiftGrabBloc.
-  // Future<List<Component>> _createPowerUps() async {
-  //   return [
-  //     FlameComponent(
-  //       startPosition: Vector2(200, 200),
-  //     )..add(
-  //         FlameBlocListener<GameBloc, GameState>(
-  //           onNewState: (state) {
-  //             // Handle power-up state
-  //           },
-  //         ),
-  //       ),
-  //     // Add other power-ups
-  //   ];
-  // }
 }

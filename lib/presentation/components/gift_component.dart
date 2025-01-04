@@ -1,65 +1,97 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:gift_grab/presentation/components/santa_component.dart';
-// import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
-import 'dart:math';
-
 import 'package:gift_grab/data/constants/globals.dart';
+import 'dart:math' as math;
 
 class GiftComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  /// Height of the sprite.
-  final double _spriteHeight = Globals.isTablet ? 200.0 : 100.0;
+  static const double TABLET_HEIGHT = 200.0;
+  static const double MOBILE_HEIGHT = 100.0;
+  static const double TABLET_SPEED = 250.0; // Slightly slower than flame
+  static const double MOBILE_SPEED = 125.0;
+  static const double SIZE_RATIO = 1.0;
 
-  /// Used for generating random position of gift.
-  final Random _random = Random();
+  late final Vector2 _velocity;
+  final Vector2 startPosition;
+  final double _spriteHeight;
+  final double speed;
+  final Function onCollected;
 
-  GiftComponent();
+  GiftComponent({
+    required this.startPosition,
+    required this.onCollected,
+  })  : _spriteHeight = Globals.isTablet ? TABLET_HEIGHT : MOBILE_HEIGHT,
+        speed = Globals.isTablet ? TABLET_SPEED : MOBILE_SPEED;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    await _setupSprite();
+    _setupPhysics();
+    _setupCollision();
+  }
 
+  Future<void> _setupSprite() async {
     sprite = await gameRef.loadSprite(Globals.giftSprite);
-
-    position = _createRandomPosition();
-
-    // Set dimensions of santa sprite.
-    width = _spriteHeight;
+    width = _spriteHeight * SIZE_RATIO;
     height = _spriteHeight;
-
-    // Set anchor of component.
     anchor = Anchor.center;
+  }
 
-    add(CircleHitbox()..radius = 1);
+  void _setupPhysics() {
+    position = startPosition;
+    _velocity = _calculateInitialVelocity();
+  }
+
+  void _setupCollision() {
+    add(CircleHitbox()..radius = width / 2);
+    add(ScreenHitbox());
+  }
+
+  Vector2 _calculateInitialVelocity() {
+    final double angle = _getRandomAngle() * (math.pi / 180);
+    return Vector2(
+      math.cos(angle) * speed,
+      math.sin(angle) * speed,
+    );
+  }
+
+  double _getRandomAngle() => lerpDouble(0, 360, math.Random().nextDouble())!;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _updatePosition(dt);
+    _keepInBounds();
+  }
+
+  void _updatePosition(double dt) {
+    position += _velocity * dt;
+  }
+
+  void _keepInBounds() {
+    if (position.x < 0 || position.x > gameRef.size.x) {
+      _velocity.x = -_velocity.x;
+      position.x = position.x.clamp(0, gameRef.size.x);
+    }
+    if (position.y < 0 || position.y > gameRef.size.y) {
+      _velocity.y = -_velocity.y;
+      position.y = position.y.clamp(0, gameRef.size.y);
+    }
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    // If collision comes from Santa...
     if (other is SantaComponent) {
-      // Play gift grab sound.
       FlameAudio.play(Globals.itemGrabSound);
-
-      // Remove the just collided gift.
       removeFromParent();
-
-      // Update Santa's score by one.
-      // gameRef.score += 1;
-
-      // Add a new gift to the field.
-      gameRef.add(GiftComponent());
+      onCollected();
     }
-  }
-
-  /// Create new position for the gift on random.
-  Vector2 _createRandomPosition() {
-    final double x = _random.nextInt(gameRef.size.x.toInt()).toDouble();
-    final double y = _random.nextInt(gameRef.size.y.toInt()).toDouble();
-
-    return Vector2(x, y);
   }
 }
