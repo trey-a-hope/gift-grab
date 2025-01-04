@@ -7,11 +7,11 @@ import 'dart:math' as math;
 
 class IceComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  static const double TABLET_HEIGHT = 200.0;
-  static const double MOBILE_HEIGHT = 100.0;
-  static const double TABLET_SPEED = 300.0;
-  static const double MOBILE_SPEED = 150.0;
-  static const double SIZE_RATIO = 1.0;
+  static const double _tableHeight = 200.0;
+  static const double _mobileHeight = 100.0;
+  static const double _tabletSpeed = 300.0;
+  static const double _mobileSpeed = 150.0;
+  static const double sizeRatio = 1.0;
 
   late final Vector2 _velocity;
   final Vector2 startPosition;
@@ -19,8 +19,8 @@ class IceComponent extends SpriteComponent
   final double speed;
 
   IceComponent({required this.startPosition})
-      : _spriteHeight = Globals.isTablet ? TABLET_HEIGHT : MOBILE_HEIGHT,
-        speed = Globals.isTablet ? TABLET_SPEED : MOBILE_SPEED;
+      : _spriteHeight = Globals.isTablet ? _tableHeight : _mobileHeight,
+        speed = Globals.isTablet ? _tabletSpeed : _mobileSpeed;
 
   @override
   Future<void> onLoad() async {
@@ -32,7 +32,7 @@ class IceComponent extends SpriteComponent
 
   Future<void> _setupSprite() async {
     sprite = await gameRef.loadSprite(Globals.iceSprite);
-    width = _spriteHeight * SIZE_RATIO;
+    width = _spriteHeight * sizeRatio;
     height = _spriteHeight;
     anchor = Anchor.center;
   }

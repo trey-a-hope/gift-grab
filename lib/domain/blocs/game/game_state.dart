@@ -3,46 +3,57 @@ part of 'game_bloc.dart';
 class GameState extends Equatable {
   final int score;
   final int remainingTime;
-
   final int flameRemainingTime;
-  final bool isFlameSpawned;
-  final bool isSantaFlamed;
-
   final bool isGameOver;
+  final bool isSantaFlamed;
+  final bool isSantaFrozen;
+  final double santaSpeed;
+  final bool isFlameSpawned;
 
   const GameState({
-    required this.score,
-    required this.remainingTime,
-    required this.flameRemainingTime,
-    this.isFlameSpawned = false,
-    this.isSantaFlamed = false,
+    this.score = 0,
+    this.remainingTime = 30,
+    this.flameRemainingTime = 10,
     this.isGameOver = false,
+    this.isSantaFlamed = false,
+    this.isSantaFrozen = false,
+    this.santaSpeed = 500,
+    this.isFlameSpawned = false,
   });
 
   GameState copyWith({
     int? score,
     int? remainingTime,
     int? flameRemainingTime,
-    bool? isFlameSpawned,
-    bool? isSantaFlamed,
     bool? isGameOver,
-  }) =>
-      GameState(
-        score: score ?? this.score,
-        remainingTime: remainingTime ?? this.remainingTime,
-        flameRemainingTime: flameRemainingTime ?? this.flameRemainingTime,
-        isFlameSpawned: isFlameSpawned ?? this.isFlameSpawned,
-        isSantaFlamed: isSantaFlamed ?? this.isSantaFlamed,
-        isGameOver: isGameOver ?? this.isGameOver,
-      );
+    bool? isSantaFlamed,
+    bool? isSantaFrozen,
+    double? santaSpeed,
+    bool? isFlameSpawned,
+  }) {
+    return GameState(
+      score: score ?? this.score,
+      remainingTime: remainingTime ?? this.remainingTime,
+      flameRemainingTime: flameRemainingTime ?? this.flameRemainingTime,
+      isGameOver: isGameOver ?? this.isGameOver,
+      isSantaFlamed: isSantaFlamed ?? this.isSantaFlamed,
+      isSantaFrozen: isSantaFrozen ?? this.isSantaFrozen,
+      santaSpeed: santaSpeed ?? this.santaSpeed,
+      isFlameSpawned: isFlameSpawned ?? this.isFlameSpawned,
+    );
+  }
 
   @override
   List<Object?> get props => [
         score,
         remainingTime,
         flameRemainingTime,
-        isFlameSpawned,
-        isSantaFlamed,
         isGameOver,
+        isSantaFlamed,
+        isSantaFrozen,
+        santaSpeed,
+        // santaPosition,
+        // santaMovement,
+        isFlameSpawned,
       ];
 }

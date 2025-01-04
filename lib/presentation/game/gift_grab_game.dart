@@ -4,7 +4,6 @@ import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
-import 'package:gift_grab/domain/blocs/santa/santa_bloc.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/spawners/flame_spawner.dart';
 import 'package:gift_grab/presentation/spawners/gift_spawner.dart';
@@ -68,9 +67,6 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
         providers: [
           FlameBlocProvider<LeaderboardBloc, LeaderboardState>(
             create: () => LeaderboardBloc(),
-          ),
-          FlameBlocProvider<SantaBloc, SantaState>(
-            create: () => SantaBloc(size / 2),
           ),
           FlameBlocProvider<GameBloc, GameState>(
             create: () => GameBloc()..add(StartGameEvent()),

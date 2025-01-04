@@ -8,11 +8,11 @@ import 'package:gift_grab/data/constants/globals.dart';
 
 class FlameComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  static const double TABLET_HEIGHT = 160.0;
-  static const double MOBILE_HEIGHT = 80.0;
-  static const double TABLET_SPEED = 300.0;
-  static const double MOBILE_SPEED = 150.0;
-  static const double SIZE_RATIO = 0.8;
+  static const double _tableHeight = 160.0;
+  static const double _mobileHeight = 80.0;
+  static const double _tabletSpeed = 300.0;
+  static const double _mobileSpeed = 150.0;
+  static const double sizeRatio = 0.8;
 
   late final Vector2 _velocity;
   final Vector2 startPosition;
@@ -20,8 +20,8 @@ class FlameComponent extends SpriteComponent
   final double speed;
 
   FlameComponent({required this.startPosition})
-      : _spriteHeight = Globals.isTablet ? TABLET_HEIGHT : MOBILE_HEIGHT,
-        speed = Globals.isTablet ? TABLET_SPEED : MOBILE_SPEED;
+      : _spriteHeight = Globals.isTablet ? _tableHeight : _mobileHeight,
+        speed = Globals.isTablet ? _tabletSpeed : _mobileSpeed;
 
   @override
   Future<void> onLoad() async {
@@ -33,7 +33,7 @@ class FlameComponent extends SpriteComponent
 
   Future<void> _setupSprite() async {
     sprite = await gameRef.loadSprite(Globals.flameSprite);
-    width = _spriteHeight * SIZE_RATIO;
+    width = _spriteHeight * sizeRatio;
     height = _spriteHeight;
     anchor = Anchor.center;
   }

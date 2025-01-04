@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,20 +7,17 @@ part 'game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   static const int initialTime = 30;
-  static const int flameTime = 10;
-  static const int initialScore = 0;
+  static const int flameImmunityDuration = 10;
+  static const double originalSpeed = 500;
 
   Timer? _gameTimer;
   Timer? _flameDisplayTimer;
   Timer? _flameCountdownTimer;
+  Timer? _frozenCountdown;
+  Timer? _cookieCountdown;
   bool _hasSpawnedFlame = false;
 
-  GameBloc()
-      : super(const GameState(
-          score: initialScore,
-          remainingTime: initialTime,
-          flameRemainingTime: flameTime,
-        )) {
+  GameBloc() : super(GameState()) {
     on<StartGameEvent>(_onStartGameEvent);
     on<ScorePointEvent>(_onScorePointEvent);
     on<TimerTickEvent>(_onTimerTickEvent);
@@ -30,6 +26,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<DeactivateFlameEvent>(_onDeactivateFlameEvent);
     on<FlameTickEvent>(_onFlameTickEvent);
     on<ResetGameEvent>(_onResetGameEvent);
+
+    // Santa related events
+    on<FreezeSantaEvent>(_onFreezeSantaEvent);
+    on<UnfreezeSantaEvent>(_onUnfreezeSantaEvent);
+    on<IncreaseSantaSpeedEvent>(_onIncreaseSantaSpeedEvent);
+    on<ResetSantaSpeedEvent>(_onResetSantaSpeedEvent);
   }
 
   void startTimer() {
@@ -59,31 +61,60 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     _flameCountdownTimer?.cancel();
     _flameCountdownTimer = null;
+
+    _frozenCountdown?.cancel();
+    _frozenCountdown = null;
+
+    _cookieCountdown?.cancel();
+    _cookieCountdown = null;
+  }
+
+  void _onResetGameEvent(ResetGameEvent event, Emitter<GameState> emit) {
+    stopTimer();
+    emit(GameState(
+      remainingTime: initialTime,
+      flameRemainingTime: flameImmunityDuration,
+      score: 0,
+      isGameOver: false,
+      isSantaFlamed: false,
+      isSantaFrozen: false,
+      santaSpeed: originalSpeed,
+      isFlameSpawned: false,
+    ));
+    _hasSpawnedFlame = false;
+  }
+
+  void _onDeactivateFlameEvent(
+      DeactivateFlameEvent event, Emitter<GameState> emit) {
+    emit(state.copyWith(
+      isSantaFlamed: false,
+      flameRemainingTime: flameImmunityDuration,
+    ));
   }
 
   void _onDisplayFlameEvent(DisplayFlameEvent event, Emitter<GameState> emit) {
     emit(state.copyWith(isFlameSpawned: true));
   }
 
-  void _onStartFlameCountdownEvent(
-      StartFlameCountdownEvent event, Emitter<GameState> emit) {
-    debugPrint('Starting flame countdown');
-    emit(state.copyWith(
-      isSantaFlamed: true,
-      flameRemainingTime: flameTime,
-    ));
-    _startFlameCountdown();
+  void _onTimerTickEvent(TimerTickEvent event, Emitter<GameState> emit) {
+    final newTime = state.remainingTime - 1;
+    if (newTime <= 0) {
+      _gameTimer?.cancel();
+      emit(state.copyWith(
+        remainingTime: 0,
+        isGameOver: true,
+      ));
+    } else {
+      emit(state.copyWith(remainingTime: newTime));
+    }
   }
 
   void _onStartGameEvent(StartGameEvent event, Emitter<GameState> emit) {
-    emit(state.copyWith(
-      score: initialScore,
+    emit(GameState(
       remainingTime: initialTime,
-      flameRemainingTime: flameTime,
-      isSantaFlamed: false,
+      score: 0,
       isGameOver: false,
     ));
-
     startTimer();
   }
 
@@ -91,18 +122,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     emit(state.copyWith(score: state.score + 1));
   }
 
-  void _onTimerTickEvent(TimerTickEvent event, Emitter<GameState> emit) {
-    final newTime = state.remainingTime - 1;
-    if (newTime <= 0) {
-      emit(
-        state.copyWith(
-          remainingTime: 0,
-          isGameOver: true,
-        ),
-      );
-    } else {
-      emit(state.copyWith(remainingTime: newTime));
-    }
+  void _onStartFlameCountdownEvent(
+      StartFlameCountdownEvent event, Emitter<GameState> emit) {
+    emit(state.copyWith(
+      isSantaFlamed: true,
+      flameRemainingTime: flameImmunityDuration,
+    ));
+    _startFlameCountdown();
   }
 
   void _startFlameCountdown() {
@@ -115,43 +141,57 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     );
   }
 
-  void _onDeactivateFlameEvent(
-      DeactivateFlameEvent event, Emitter<GameState> emit) {
-    emit(state.copyWith(
-      isSantaFlamed: false,
-      flameRemainingTime: flameTime,
-    ));
-  }
-
   void _onFlameTickEvent(FlameTickEvent event, Emitter<GameState> emit) {
     final newTime = state.flameRemainingTime - 1;
-    debugPrint('Flame time left...$newTime seconds...');
     if (newTime <= 0) {
       _flameCountdownTimer?.cancel();
-      // santaBloc.add(UnflameSantaEvent()); // Add this line
       emit(state.copyWith(
         isSantaFlamed: false,
-        flameRemainingTime: flameTime,
+        flameRemainingTime: flameImmunityDuration,
       ));
     } else {
-      emit(state.copyWith(
-        flameRemainingTime: newTime,
-      ));
+      emit(state.copyWith(flameRemainingTime: newTime));
     }
   }
 
-  void _onResetGameEvent(ResetGameEvent event, Emitter<GameState> emit) {
-    emit(const GameState(
-      score: initialScore,
-      remainingTime: initialTime,
-      flameRemainingTime: flameTime,
-      isGameOver: false,
+  // Santa related event handlers
+  void _onFreezeSantaEvent(FreezeSantaEvent event, Emitter<GameState> emit) {
+    if (!state.isSantaFrozen) {
+      _frozenCountdown?.cancel();
+      emit(state.copyWith(
+        isSantaFrozen: true,
+      ));
+
+      _frozenCountdown = Timer(const Duration(seconds: 3), () {
+        add(UnfreezeSantaEvent());
+      });
+    }
+  }
+
+  void _onUnfreezeSantaEvent(
+      UnfreezeSantaEvent event, Emitter<GameState> emit) {
+    emit(state.copyWith(
+      isSantaFrozen: false,
     ));
+  }
+
+  void _onIncreaseSantaSpeedEvent(
+      IncreaseSantaSpeedEvent event, Emitter<GameState> emit) {
+    emit(state.copyWith(santaSpeed: state.santaSpeed * 2));
+  }
+
+  void _onResetSantaSpeedEvent(
+      ResetSantaSpeedEvent event, Emitter<GameState> emit) {
+    emit(state.copyWith(santaSpeed: originalSpeed));
   }
 
   @override
   Future<void> close() {
-    stopTimer();
+    _gameTimer?.cancel();
+    _flameDisplayTimer?.cancel();
+    _flameCountdownTimer?.cancel();
+    _frozenCountdown?.cancel();
+    _cookieCountdown?.cancel();
     return super.close();
   }
 }
