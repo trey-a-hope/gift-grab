@@ -126,7 +126,7 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
   }
 
   void _handleCookieCollision() {
-    bloc.add(IncreaseSantaSpeedEvent());
+    bloc.add(StartSpeedBoostCountdownEvent());
     FlameAudio.play(Globals.itemGrabSound);
   }
 

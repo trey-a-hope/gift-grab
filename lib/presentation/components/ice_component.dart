@@ -14,11 +14,10 @@ class IceComponent extends SpriteComponent
   static const double sizeRatio = 1.0;
 
   late final Vector2 _velocity;
-  final Vector2 startPosition;
   final double _spriteHeight;
   final double speed;
 
-  IceComponent({required this.startPosition})
+  IceComponent()
       : _spriteHeight = Globals.isTablet ? _tableHeight : _mobileHeight,
         speed = Globals.isTablet ? _tabletSpeed : _mobileSpeed;
 
@@ -38,7 +37,10 @@ class IceComponent extends SpriteComponent
   }
 
   void _setupPhysics() {
-    position = startPosition;
+    position = Vector2(
+      math.Random().nextDouble() * gameRef.size.x,
+      math.Random().nextDouble() * gameRef.size.y,
+    );
     _velocity = _calculateInitialVelocity();
   }
 

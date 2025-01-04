@@ -9,6 +9,9 @@ class GameState extends Equatable {
   final bool isSantaFrozen;
   final double santaSpeed;
   final bool isFlameSpawned;
+  final bool isCookieSpawned;
+  final int speedBoostRemainingTime;
+  final bool isSpeedBoosted;
 
   const GameState({
     this.score = 0,
@@ -19,6 +22,9 @@ class GameState extends Equatable {
     this.isSantaFrozen = false,
     this.santaSpeed = 500,
     this.isFlameSpawned = false,
+    this.isCookieSpawned = false,
+    this.speedBoostRemainingTime = 7,
+    this.isSpeedBoosted = false,
   });
 
   GameState copyWith({
@@ -30,6 +36,9 @@ class GameState extends Equatable {
     bool? isSantaFrozen,
     double? santaSpeed,
     bool? isFlameSpawned,
+    bool? isCookieSpawned,
+    int? speedBoostRemainingTime,
+    bool? isSpeedBoosted,
   }) {
     return GameState(
       score: score ?? this.score,
@@ -40,6 +49,10 @@ class GameState extends Equatable {
       isSantaFrozen: isSantaFrozen ?? this.isSantaFrozen,
       santaSpeed: santaSpeed ?? this.santaSpeed,
       isFlameSpawned: isFlameSpawned ?? this.isFlameSpawned,
+      isCookieSpawned: isCookieSpawned ?? this.isCookieSpawned,
+      speedBoostRemainingTime:
+          speedBoostRemainingTime ?? this.speedBoostRemainingTime,
+      isSpeedBoosted: isSpeedBoosted ?? this.isSpeedBoosted,
     );
   }
 
@@ -52,8 +65,9 @@ class GameState extends Equatable {
         isSantaFlamed,
         isSantaFrozen,
         santaSpeed,
-        // santaPosition,
-        // santaMovement,
         isFlameSpawned,
+        isCookieSpawned,
+        speedBoostRemainingTime,
+        isSpeedBoosted
       ];
 }

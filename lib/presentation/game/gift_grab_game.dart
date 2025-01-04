@@ -5,6 +5,7 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
+import 'package:gift_grab/presentation/spawners/cookie_spawner.dart';
 import 'package:gift_grab/presentation/spawners/flame_spawner.dart';
 import 'package:gift_grab/presentation/spawners/gift_spawner.dart';
 import 'package:gift_grab/presentation/components/hud_text_components.dart';
@@ -82,10 +83,8 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
               HUDTextComponents(),
               FlameSpawner(),
               GiftSpawner(),
-              IceComponent(
-                  startPosition: Vector2(size.x * 0.25, size.y * 0.25)),
-              IceComponent(
-                  startPosition: Vector2(size.x * 0.75, size.y * 0.75)),
+              CookieSpawner(),
+              IceComponent(),
             ],
           ),
         ],

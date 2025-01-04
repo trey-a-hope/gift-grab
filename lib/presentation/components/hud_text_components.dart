@@ -10,6 +10,7 @@ class HUDTextComponents extends PositionComponent
   late TextComponent _scoreText;
   late TextComponent _timerText;
   late TextComponent _flameTimerText;
+  late TextComponent _cookieTimerText;
 
   @override
   Future<void> onLoad() async {
@@ -51,6 +52,18 @@ class HUDTextComponents extends PositionComponent
       ),
     );
 
+    _cookieTimerText = TextComponent(
+      text: 'Cookie FTime: 0',
+      position: Vector2(gameRef.size.x - 40, 150),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: TextStyle(
+          color: palette.BasicPalette.white.color,
+          fontSize: 25,
+        ),
+      ),
+    );
+
     add(_timerText);
     add(_scoreText);
   }
@@ -61,13 +74,21 @@ class HUDTextComponents extends PositionComponent
     _timerText.text = 'Time: ${state.remainingTime}';
 
     if (state.isSantaFlamed) {
-      // Check this instead of isFlameActive
       if (!_flameTimerText.isMounted) {
         add(_flameTimerText);
       }
       _flameTimerText.text = 'Flame Time: ${state.flameRemainingTime}';
     } else if (_flameTimerText.isMounted) {
       _flameTimerText.removeFromParent();
+    }
+
+    if (state.isSpeedBoosted) {
+      if (!_cookieTimerText.isMounted) {
+        add(_cookieTimerText);
+      }
+      _cookieTimerText.text = 'Cookie Time: ${state.speedBoostRemainingTime}';
+    } else if (_cookieTimerText.isMounted) {
+      _cookieTimerText.removeFromParent();
     }
   }
 }

@@ -15,6 +15,7 @@ class TimerTickEvent extends GameEvent {}
 
 class ScorePointEvent extends GameEvent {}
 
+// Flame related events
 class DisplayFlameEvent extends GameEvent {}
 
 class StartFlameCountdownEvent extends GameEvent {}
@@ -28,6 +29,9 @@ class FreezeSantaEvent extends GameEvent {}
 
 class UnfreezeSantaEvent extends GameEvent {}
 
-class IncreaseSantaSpeedEvent extends GameEvent {}
+// Cookie related events
+class DisplayCookieEvent extends GameEvent {}
 
-class ResetSantaSpeedEvent extends GameEvent {}
+class StartSpeedBoostCountdownEvent extends GameEvent {}
+
+class SpeedBoostTickEvent extends GameEvent {}
