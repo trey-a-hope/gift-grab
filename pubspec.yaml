@@ -31,6 +31,7 @@ dependencies:
   toastification: ^2.0.0
   toggle_switch: ^2.0.1
   uuid:
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -42,5 +43,6 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/audio/
     - assets/images/

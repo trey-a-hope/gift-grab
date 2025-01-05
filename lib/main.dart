@@ -6,14 +6,19 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final _isDev = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load();
+
   getNakamaClient(
-    host: '127.0.0.1',
+    host: _isDev ? '127.0.0.1' : '24.144.85.68',
     ssl: false,
-    serverKey: 'defaultkey',
+    serverKey: dotenv.env['NAKAMA_SERVER_KEY']!,
     httpPort: 7350,
   );
 
