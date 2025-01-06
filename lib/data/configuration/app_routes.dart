@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/group_details_screen.dart';
 import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
@@ -11,6 +13,7 @@ import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class StreamToListenable extends ChangeNotifier {
   late final List<StreamSubscription> subscriptions;
@@ -70,6 +73,23 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           name: Globals.routes.createGroup,
           builder: (context, state) => const CreateGroupScreen(),
         ),
+        GoRoute(
+            path:
+                '/${Globals.routes.main}/${Globals.routes.groups}/${Globals.routes.groupDetails}/:group',
+            name: Globals.routes.groupDetails,
+            builder: (context, state) {
+              final param = state.pathParameters['group'];
+
+              if (param == null) {
+                throw Exception(
+                  'The group when changing routes is null.',
+                );
+              }
+
+              final group = Group.fromJson(jsonDecode(param));
+
+              return GroupDetailsScreen(group: group);
+            }),
         GoRoute(
           path: '/${Globals.routes.main}/${Globals.routes.settings}',
           name: Globals.routes.settings,

@@ -39,58 +39,58 @@ class _GroupsScreenState extends State<GroupsScreen>
         child: BlocProvider(
           create: (context) => GroupBloc(
             accountBloc: context.read<AccountBloc>(),
-          )..add(LoadGroupsEvent()),
+          )..add(
+              LoadGroupsEvent(),
+            ),
           child: BlocBuilder<GroupBloc, GroupState>(
-            builder: (context, state) {
-              return switch (state) {
-                GroupLoading() => const CircularProgressIndicator(),
-                GroupsLoaded() => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TabBar(
-                          labelColor: Colors.white,
-                          labelStyle: theme.textTheme.displayLarge,
-                          indicatorColor: Colors.white,
-                          unselectedLabelColor: Colors.grey,
+            builder: (context, state) => switch (state) {
+              GroupLoading() => const CircularProgressIndicator(),
+              GroupsLoaded() => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TabBar(
+                        labelColor: Colors.white,
+                        labelStyle: theme.textTheme.displayLarge,
+                        indicatorColor: Colors.white,
+                        unselectedLabelColor: Colors.grey,
+                        controller: _tabController,
+                        tabs: const [
+                          Text('All Groups'),
+                          Text('My Groups'),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
                           controller: _tabController,
-                          tabs: const [
-                            Text('All Groups'),
-                            Text('My Groups'),
+                          children: [
+                            GroupDetailsListWidget(
+                              groups: state.entry.allGroups,
+                              currentUid: state.uid,
+                            ),
+                            GroupDetailsListWidget(
+                              groups: state.entry.myGroups,
+                              currentUid: state.uid,
+                            )
                           ],
                         ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              GroupDetailsListWidget(
-                                groups: state.entry.allGroups,
-                                currentUid: state.uid,
-                              ),
-                              GroupDetailsListWidget(
-                                groups: state.entry.myGroups,
-                                currentUid: state.uid,
-                              )
-                            ],
-                          ),
-                        ),
-                        const Gap(16),
-                        GGButtonWidget(
-                          title: 'Create Group',
-                          onPressed: () =>
-                              context.goNamed(Globals.routes.createGroup),
-                        ),
-                        const Gap(16),
-                        GGButtonWidget(
-                          title: 'Back',
-                          onPressed: () => context.goNamed(Globals.routes.main),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const Gap(16),
+                      GGButtonWidget(
+                        title: 'Create Group',
+                        onPressed: () =>
+                            context.goNamed(Globals.routes.createGroup),
+                      ),
+                      const Gap(16),
+                      GGButtonWidget(
+                        title: 'Back',
+                        onPressed: () => context.goNamed(Globals.routes.main),
+                      ),
+                    ],
                   ),
-                GroupError() => const Text('ERROR'),
-                _ => Text('hello')
-              };
+                ),
+              GroupError() => const Text('ERROR'),
+              _ => Text('hello')
             },
           ),
         ),

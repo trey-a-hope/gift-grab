@@ -25,72 +25,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return GGScaffoldWidget(
       child: Center(
         child: BlocBuilder<AccountBloc, AccountState>(
-          builder: (context, state) {
-            if (state is AccountLoading) {
-              return const CircularProgressIndicator();
-            }
+          builder: (context, state) => switch (state) {
+            AccountLoading() => const CircularProgressIndicator(),
+            AccountLoaded() => Builder(
+                builder: (_) {
+                  _controller.text =
+                      state.account.user.username ?? 'No Username';
 
-            if (state is AccountError) {
-              return Text('Error: ${state.message}');
-            }
-
-            if (state is AccountLoaded) {
-              _controller.text = state.account.user.username ?? 'No Username';
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Edit Profile',
-                    style: theme.textTheme.displayLarge!.copyWith(
-                      fontSize: Globals.isTablet
-                          ? theme.textTheme.displayLarge!.fontSize! * 2
-                          : theme.textTheme.displayLarge!.fontSize,
-                    ),
-                  ),
-                  const Gap(50),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: GGInputFieldWidget(
-                      onChanged: (val) {
-                        _controller.text = val;
-                      },
-                      initialValue: _controller.text,
-                      hintText: 'Enter username...',
-                    ),
-                  ),
-                  const Gap(20),
-                  SizedBox(
-                    width: Globals.isTablet ? 400 : 200,
-                    height: Globals.isTablet ? 100 : 50,
-                    child: ElevatedButton(
-                      onPressed: () => _attemptSaveUsername(context),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: Globals.isTablet ? 50 : 25,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Edit Profile',
+                        style: theme.textTheme.displayLarge!.copyWith(
+                          fontSize: Globals.isTablet
+                              ? theme.textTheme.displayLarge!.fontSize! * 2
+                              : theme.textTheme.displayLarge!.fontSize,
                         ),
                       ),
-                    ),
-                  ),
-                  const Gap(20),
-                  SizedBox(
-                    width: Globals.isTablet ? 400 : 200,
-                    height: Globals.isTablet ? 100 : 50,
-                    child: ElevatedButton(
-                      onPressed: () => context.goNamed(Globals.routes.settings),
-                      child: Text(
-                        'Back',
-                        style: TextStyle(
-                          fontSize: Globals.isTablet ? 50 : 25,
+                      const Gap(50),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: GGInputFieldWidget(
+                          onChanged: (val) {
+                            _controller.text = val;
+                          },
+                          initialValue: _controller.text,
+                          hintText: 'Enter username...',
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            }
-
-            return SizedBox();
+                      const Gap(20),
+                      SizedBox(
+                        width: Globals.isTablet ? 400 : 200,
+                        height: Globals.isTablet ? 100 : 50,
+                        child: ElevatedButton(
+                          onPressed: () => _attemptSaveUsername(context),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontSize: Globals.isTablet ? 50 : 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Gap(20),
+                      SizedBox(
+                        width: Globals.isTablet ? 400 : 200,
+                        height: Globals.isTablet ? 100 : 50,
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              context.goNamed(Globals.routes.settings),
+                          child: Text(
+                            'Back',
+                            style: TextStyle(
+                              fontSize: Globals.isTablet ? 50 : 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            AccountError() => Text('Error: ${state.message}'),
+            _ => Text('hello')
           },
         ),
       ),

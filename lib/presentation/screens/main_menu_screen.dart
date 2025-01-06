@@ -40,27 +40,25 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
-              builder: (context, state) {
-                return switch (state) {
-                  AccountLoading() => const CircularProgressIndicator(),
-                  AccountLoaded() => Text(
-                      'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
-                      style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
-                    ),
-                  AccountError() => Text(
-                      'Error: ${state.message}',
-                      style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
-                          color: Colors.red),
-                    ),
-                  _ => Text(
-                      'Error: Should not see this...',
-                      style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
-                          color: Colors.red),
-                    ),
-                };
+              builder: (context, state) => switch (state) {
+                AccountLoading() => const CircularProgressIndicator(),
+                AccountLoaded() => Text(
+                    'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
+                    style: theme.textTheme.displayLarge!.copyWith(
+                        fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
+                  ),
+                AccountError() => Text(
+                    'Error: ${state.message}',
+                    style: theme.textTheme.displayLarge!.copyWith(
+                        fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
+                        color: Colors.red),
+                  ),
+                _ => Text(
+                    'Error: Should not see this...',
+                    style: theme.textTheme.displayLarge!.copyWith(
+                        fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
+                        color: Colors.red),
+                  ),
               },
             ),
             const Gap(64),

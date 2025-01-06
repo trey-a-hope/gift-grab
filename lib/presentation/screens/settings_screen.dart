@@ -38,32 +38,29 @@ class SettingsScreen extends StatelessWidget {
             ),
             const Gap(16),
             BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                return GGButtonWidget(
-                  title: 'Sign Out',
-                  onPressed: () async {
-                    final confirm = await ModalService.showConfirmation(
-                      context: context,
-                      title: 'Sign Out?',
-                      message: 'Are you sure?',
-                    );
+              builder: (context, state) => GGButtonWidget(
+                title: 'Sign Out',
+                onPressed: () async {
+                  final confirm = await ModalService.showConfirmation(
+                    context: context,
+                    title: 'Sign Out?',
+                    message: 'Are you sure?',
+                  );
 
-                    if (confirm == null || confirm == false) {
-                      return;
-                    }
+                  if (confirm == null || confirm == false) {
+                    return;
+                  }
 
-                    if (!context.mounted) return;
+                  if (!context.mounted) return;
 
-                    context.read<AuthBloc>().add(LogoutEvent());
-                  },
-                );
-              },
+                  context.read<AuthBloc>().add(LogoutEvent());
+                },
+              ),
             ),
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
-              builder: (context, state) {
-                if (state is AccountLoaded) {
-                  return GGButtonWidget(
+              builder: (context, state) => switch (state) {
+                AccountLoaded() => GGButtonWidget(
                     title: 'Delete Profile',
                     onPressed: () async {
                       final confirm =
@@ -82,9 +79,8 @@ class SettingsScreen extends StatelessWidget {
 
                       context.read<AccountBloc>().add(DeleteAccountEvent());
                     },
-                  );
-                }
-                return SizedBox();
+                  ),
+                _ => const SizedBox(),
               },
             ),
             const Gap(16),

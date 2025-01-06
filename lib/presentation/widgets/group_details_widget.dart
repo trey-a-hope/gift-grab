@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 
 class GroupDetailsWidget extends StatelessWidget {
@@ -16,14 +20,12 @@ class GroupDetailsWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      onTap: () {},
-
-      // context.goNamed(
-      //   Globals.routes.groupDetails,
-      //   pathParameters: {
-      //     'group': jsonEncode(group),
-      //   },
-      // ),
+      onTap: () => context.goNamed(
+        Globals.routes.groupDetails,
+        pathParameters: {
+          'group': jsonEncode(group),
+        },
+      ),
       leading: CircleAvatar(
         child: Text(
           '${group.edgeCount}/${group.maxCount}',

@@ -21,19 +21,10 @@ class LeaderboardScreen extends StatelessWidget {
         child: BlocProvider(
           create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
           child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
-            builder: (context, state) {
-              if (state.isLoading) {
-                return const CircularProgressIndicator();
-              }
-
-              if (state is LeaderboardError) {
-                return Text('Error: ${state.message}');
-              }
-
-              if (state is LeaderboardLoaded) {
-                final entries = state.entries;
-
-                return Column(
+            builder: (context, state) => switch (state) {
+              LeaderboardLoading() => const CircularProgressIndicator(),
+              LeaderboardError() => Text('Error: ${state.message}'),
+              LeaderboardLoaded() => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -54,16 +45,16 @@ class LeaderboardScreen extends StatelessWidget {
                     ),
                     const Gap(64),
                     Expanded(
-                      child: entries.isEmpty
+                      child: state.entries.isEmpty
                           ? Center(
                               child: Text('No records for this week yet...',
                                   style: theme.textTheme.displayLarge),
                             )
                           : ListView.builder(
-                              itemCount: entries.length,
+                              itemCount: state.entries.length,
                               itemBuilder: ((_, index) =>
                                   LeaderboardRecordWidget(
-                                    entry: entries[index],
+                                    entry: state.entries[index],
                                   )),
                             ),
                     ),
@@ -84,10 +75,8 @@ class LeaderboardScreen extends StatelessWidget {
                       ),
                     )
                   ],
-                );
-              }
-
-              return const SizedBox();
+                ),
+              _ => const SizedBox(),
             },
           ),
         ),
