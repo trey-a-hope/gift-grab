@@ -4,6 +4,7 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -42,6 +43,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<AccountBloc>(
           create: (context) => AccountBloc(
             authBloc: authBloc,
+          ),
+        ),
+        BlocProvider<GroupBloc>(
+          create: (context) => GroupBloc(
+            accountBloc: context.read<AccountBloc>(),
           ),
         ),
       ],

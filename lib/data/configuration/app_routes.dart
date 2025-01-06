@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
@@ -56,6 +58,17 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           path: '/${Globals.routes.main}/${Globals.routes.leaderboard}',
           name: Globals.routes.leaderboard,
           builder: (context, state) => const LeaderboardScreen(),
+        ),
+        GoRoute(
+          path: '/${Globals.routes.main}/${Globals.routes.groups}',
+          name: Globals.routes.groups,
+          builder: (context, state) => const GroupsScreen(),
+        ),
+        GoRoute(
+          path:
+              '/${Globals.routes.main}/${Globals.routes.groups}/${Globals.routes.createGroup}',
+          name: Globals.routes.createGroup,
+          builder: (context, state) => const CreateGroupScreen(),
         ),
         GoRoute(
           path: '/${Globals.routes.main}/${Globals.routes.settings}',

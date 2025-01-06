@@ -75,6 +75,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const Gap(16),
             GGButtonWidget(
+              title: 'Groups',
+              onPressed: () => context.goNamed(Globals.routes.groups),
+            ),
+            const Gap(16),
+            GGButtonWidget(
               title: 'Settings',
               onPressed: () => context.goNamed(Globals.routes.settings),
             ),

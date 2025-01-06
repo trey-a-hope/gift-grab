@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'account_event.dart';
@@ -29,11 +31,26 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       if (session == null) {
         throw Exception('Session expired...');
       } else {
+        debugPrint(session.toString());
         final account = await getNakamaClient().getAccount(session);
         emit(AccountLoaded(account: account));
       }
     } catch (e) {
-      emit(AccountError(message: e.toString()));
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          case 'NOT_FOUND':
+            emit(AccountError(
+                message: 'Account not found. Please check your credentials.'));
+          case 'INVALID_ARGUMENT':
+            emit(AccountError(message: 'Invalid email or password.'));
+          case 'UNAUTHENTICATED':
+            emit(AccountError(message: 'Auth token invalid.'));
+          default:
+            emit(AccountError(message: 'Authentication failed: ${e.message}'));
+        }
+      } else {
+        emit(AccountError(message: e.toString()));
+      }
     }
   }
 

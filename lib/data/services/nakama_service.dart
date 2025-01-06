@@ -32,7 +32,7 @@ class NakamaService {
 
     // Check if session is expired or close to expiry
     if (session.isExpired ||
-        session.hasExpired(DateTime.now().add(Duration(minutes: 5)))) {
+        session.hasExpired(DateTime.now().add(Duration(hours: 1)))) {
       try {
         // Try to refresh the session
         final client = getNakamaClient();
