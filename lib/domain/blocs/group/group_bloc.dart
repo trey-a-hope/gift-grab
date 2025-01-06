@@ -11,11 +11,12 @@ part 'group_state.dart';
 class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final AccountBloc accountBloc; // Add this line
 
+  List<Group> _userGroupsToGroups(List<UserGroup>? userGroups) =>
+      userGroups == null ? <Group>[] : userGroups.map((u) => u.group).toList();
+
   GroupBloc({required this.accountBloc}) : super(GroupInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);
     on<CreateGroupEvent>(_onCreateGroup);
-    on<DeleteGroupEvent>(_onDeleteGroup);
-    on<JoinGroupEvent>(_onJoinGroup);
   }
 
   Future<void> _onLoadGroups(
@@ -41,9 +42,28 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
           session: session,
         );
 
-        final myGroupList = await getNakamaClient().listUserGroups(
+        final adminGroupList = await getNakamaClient().listUserGroups(
           session: session,
           userId: uid,
+          state: GroupMembershipState.admin,
+        );
+
+        final superAdminGroupList = await getNakamaClient().listUserGroups(
+          session: session,
+          userId: uid,
+          state: GroupMembershipState.superadmin,
+        );
+
+        final memberGroupList = await getNakamaClient().listUserGroups(
+          session: session,
+          userId: uid,
+          state: GroupMembershipState.member,
+        );
+
+        final joinRequestGroupList = await getNakamaClient().listUserGroups(
+          session: session,
+          userId: uid,
+          state: GroupMembershipState.joinRequest,
         );
 
         emit(
@@ -51,7 +71,12 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             uid: uid,
             entry: GroupsEntry(
               allGroups: allGroupList.groups ?? [],
-              myGroups: myGroupList.userGroups!.map((m) => m.group).toList(),
+              adminGroups: _userGroupsToGroups(adminGroupList.userGroups),
+              superAdminGroups:
+                  _userGroupsToGroups(superAdminGroupList.userGroups),
+              memberGroups: _userGroupsToGroups(memberGroupList.userGroups),
+              joinRequestGroups:
+                  _userGroupsToGroups(joinRequestGroupList.userGroups),
             ),
           ),
         );
@@ -83,55 +108,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
         debugPrint(newGroup.toString());
 
-        emit(GroupCreatedSuccess());
-      }
-    } catch (e) {
-      emit(GroupError(message: e.toString()));
-    }
-  }
-
-  Future<void> _onDeleteGroup(
-    DeleteGroupEvent event,
-    Emitter<GroupState> emit,
-  ) async {
-    emit(GroupLoading());
-
-    try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        await getNakamaClient().deleteGroup(
-          session: session,
-          groupId: event.groupId,
-        );
-
-        emit(GroupDeleteSuccess());
-      }
-    } catch (e) {
-      emit(GroupError(message: e.toString()));
-    }
-  }
-
-  Future<void> _onJoinGroup(
-    JoinGroupEvent event,
-    Emitter<GroupState> emit,
-  ) async {
-    emit(GroupLoading());
-
-    try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        await getNakamaClient().joinGroup(
-          session: session,
-          groupId: 'GROUPID',
-        );
-
-        add(LoadGroupsEvent());
+        emit(GroupEventSuccess('Group created successfully'));
       }
     } catch (e) {
       emit(GroupError(message: e.toString()));

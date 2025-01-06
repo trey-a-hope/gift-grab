@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
@@ -38,9 +37,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
     return BlocListener<GroupBloc, GroupState>(
       listener: (context, state) {
-        if (state is GroupCreatedSuccess) {
+        if (state is GroupEventSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Group created successfully')),
+            SnackBar(content: Text(state.message)),
           );
           context.read<GroupBloc>().add(LoadGroupsEvent());
           context.goNamed(Globals.routes.groups);

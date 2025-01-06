@@ -41,7 +41,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
               builder: (context, state) => switch (state) {
-                AccountLoading() => const CircularProgressIndicator(),
+                AccountLoading() =>
+                  Center(child: const CircularProgressIndicator()),
                 AccountLoaded() => Text(
                     'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
                     style: theme.textTheme.displayLarge!.copyWith(

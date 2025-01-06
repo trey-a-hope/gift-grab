@@ -26,7 +26,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Center(
         child: BlocBuilder<AccountBloc, AccountState>(
           builder: (context, state) => switch (state) {
-            AccountLoading() => const CircularProgressIndicator(),
+            AccountLoading() =>
+              Center(child: const CircularProgressIndicator()),
             AccountLoaded() => Builder(
                 builder: (_) {
                   _controller.text =

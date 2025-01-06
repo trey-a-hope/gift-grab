@@ -22,7 +22,8 @@ class LeaderboardScreen extends StatelessWidget {
           create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
           child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
             builder: (context, state) => switch (state) {
-              LeaderboardLoading() => const CircularProgressIndicator(),
+              LeaderboardLoading() =>
+                Center(child: const CircularProgressIndicator()),
               LeaderboardError() => Text('Error: ${state.message}'),
               LeaderboardLoaded() => Column(
                   mainAxisAlignment: MainAxisAlignment.center,

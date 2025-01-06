@@ -17,15 +17,3 @@ class CreateGroupEvent extends GroupEvent {
     required this.open,
   });
 }
-
-class DeleteGroupEvent extends GroupEvent {
-  final String groupId;
-
-  DeleteGroupEvent({required this.groupId});
-}
-
-class JoinGroupEvent extends GroupEvent {
-  final String groupId;
-
-  JoinGroupEvent({required this.groupId});
-}

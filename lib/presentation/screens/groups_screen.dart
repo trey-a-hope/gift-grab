@@ -25,7 +25,7 @@ class _GroupsScreenState extends State<GroupsScreen>
     super.initState();
     _tabController = TabController(
       initialIndex: 0,
-      length: 2,
+      length: 5,
       vsync: this,
     );
   }
@@ -39,59 +39,83 @@ class _GroupsScreenState extends State<GroupsScreen>
         child: BlocProvider(
           create: (context) => GroupBloc(
             accountBloc: context.read<AccountBloc>(),
-          )..add(
-              LoadGroupsEvent(),
-            ),
-          child: BlocBuilder<GroupBloc, GroupState>(
-            builder: (context, state) => switch (state) {
-              GroupLoading() => const CircularProgressIndicator(),
-              GroupsLoaded() => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TabBar(
-                        labelColor: Colors.white,
-                        labelStyle: theme.textTheme.displayLarge,
-                        indicatorColor: Colors.white,
-                        unselectedLabelColor: Colors.grey,
-                        controller: _tabController,
-                        tabs: const [
-                          Text('All Groups'),
-                          Text('My Groups'),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
+          )..add(LoadGroupsEvent()),
+          child: BlocListener<GroupBloc, GroupState>(
+            listener: (context, state) {
+              if (state is GroupEventSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+                context.read<GroupBloc>().add(LoadGroupsEvent());
+              }
+            },
+            child: BlocBuilder<GroupBloc, GroupState>(
+              builder: (context, state) => switch (state) {
+                GroupLoading() =>
+                  Center(child: const CircularProgressIndicator()),
+                GroupsLoaded() => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TabBar(
+                          labelColor: Colors.white,
+                          labelStyle: theme.textTheme.displayLarge,
+                          indicatorColor: Colors.white,
+                          unselectedLabelColor: Colors.grey,
                           controller: _tabController,
-                          children: [
-                            GroupDetailsListWidget(
-                              groups: state.entry.allGroups,
-                              currentUid: state.uid,
-                            ),
-                            GroupDetailsListWidget(
-                              groups: state.entry.myGroups,
-                              currentUid: state.uid,
-                            )
+                          tabs: const [
+                            Text('All'),
+                            Text('Admin'),
+                            Text('Super Admin'),
+                            Text('Member'),
+                            Text('Join Request')
                           ],
                         ),
-                      ),
-                      const Gap(16),
-                      GGButtonWidget(
-                        title: 'Create Group',
-                        onPressed: () =>
-                            context.goNamed(Globals.routes.createGroup),
-                      ),
-                      const Gap(16),
-                      GGButtonWidget(
-                        title: 'Back',
-                        onPressed: () => context.goNamed(Globals.routes.main),
-                      ),
-                    ],
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              GroupDetailsListWidget(
+                                groups: state.entry.allGroups,
+                                currentUid: state.uid,
+                              ),
+                              GroupDetailsListWidget(
+                                groups: state.entry.adminGroups,
+                                currentUid: state.uid,
+                              ),
+                              GroupDetailsListWidget(
+                                groups: state.entry.superAdminGroups,
+                                currentUid: state.uid,
+                              ),
+                              GroupDetailsListWidget(
+                                groups: state.entry.memberGroups,
+                                currentUid: state.uid,
+                              ),
+                              GroupDetailsListWidget(
+                                groups: state.entry.joinRequestGroups,
+                                currentUid: state.uid,
+                              )
+                            ],
+                          ),
+                        ),
+                        const Gap(16),
+                        GGButtonWidget(
+                          title: 'Create Group',
+                          onPressed: () =>
+                              context.goNamed(Globals.routes.createGroup),
+                        ),
+                        const Gap(16),
+                        GGButtonWidget(
+                          title: 'Back',
+                          onPressed: () => context.goNamed(Globals.routes.main),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              GroupError() => const Text('ERROR'),
-              _ => Text('hello')
-            },
+                GroupError() => const Text('ERROR'),
+                _ => SizedBox(),
+              },
+            ),
           ),
         ),
       ),
