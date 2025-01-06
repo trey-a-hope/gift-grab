@@ -7,10 +7,19 @@ import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 
-class MainMenuScreen extends StatelessWidget {
-  const MainMenuScreen({
-    super.key,
-  });
+class MainMenuScreen extends StatefulWidget {
+  const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AccountBloc>().add(FetchAccountEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +41,26 @@ class MainMenuScreen extends StatelessWidget {
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
               builder: (context, state) {
-                if (state is AccountLoaded) {
-                  return Text(
-                    'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
-                    style: theme.textTheme.displayLarge!.copyWith(
-                        fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
-                  );
-                }
-                return SizedBox();
+                return switch (state) {
+                  AccountLoading() => const CircularProgressIndicator(),
+                  AccountLoaded() => Text(
+                      'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
+                      style: theme.textTheme.displayLarge!.copyWith(
+                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
+                    ),
+                  AccountError() => Text(
+                      'Error: ${state.message}',
+                      style: theme.textTheme.displayLarge!.copyWith(
+                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
+                          color: Colors.red),
+                    ),
+                  _ => Text(
+                      'Error: Should not see this...',
+                      style: theme.textTheme.displayLarge!.copyWith(
+                          fontSize: theme.textTheme.bodyLarge!.fontSize! * 2,
+                          color: Colors.red),
+                    ),
+                };
               },
             ),
             const Gap(64),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'auth_event.dart';
@@ -21,7 +22,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckAuthStatusEvent>(_onCheckAuthStatusEvent);
   }
 
-  Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
+  Future<void> _onLoginEvent(
+    LoginEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
 
     try {
@@ -38,12 +42,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(Authenticated());
     } catch (e) {
-      emit(AuthError(message: e.toString()));
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          case 'NOT_FOUND':
+            emit(AuthError(
+                message: 'Account not found. Please check your credentials.'));
+          case 'INVALID_ARGUMENT':
+            emit(AuthError(message: 'Invalid email or password.'));
+          case 'UNAUTHENTICATED':
+            emit(AuthError(message: 'Invalid credentials.'));
+          default:
+            emit(AuthError(message: 'Authentication failed: ${e.message}'));
+        }
+      } else {
+        emit(AuthError(message: e.toString()));
+      }
     }
   }
 
   Future<void> _onSignUpEvent(
-      SignUpEvent event, Emitter<AuthState> emit) async {
+    SignUpEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
 
     try {
@@ -62,12 +82,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(Authenticated());
     } catch (e) {
-      emit(AuthError(message: e.toString()));
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          case 'INVALID_ARGUMENT':
+            emit(AuthError(message: 'Invalid email or password.'));
+          case 'UNAUTHENTICATED':
+            emit(AuthError(message: 'Invalid credentials.'));
+          default:
+            emit(AuthError(message: 'Authentication failed: ${e.message}'));
+        }
+      } else {
+        emit(AuthError(message: e.toString()));
+      }
     }
   }
 
   Future<void> _onLogoutEvent(
-      LogoutEvent event, Emitter<AuthState> emit) async {
+    LogoutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
 
     try {

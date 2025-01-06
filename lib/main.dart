@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
           create: (context) => authBloc,
         ),
         BlocProvider<AccountBloc>(
-          create: (context) => AccountBloc(authBloc: authBloc),
+          create: (context) => AccountBloc(
+            authBloc: authBloc,
+          ),
         ),
       ],
       child: ToastificationWrapper(

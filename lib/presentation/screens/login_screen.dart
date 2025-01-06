@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -55,6 +57,21 @@ class LoginScreen extends StatelessWidget {
     required String username,
   }) async {
     try {
+      final completer = Completer<String?>();
+
+      late final StreamSubscription subscription;
+      subscription = context.read<AuthBloc>().stream.listen(
+        (state) {
+          if (state is AuthError && !completer.isCompleted) {
+            completer.complete(state.message);
+            subscription.cancel();
+          } else if (state is Authenticated && !completer.isCompleted) {
+            completer.complete(null);
+            subscription.cancel();
+          }
+        },
+      );
+
       context.read<AuthBloc>().add(
             SignUpEvent(
               email: email,
@@ -62,7 +79,8 @@ class LoginScreen extends StatelessWidget {
               username: username,
             ),
           );
-      return null;
+
+      return await completer.future;
     } catch (e) {
       return e.toString();
     }
@@ -73,17 +91,28 @@ class LoginScreen extends StatelessWidget {
     required String email,
     required String password,
   }) async {
-    // TODO: Handle error with login; currently just goes blank if incorrect auth.
-    try {
-      context.read<AuthBloc>().add(
-            LoginEvent(
-              email: email,
-              password: password,
-            ),
-          );
-      return null;
-    } catch (e) {
-      return e.toString();
-    }
+    final completer = Completer<String?>();
+
+    late final StreamSubscription subscription;
+    subscription = context.read<AuthBloc>().stream.listen(
+      (state) {
+        if (state is AuthError && !completer.isCompleted) {
+          completer.complete(state.message);
+          subscription.cancel();
+        } else if (state is Authenticated && !completer.isCompleted) {
+          completer.complete(null);
+          subscription.cancel();
+        }
+      },
+    );
+
+    context.read<AuthBloc>().add(
+          LoginEvent(
+            email: email,
+            password: password,
+          ),
+        );
+
+    return await completer.future;
   }
 }
