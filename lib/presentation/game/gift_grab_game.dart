@@ -59,6 +59,12 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   int score = 0;
   Function()? resetGame;
 
+  late final JoystickComponent _joystick;
+
+  GiftGrabGame() {
+    _joystick = createJoystick();
+  }
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
@@ -79,7 +85,7 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
             children: [
               GameStateHandler(),
               BackgroundComponent(),
-              SantaComponent(joystick: joystick),
+              SantaComponent(joystick: _joystick),
               HUDTextComponents(),
               FlameSpawner(),
               GiftSpawner(),
@@ -91,6 +97,6 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
       ),
     );
 
-    await add(joystick);
+    await add(_joystick);
   }
 }
