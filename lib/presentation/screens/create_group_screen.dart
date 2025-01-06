@@ -36,110 +36,113 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return GGScaffoldWidget(
-      child: SafeArea(
-        child: ListView(
-          children: [
-            Text(
-              'Create Group',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displayLarge!.fontSize! * 2
-                    : theme.textTheme.displayLarge!.fontSize,
-              ),
-            ),
-            const Gap(20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: GGInputFieldWidget(
-                hintText: 'Enter Group Name',
-                maxLength: 20,
-                onChanged: (val) => setState(
-                  () => _name = val,
+    return BlocListener<GroupBloc, GroupState>(
+      listener: (context, state) {
+        if (state is GroupCreatedSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Group created successfully')),
+          );
+          context.read<GroupBloc>().add(LoadGroupsEvent());
+          context.goNamed(Globals.routes.groups);
+        }
+      },
+      child: GGScaffoldWidget(
+        child: SafeArea(
+          child: ListView(
+            children: [
+              Text(
+                'Create Group',
+                style: theme.textTheme.displayLarge!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displayLarge!.fontSize! * 2
+                      : theme.textTheme.displayLarge!.fontSize,
                 ),
               ),
-            ),
-            const Gap(20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: GGInputFieldWidget(
-                hintText: 'Description',
-                maxLength: 100,
-                maxLines: 5,
-                onChanged: (val) => setState(
-                  () => _description = val,
-                ),
-              ),
-            ),
-            const Gap(20),
-            Text(
-              'Max Group Count',
-              style: theme.textTheme.displaySmall!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displaySmall!.fontSize! * 2
-                    : theme.textTheme.displaySmall!.fontSize,
-              ),
-            ),
-            const Gap(20),
-            Slider(
-              value: _groupCount.toDouble(),
-              min: _minCount.toDouble(),
-              max: _maxCount.toDouble(),
-              divisions: _maxCount - _minCount,
-              label: '$_groupCount',
-              onChanged: (groupCount) {
-                setState(
-                  () => _groupCount = groupCount.toInt(),
-                );
-              },
-            ),
-            const Gap(20),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Public Group',
-                    style: Theme.of(context).textTheme.displaySmall,
+              const Gap(20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: GGInputFieldWidget(
+                  hintText: 'Enter Group Name',
+                  maxLength: 20,
+                  onChanged: (val) => setState(
+                    () => _name = val,
                   ),
-                  Switch(
-                    value: _isOpen,
-                    onChanged: (val) => setState(
-                      () => _isOpen = val,
+                ),
+              ),
+              const Gap(20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: GGInputFieldWidget(
+                  hintText: 'Description',
+                  maxLength: 100,
+                  maxLines: 5,
+                  onChanged: (val) => setState(
+                    () => _description = val,
+                  ),
+                ),
+              ),
+              const Gap(20),
+              Text(
+                'Max Group Count',
+                style: theme.textTheme.displaySmall!.copyWith(
+                  fontSize: Globals.isTablet
+                      ? theme.textTheme.displaySmall!.fontSize! * 2
+                      : theme.textTheme.displaySmall!.fontSize,
+                ),
+              ),
+              const Gap(20),
+              Slider(
+                value: _groupCount.toDouble(),
+                min: _minCount.toDouble(),
+                max: _maxCount.toDouble(),
+                divisions: _maxCount - _minCount,
+                label: '$_groupCount',
+                onChanged: (groupCount) {
+                  setState(
+                    () => _groupCount = groupCount.toInt(),
+                  );
+                },
+              ),
+              const Gap(20),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Public Group',
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
-                  ),
-                ],
+                    Switch(
+                      value: _isOpen,
+                      onChanged: (val) => setState(
+                        () => _isOpen = val,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Gap(16),
-            GGButtonWidget(
-              title: 'Submit',
-              onPressed: () async {
-                context.read<GroupBloc>().add(
+              const Gap(16),
+              GGButtonWidget(
+                title: 'Submit',
+                onPressed: () async => context.read<GroupBloc>().add(
                       CreateGroupEvent(
                         name: _name ?? 'NO NAME GROUP',
                         description: _description ?? 'NO DESCRIPTION GROUP',
                         maxCount: _groupCount,
                         open: _isOpen,
                       ),
-                    );
-
-                ModalService.showSuccess(title: 'Group created');
-
-                if (!context.mounted) return;
-
-                context.goNamed(Globals.routes.groups);
-              },
-            ),
-            const Gap(16),
-            GGButtonWidget(
-              title: 'Back',
-              onPressed: () => context.goNamed(Globals.routes.groups),
-            ),
-          ],
+                    ),
+              ),
+              const Gap(16),
+              GGButtonWidget(
+                title: 'Back',
+                onPressed: () => context.goNamed(Globals.routes.groups),
+              ),
+            ],
+          ),
         ),
       ),
     );

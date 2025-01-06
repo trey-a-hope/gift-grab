@@ -21,3 +21,7 @@ class GroupError extends GroupState {
 
   GroupError({required this.message});
 }
+
+class GroupCreatedSuccess extends GroupState {}
+
+class GroupDeleteSuccess extends GroupState {}

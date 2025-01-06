@@ -83,7 +83,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
         debugPrint(newGroup.toString());
 
-        add(LoadGroupsEvent());
+        emit(GroupCreatedSuccess());
       }
     } catch (e) {
       emit(GroupError(message: e.toString()));
@@ -104,10 +104,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       } else {
         await getNakamaClient().deleteGroup(
           session: session,
-          groupId: 'GROUP ID',
+          groupId: event.groupId,
         );
 
-        add(LoadGroupsEvent());
+        emit(GroupDeleteSuccess());
       }
     } catch (e) {
       emit(GroupError(message: e.toString()));
