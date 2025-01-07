@@ -55,6 +55,12 @@ class GroupDetailsScreen extends StatelessWidget {
                   context.goNamed(Globals.routes.groups);
                 }
               }
+
+              if (state is GroupUsersError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
             },
             builder: (context, state) => switch (state) {
               GroupUserLoading() =>
@@ -84,8 +90,7 @@ class GroupDetailsScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (!state.users.any(
-                            (groupUser) => groupUser.user.id == state.uid)) ...[
+                        if (_canJoin(users: state.users, uid: state.uid)) ...[
                           GGButtonWidget(
                             title: 'Join',
                             onPressed: () async {
@@ -174,7 +179,7 @@ class GroupDetailsScreen extends StatelessWidget {
                     )
                   ],
                 ),
-              GroupUsersError() => const Text('ERROR'),
+              GroupUsersError() => Center(),
               _ => const SizedBox(),
             },
           ),
@@ -204,5 +209,16 @@ class GroupDetailsScreen extends StatelessWidget {
     final me = users.where((item) => item.user.id == uid).firstOrNull;
     if (me == null) return false;
     return me.state != GroupMembershipState.superadmin;
+  }
+
+  bool _canJoin({required List<GroupUser> users, required String uid}) {
+    if (group.maxCount == null) {
+      throw Exception('Max count is null');
+    }
+
+    final notPresent = !users.any((groupUser) => groupUser.user.id == uid);
+    final notFull = group.maxCount! > users.length;
+
+    return notPresent && notFull;
   }
 }
