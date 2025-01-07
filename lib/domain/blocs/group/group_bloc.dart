@@ -13,6 +13,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
   GroupBloc({required this.accountBloc}) : super(GroupInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);
+
     on<CreateGroupEvent>(_onCreateGroup);
     on<UpdateGroupEvent>(_onUpdateGroupEvent);
   }
@@ -132,11 +133,9 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
           name: event.name,
           avatarUrl: event.avatarUrl,
           description: event.description,
-          langTag: event.langTag,
-          maxCount: event.maxCount,
+          langTag: event.langTag ?? 'en', // Group language cannot be empty.
+          maxCount: event.maxCount, // TODO: Count is not updating, (api bug)...
         );
-
-        // debugPrint(newGroup.toString());
 
         emit(GroupEventSuccess('Group updated successfully'));
       }

@@ -42,8 +42,9 @@ class _Routes {
   final String settings = 'settings';
   final String editProfile = 'edit_profile';
   final String groups = 'groups';
-  final String createGroup = 'create_groups';
+  final String createGroup = 'create_group';
   final String groupDetails = 'group_details';
+  final String editGroup = 'edit_group';
 }
 
 class _TimeLimits {

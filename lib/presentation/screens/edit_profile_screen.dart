@@ -20,9 +20,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return GGScaffoldWidget(
+      title: 'Edit Profile',
+      goBack: () => context.goNamed(Globals.routes.settings),
       child: Center(
         child: BlocBuilder<AccountBloc, AccountState>(
           builder: (context, state) => switch (state) {
@@ -36,15 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Edit Profile',
-                        style: theme.textTheme.displayLarge!.copyWith(
-                          fontSize: Globals.isTablet
-                              ? theme.textTheme.displayLarge!.fontSize! * 2
-                              : theme.textTheme.displayLarge!.fontSize,
-                        ),
-                      ),
-                      const Gap(50),
+                      const Gap(32),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: GGInputFieldWidget(
@@ -55,7 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           hintText: 'Enter username...',
                         ),
                       ),
-                      const Gap(20),
+                      const Gap(16),
                       SizedBox(
                         width: Globals.isTablet ? 400 : 200,
                         height: Globals.isTablet ? 100 : 50,
@@ -63,21 +55,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           onPressed: () => _attemptSaveUsername(context),
                           child: Text(
                             'Save',
-                            style: TextStyle(
-                              fontSize: Globals.isTablet ? 50 : 25,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Gap(20),
-                      SizedBox(
-                        width: Globals.isTablet ? 400 : 200,
-                        height: Globals.isTablet ? 100 : 50,
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              context.goNamed(Globals.routes.settings),
-                          child: Text(
-                            'Back',
                             style: TextStyle(
                               fontSize: Globals.isTablet ? 50 : 25,
                             ),

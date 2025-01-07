@@ -35,6 +35,8 @@ class _GroupsScreenState extends State<GroupsScreen>
     final theme = Theme.of(context);
 
     return GGScaffoldWidget(
+      title: 'Groups',
+      goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: BlocProvider(
           create: (context) => GroupBloc(
@@ -57,6 +59,7 @@ class _GroupsScreenState extends State<GroupsScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TabBar(
+                        padding: EdgeInsets.all(16),
                         labelColor: Colors.white,
                         labelStyle: theme.textTheme.displayLarge,
                         indicatorColor: Colors.white,
@@ -102,11 +105,6 @@ class _GroupsScreenState extends State<GroupsScreen>
                         title: 'Create Group',
                         onPressed: () =>
                             context.goNamed(Globals.routes.createGroup),
-                      ),
-                      const Gap(16),
-                      GGButtonWidget(
-                        title: 'Back',
-                        onPressed: () => context.goNamed(Globals.routes.main),
                       ),
                     ],
                   ),

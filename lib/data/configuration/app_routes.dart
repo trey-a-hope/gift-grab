@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
+import 'package:gift_grab/presentation/screens/edit_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
 import 'package:gift_grab/presentation/screens/group_details_screen.dart';
@@ -68,28 +68,26 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           builder: (context, state) => const GroupsScreen(),
         ),
         GoRoute(
-          path:
-              '/${Globals.routes.main}/${Globals.routes.groups}/${Globals.routes.createGroup}',
+          path: '/${Globals.routes.groups}/create',
           name: Globals.routes.createGroup,
           builder: (context, state) => const CreateGroupScreen(),
         ),
         GoRoute(
-            path:
-                '/${Globals.routes.main}/${Globals.routes.groups}/${Globals.routes.groupDetails}/:group',
-            name: Globals.routes.groupDetails,
-            builder: (context, state) {
-              final param = state.pathParameters['group'];
-
-              if (param == null) {
-                throw Exception(
-                  'The group when changing routes is null.',
-                );
-              }
-
-              final group = Group.fromJson(jsonDecode(param));
-
-              return GroupDetailsScreen(group: group);
-            }),
+          path: '/${Globals.routes.groups}/:groupId/edit',
+          name: Globals.routes.editGroup,
+          builder: (context, state) {
+            final group = state.extra as Group;
+            return EditGroupScreen(group: group);
+          },
+        ),
+        GoRoute(
+          path: '/${Globals.routes.groups}/:groupId',
+          name: Globals.routes.groupDetails,
+          builder: (context, state) {
+            final group = state.extra as Group;
+            return GroupDetailsScreen(group: group);
+          },
+        ),
         GoRoute(
           path: '/${Globals.routes.main}/${Globals.routes.settings}',
           name: Globals.routes.settings,

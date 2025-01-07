@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
@@ -23,6 +22,8 @@ class GroupDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
+      title: group.name ?? 'Unknown Name',
+      goBack: () => context.goNamed(Globals.routes.groups),
       child: SafeArea(
         child: MultiBlocProvider(
           providers: [
@@ -61,14 +62,12 @@ class GroupDetailsScreen extends StatelessWidget {
               GroupUsersLoaded() => Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      group.name ?? 'No Name...',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    const Gap(16),
-                    Text(
-                      group.description ?? 'No Description...',
-                      style: Theme.of(context).textTheme.headlineMedium,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: Text(
+                        group.description ?? 'No Description...',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                     ),
                     Expanded(
                       child: state.users.isEmpty
@@ -161,11 +160,16 @@ class GroupDetailsScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                        GGButtonWidget(
-                          title: 'Back',
-                          onPressed: () =>
-                              context.goNamed(Globals.routes.groups),
-                        ),
+                        if (_canEdit(users: state.users, uid: state.uid)) ...[
+                          GGButtonWidget(
+                            title: 'Edit',
+                            onPressed: () => context.goNamed(
+                              Globals.routes.editGroup,
+                              pathParameters: {'groupId': group.id},
+                              extra: group,
+                            ),
+                          ),
+                        ],
                       ],
                     )
                   ],
@@ -177,6 +181,17 @@ class GroupDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // 0:Superadmin:There must at least be 1 superadmin in any group. The superadmin has all the privileges of the admin and can additionally delete the group and promote admin members.
+  // 1:Admin:There can be one of more admins. Admins can update groups as well as accept, kick, promote, demote, ban or add members.
+  // 2:Member:Regular group member. They cannot accept join requests from new users.
+  // 3:Join request:A new join request from a new user. This does not count towards the maximum group member count.
+  bool _canEdit({required List<GroupUser> users, required String uid}) {
+    final me = users.where((item) => item.user.id == uid).firstOrNull;
+    if (me == null) return false;
+    return me.state == GroupMembershipState.superadmin ||
+        me.state == GroupMembershipState.admin;
   }
 
   bool _canDelete({required List<GroupUser> users, required String uid}) {

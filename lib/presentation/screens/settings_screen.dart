@@ -16,22 +16,14 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return GGScaffoldWidget(
+      title: 'Settings',
+      goBack: () => context.goNamed(Globals.routes.main),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Settings',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displayLarge!.fontSize! * 2
-                    : theme.textTheme.displayLarge!.fontSize,
-              ),
-            ),
-            const Gap(64),
+            const Gap(32),
             GGButtonWidget(
               title: 'Edit Profile',
               onPressed: () => context.goNamed(Globals.routes.editProfile),
@@ -82,11 +74,6 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 _ => const SizedBox(),
               },
-            ),
-            const Gap(16),
-            GGButtonWidget(
-              title: 'Back',
-              onPressed: () => context.goNamed(Globals.routes.main),
             ),
           ],
         ),

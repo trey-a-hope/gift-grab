@@ -4,6 +4,12 @@ abstract class GroupEvent {}
 
 class LoadGroupsEvent extends GroupEvent {}
 
+class LoadGroupEvent extends GroupEvent {
+  final String groupId;
+
+  LoadGroupEvent(this.groupId);
+}
+
 class UpdateGroupEvent extends GroupEvent {
   final String groupId;
   final bool open;

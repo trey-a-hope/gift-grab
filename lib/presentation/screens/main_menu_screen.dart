@@ -26,18 +26,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     final theme = Theme.of(context);
 
     return GGScaffoldWidget(
+      title: 'Gift Grab',
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Gift Grab',
-              style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displayLarge!.fontSize! * 2
-                    : theme.textTheme.displayLarge!.fontSize,
-              ),
-            ),
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
               builder: (context, state) => switch (state) {

@@ -13,6 +13,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(
+        title: 'Login',
         child: FlutterLogin(
           title: 'Gift Grab',
           theme: LoginTheme(

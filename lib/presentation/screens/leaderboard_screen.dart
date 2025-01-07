@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -17,6 +16,8 @@ class LeaderboardScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GGScaffoldWidget(
+      title: 'Leaderboard',
+      goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: BlocProvider(
           create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
@@ -28,23 +29,17 @@ class LeaderboardScreen extends StatelessWidget {
               LeaderboardLoaded() => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Weekly Leaderboard',
-                      style: theme.textTheme.displayLarge!.copyWith(
-                        fontSize: Globals.isTablet
-                            ? theme.textTheme.displayLarge!.fontSize! * 2
-                            : theme.textTheme.displayLarge!.fontSize,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32),
+                      child: Text(
+                        'Resets every Monday at 12:00am.',
+                        style: theme.textTheme.headlineSmall!.copyWith(
+                          fontSize: Globals.isTablet
+                              ? theme.textTheme.headlineSmall!.fontSize! * 2
+                              : theme.textTheme.headlineSmall!.fontSize,
+                        ),
                       ),
                     ),
-                    Text(
-                      'Resets every Monday at 12:00am.',
-                      style: theme.textTheme.headlineSmall!.copyWith(
-                        fontSize: Globals.isTablet
-                            ? theme.textTheme.headlineSmall!.fontSize! * 2
-                            : theme.textTheme.headlineSmall!.fontSize,
-                      ),
-                    ),
-                    const Gap(64),
                     Expanded(
                       child: state.entries.isEmpty
                           ? Center(
@@ -59,22 +54,6 @@ class LeaderboardScreen extends StatelessWidget {
                                   )),
                             ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: SizedBox(
-                        width: Globals.isTablet ? 400 : 200,
-                        height: Globals.isTablet ? 100 : 50,
-                        child: ElevatedButton(
-                          onPressed: () => context.goNamed(Globals.routes.main),
-                          child: Text(
-                            'Back',
-                            style: TextStyle(
-                              fontSize: Globals.isTablet ? 50 : 25,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               _ => const SizedBox(),

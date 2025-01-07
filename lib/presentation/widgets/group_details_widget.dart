@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
@@ -22,9 +20,8 @@ class GroupDetailsWidget extends StatelessWidget {
     return ListTile(
       onTap: () => context.goNamed(
         Globals.routes.groupDetails,
-        pathParameters: {
-          'group': jsonEncode(group),
-        },
+        pathParameters: {'groupId': group.id},
+        extra: group,
       ),
       leading: CircleAvatar(
         child: Text(
