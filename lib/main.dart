@@ -9,7 +9,7 @@ import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-final _isDev = true;
+final _isDev = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

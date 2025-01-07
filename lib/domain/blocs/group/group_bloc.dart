@@ -9,14 +9,12 @@ part 'group_event.dart';
 part 'group_state.dart';
 
 class GroupBloc extends Bloc<GroupEvent, GroupState> {
-  final AccountBloc accountBloc; // Add this line
-
-  List<Group> _userGroupsToGroups(List<UserGroup>? userGroups) =>
-      userGroups == null ? <Group>[] : userGroups.map((u) => u.group).toList();
+  final AccountBloc accountBloc;
 
   GroupBloc({required this.accountBloc}) : super(GroupInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);
     on<CreateGroupEvent>(_onCreateGroup);
+    on<UpdateGroupEvent>(_onUpdateGroupEvent);
   }
 
   Future<void> _onLoadGroups(
@@ -114,4 +112,39 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       emit(GroupError(message: e.toString()));
     }
   }
+
+  Future<void> _onUpdateGroupEvent(
+    UpdateGroupEvent event,
+    Emitter<GroupState> emit,
+  ) async {
+    emit(GroupLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        throw Exception('Session expired...');
+      } else {
+        await getNakamaClient().updateGroup(
+          session: session,
+          groupId: event.groupId,
+          open: event.open,
+          name: event.name,
+          avatarUrl: event.avatarUrl,
+          description: event.description,
+          langTag: event.langTag,
+          maxCount: event.maxCount,
+        );
+
+        // debugPrint(newGroup.toString());
+
+        emit(GroupEventSuccess('Group updated successfully'));
+      }
+    } catch (e) {
+      emit(GroupError(message: e.toString()));
+    }
+  }
+
+  List<Group> _userGroupsToGroups(List<UserGroup>? userGroups) =>
+      userGroups == null ? <Group>[] : userGroups.map((u) => u.group).toList();
 }

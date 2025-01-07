@@ -40,7 +40,7 @@ class _GroupsScreenState extends State<GroupsScreen>
           create: (context) => GroupBloc(
             accountBloc: context.read<AccountBloc>(),
           )..add(LoadGroupsEvent()),
-          child: BlocListener<GroupBloc, GroupState>(
+          child: BlocConsumer<GroupBloc, GroupState>(
             listener: (context, state) {
               if (state is GroupEventSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -49,73 +49,71 @@ class _GroupsScreenState extends State<GroupsScreen>
                 context.read<GroupBloc>().add(LoadGroupsEvent());
               }
             },
-            child: BlocBuilder<GroupBloc, GroupState>(
-              builder: (context, state) => switch (state) {
-                GroupLoading() =>
-                  Center(child: const CircularProgressIndicator()),
-                GroupsLoaded() => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TabBar(
-                          labelColor: Colors.white,
-                          labelStyle: theme.textTheme.displayLarge,
-                          indicatorColor: Colors.white,
-                          unselectedLabelColor: Colors.grey,
+            builder: (context, state) => switch (state) {
+              GroupLoading() =>
+                Center(child: const CircularProgressIndicator()),
+              GroupsLoaded() => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TabBar(
+                        labelColor: Colors.white,
+                        labelStyle: theme.textTheme.displayLarge,
+                        indicatorColor: Colors.white,
+                        unselectedLabelColor: Colors.grey,
+                        controller: _tabController,
+                        tabs: const [
+                          Text('All'),
+                          Text('Admin'),
+                          Text('Super Admin'),
+                          Text('Member'),
+                          Text('Join Request')
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
                           controller: _tabController,
-                          tabs: const [
-                            Text('All'),
-                            Text('Admin'),
-                            Text('Super Admin'),
-                            Text('Member'),
-                            Text('Join Request')
+                          children: [
+                            GroupDetailsListWidget(
+                              groups: state.entry.allGroups,
+                              currentUid: state.uid,
+                            ),
+                            GroupDetailsListWidget(
+                              groups: state.entry.adminGroups,
+                              currentUid: state.uid,
+                            ),
+                            GroupDetailsListWidget(
+                              groups: state.entry.superAdminGroups,
+                              currentUid: state.uid,
+                            ),
+                            GroupDetailsListWidget(
+                              groups: state.entry.memberGroups,
+                              currentUid: state.uid,
+                            ),
+                            GroupDetailsListWidget(
+                              groups: state.entry.joinRequestGroups,
+                              currentUid: state.uid,
+                            )
                           ],
                         ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              GroupDetailsListWidget(
-                                groups: state.entry.allGroups,
-                                currentUid: state.uid,
-                              ),
-                              GroupDetailsListWidget(
-                                groups: state.entry.adminGroups,
-                                currentUid: state.uid,
-                              ),
-                              GroupDetailsListWidget(
-                                groups: state.entry.superAdminGroups,
-                                currentUid: state.uid,
-                              ),
-                              GroupDetailsListWidget(
-                                groups: state.entry.memberGroups,
-                                currentUid: state.uid,
-                              ),
-                              GroupDetailsListWidget(
-                                groups: state.entry.joinRequestGroups,
-                                currentUid: state.uid,
-                              )
-                            ],
-                          ),
-                        ),
-                        const Gap(16),
-                        GGButtonWidget(
-                          title: 'Create Group',
-                          onPressed: () =>
-                              context.goNamed(Globals.routes.createGroup),
-                        ),
-                        const Gap(16),
-                        GGButtonWidget(
-                          title: 'Back',
-                          onPressed: () => context.goNamed(Globals.routes.main),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const Gap(16),
+                      GGButtonWidget(
+                        title: 'Create Group',
+                        onPressed: () =>
+                            context.goNamed(Globals.routes.createGroup),
+                      ),
+                      const Gap(16),
+                      GGButtonWidget(
+                        title: 'Back',
+                        onPressed: () => context.goNamed(Globals.routes.main),
+                      ),
+                    ],
                   ),
-                GroupError() => const Text('ERROR'),
-                _ => SizedBox(),
-              },
-            ),
+                ),
+              GroupError() => Text(state.message),
+              _ => Text('Unknown State')
+            },
           ),
         ),
       ),
