@@ -43,3 +43,15 @@ class CreateGroupEvent extends GroupEvent {
     required this.open,
   });
 }
+
+class FetchGroups extends GroupEvent {
+  final String? nameFilter;
+
+  FetchGroups({this.nameFilter});
+}
+
+class LoadMoreGroups extends GroupEvent {
+  final String? nameFilter;
+
+  LoadMoreGroups({this.nameFilter});
+}

@@ -51,53 +51,61 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           path: '/${Globals.routes.main}',
           name: Globals.routes.main,
           builder: (context, state) => MainMenuScreen(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.main}/${Globals.routes.game}',
-          name: Globals.routes.game,
-          builder: (context, state) => const GameScreen(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.main}/${Globals.routes.leaderboard}',
-          name: Globals.routes.leaderboard,
-          builder: (context, state) => const LeaderboardScreen(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.main}/${Globals.routes.groups}',
-          name: Globals.routes.groups,
-          builder: (context, state) => const GroupsScreen(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.groups}/create',
-          name: Globals.routes.createGroup,
-          builder: (context, state) => const CreateGroupScreen(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.groups}/:groupId/edit',
-          name: Globals.routes.editGroup,
-          builder: (context, state) {
-            final group = state.extra as Group;
-            return EditGroupScreen(group: group);
-          },
-        ),
-        GoRoute(
-          path: '/${Globals.routes.groups}/:groupId',
-          name: Globals.routes.groupDetails,
-          builder: (context, state) {
-            final group = state.extra as Group;
-            return GroupDetailsScreen(group: group);
-          },
-        ),
-        GoRoute(
-          path: '/${Globals.routes.main}/${Globals.routes.settings}',
-          name: Globals.routes.settings,
-          builder: (context, state) => const SettingsScreen(),
-        ),
-        GoRoute(
-          path:
-              '/${Globals.routes.main}/${Globals.routes.settings}/${Globals.routes.editProfile}',
-          name: Globals.routes.editProfile,
-          builder: (context, state) => const EditProfileScreen(),
+          routes: [
+            GoRoute(
+              path: Globals.routes.game,
+              name: Globals.routes.game,
+              builder: (context, state) => const GameScreen(),
+            ),
+            GoRoute(
+              path: Globals.routes.leaderboard,
+              name: Globals.routes.leaderboard,
+              builder: (context, state) => const LeaderboardScreen(),
+            ),
+            GoRoute(
+              path: Globals.routes.groups,
+              name: Globals.routes.groups,
+              builder: (context, state) => const GroupsScreen(),
+              routes: [
+                GoRoute(
+                  path: Globals.routes.createGroup,
+                  name: Globals.routes.createGroup,
+                  builder: (context, state) => const CreateGroupScreen(),
+                ),
+                GoRoute(
+                  path: ':groupId',
+                  name: Globals.routes.groupDetails,
+                  builder: (context, state) {
+                    final group = state.extra as Group;
+                    return GroupDetailsScreen(group: group);
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'edit',
+                      name: Globals.routes.editGroup,
+                      builder: (context, state) {
+                        final group = state.extra as Group;
+                        return EditGroupScreen(group: group);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            GoRoute(
+              path: Globals.routes.settings,
+              name: Globals.routes.settings,
+              builder: (context, state) => const SettingsScreen(),
+              routes: [
+                GoRoute(
+                  path:
+                      '/${Globals.routes.main}/${Globals.routes.settings}/${Globals.routes.editProfile}',
+                  name: Globals.routes.editProfile,
+                  builder: (context, state) => const EditProfileScreen(),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
       refreshListenable: StreamToListenable([authBloc.stream]),

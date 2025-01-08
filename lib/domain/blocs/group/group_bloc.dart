@@ -142,7 +142,4 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       emit(GroupError(message: e.toString()));
     }
   }
-
-  List<Group> _userGroupsToGroups(List<UserGroup>? userGroups) =>
-      userGroups == null ? <Group>[] : userGroups.map((u) => u.group).toList();
 }
