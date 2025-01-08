@@ -13,7 +13,6 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
   GroupBloc({required this.accountBloc}) : super(GroupInitial()) {
     on<LoadGroupsEvent>(_onLoadGroups);
-
     on<CreateGroupEvent>(_onCreateGroup);
     on<UpdateGroupEvent>(_onUpdateGroupEvent);
   }
@@ -41,41 +40,41 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
           session: session,
         );
 
-        final adminGroupList = await getNakamaClient().listUserGroups(
-          session: session,
-          userId: uid,
-          state: GroupMembershipState.admin,
-        );
+        // final adminGroupList = await getNakamaClient().listUserGroups(
+        //   session: session,
+        //   userId: uid,
+        //   state: GroupMembershipState.admin,
+        // );
 
-        final superAdminGroupList = await getNakamaClient().listUserGroups(
-          session: session,
-          userId: uid,
-          state: GroupMembershipState.superadmin,
-        );
+        // final superAdminGroupList = await getNakamaClient().listUserGroups(
+        //   session: session,
+        //   userId: uid,
+        //   state: GroupMembershipState.superadmin,
+        // );
 
-        final memberGroupList = await getNakamaClient().listUserGroups(
-          session: session,
-          userId: uid,
-          state: GroupMembershipState.member,
-        );
+        // final memberGroupList = await getNakamaClient().listUserGroups(
+        //   session: session,
+        //   userId: uid,
+        //   state: GroupMembershipState.member,
+        // );
 
-        final joinRequestGroupList = await getNakamaClient().listUserGroups(
-          session: session,
-          userId: uid,
-          state: GroupMembershipState.joinRequest,
-        );
+        // final joinRequestGroupList = await getNakamaClient().listUserGroups(
+        //   session: session,
+        //   userId: uid,
+        //   state: GroupMembershipState.joinRequest,
+        // );
 
         emit(
           GroupsLoaded(
             uid: uid,
             entry: GroupsEntry(
               allGroups: allGroupList.groups ?? [],
-              adminGroups: _userGroupsToGroups(adminGroupList.userGroups),
-              superAdminGroups:
-                  _userGroupsToGroups(superAdminGroupList.userGroups),
-              memberGroups: _userGroupsToGroups(memberGroupList.userGroups),
-              joinRequestGroups:
-                  _userGroupsToGroups(joinRequestGroupList.userGroups),
+              // adminGroups: _userGroupsToGroups(adminGroupList.userGroups),
+              // superAdminGroups:
+              //     _userGroupsToGroups(superAdminGroupList.userGroups),
+              // memberGroups: _userGroupsToGroups(memberGroupList.userGroups),
+              // joinRequestGroups:
+              //     _userGroupsToGroups(joinRequestGroupList.userGroups),
             ),
           ),
         );

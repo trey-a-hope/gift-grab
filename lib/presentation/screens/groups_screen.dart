@@ -25,7 +25,7 @@ class _GroupsScreenState extends State<GroupsScreen>
     super.initState();
     _tabController = TabController(
       initialIndex: 0,
-      length: 5,
+      length: 1,
       vsync: this,
     );
   }
@@ -67,10 +67,10 @@ class _GroupsScreenState extends State<GroupsScreen>
                         controller: _tabController,
                         tabs: const [
                           Text('All'),
-                          Text('Admin'),
-                          Text('Super Admin'),
-                          Text('Member'),
-                          Text('Join Request')
+                          // Text('Admin'),
+                          // Text('Super Admin'),
+                          // Text('Member'),
+                          // Text('Join Request')
                         ],
                       ),
                       Expanded(
@@ -81,22 +81,22 @@ class _GroupsScreenState extends State<GroupsScreen>
                               groups: state.entry.allGroups,
                               currentUid: state.uid,
                             ),
-                            GroupDetailsListWidget(
-                              groups: state.entry.adminGroups,
-                              currentUid: state.uid,
-                            ),
-                            GroupDetailsListWidget(
-                              groups: state.entry.superAdminGroups,
-                              currentUid: state.uid,
-                            ),
-                            GroupDetailsListWidget(
-                              groups: state.entry.memberGroups,
-                              currentUid: state.uid,
-                            ),
-                            GroupDetailsListWidget(
-                              groups: state.entry.joinRequestGroups,
-                              currentUid: state.uid,
-                            )
+                            // GroupDetailsListWidget(
+                            //   groups: state.entry.adminGroups,
+                            //   currentUid: state.uid,
+                            // ),
+                            // GroupDetailsListWidget(
+                            //   groups: state.entry.superAdminGroups,
+                            //   currentUid: state.uid,
+                            // ),
+                            // GroupDetailsListWidget(
+                            //   groups: state.entry.memberGroups,
+                            //   currentUid: state.uid,
+                            // ),
+                            // GroupDetailsListWidget(
+                            //   groups: state.entry.joinRequestGroups,
+                            //   currentUid: state.uid,
+                            // )
                           ],
                         ),
                       ),

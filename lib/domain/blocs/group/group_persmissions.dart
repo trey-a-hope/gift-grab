@@ -59,9 +59,9 @@ mixin GroupPermissions {
       throw Exception('Max count is null');
     }
 
-    final notPresent = !users.any((groupUser) => groupUser.user.id == uid);
+    final notInGroup = findUserInGroup(users, uid) == null;
     final notFull = group.maxCount! > users.length;
 
-    return notPresent && notFull;
+    return notInGroup && notFull;
   }
 }
