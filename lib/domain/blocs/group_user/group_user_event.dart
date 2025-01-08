@@ -25,3 +25,13 @@ class DeleteGroupEvent extends GroupUserEvent {
 
   DeleteGroupEvent({required this.groupId});
 }
+
+class KickUserEvent extends GroupUserEvent {
+  final String groupId;
+  final String uid;
+
+  KickUserEvent({
+    required this.groupId,
+    required this.uid,
+  });
+}

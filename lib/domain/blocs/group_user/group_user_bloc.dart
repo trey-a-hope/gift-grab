@@ -14,6 +14,7 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
     on<JoinGroupEvent>(_onJoinGroupEvent);
     on<LeaveGroupEvent>(_onLeaveGroupEvent);
     on<DeleteGroupEvent>(_onDeleteGroupEvent);
+    on<KickUserEvent>(_onKickUserEvent);
   }
 
   Future<void> _onLoadGroupUsersEvent(
@@ -21,7 +22,6 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
     Emitter<GroupUserState> emit,
   ) async {
     emit(GroupUserLoading());
-
     try {
       final session = await NakamaService().getValidSession();
 
@@ -113,6 +113,31 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
         );
 
         emit(GroupUserEventSuccess('Group deleted successfully', true));
+      }
+    } catch (e) {
+      emit(GroupUsersError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onKickUserEvent(
+    KickUserEvent event,
+    Emitter<GroupUserState> emit,
+  ) async {
+    emit(GroupUserLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        throw Exception('Session expired...');
+      } else {
+        await getNakamaClient().kickGroupUsers(
+          session: session,
+          groupId: event.groupId,
+          userIds: [event.uid],
+        );
+
+        emit(GroupUserEventSuccess('User kicked successfully', true));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));

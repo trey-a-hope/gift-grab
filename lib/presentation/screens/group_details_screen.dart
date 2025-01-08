@@ -4,6 +4,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/group_persmissions.dart';
 import 'package:gift_grab/domain/blocs/group_user/group_user_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
@@ -11,7 +12,9 @@ import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
-class GroupDetailsScreen extends StatelessWidget {
+// https://heroiclabs.com/docs/nakama/concepts/groups/
+
+class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
   final Group group;
 
   const GroupDetailsScreen({
@@ -84,13 +87,27 @@ class GroupDetailsScreen extends StatelessWidget {
                               itemCount: state.users.length,
                               itemBuilder: (c, i) => GroupMemberDetailsWidget(
                                 groupUser: state.users[i],
+                                isMe: state.users[i].user.id == state.uid,
+                                kickUserAction: canKick(
+                                  state.users,
+                                  state.uid,
+                                  state.users[i].user.id,
+                                )
+                                    ? () {
+                                        context.read<GroupUserBloc>().add(
+                                              KickUserEvent(
+                                                  groupId: group.id,
+                                                  uid: state.users[i].user.id),
+                                            );
+                                      }
+                                    : null,
                               ),
                             ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (_canJoin(users: state.users, uid: state.uid)) ...[
+                        if (canJoin(state.users, state.uid, group)) ...[
                           GGButtonWidget(
                             title: 'Join',
                             onPressed: () async {
@@ -115,7 +132,7 @@ class GroupDetailsScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                        if (_canLeave(users: state.users, uid: state.uid)) ...[
+                        if (canLeave(state.users, state.uid)) ...[
                           GGButtonWidget(
                             title: 'Leave',
                             onPressed: () async {
@@ -140,7 +157,7 @@ class GroupDetailsScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                        if (_canDelete(users: state.users, uid: state.uid)) ...[
+                        if (canDelete(state.users, state.uid)) ...[
                           GGButtonWidget(
                             title: 'Delete',
                             onPressed: () async {
@@ -165,7 +182,7 @@ class GroupDetailsScreen extends StatelessWidget {
                             },
                           ),
                         ],
-                        if (_canEdit(users: state.users, uid: state.uid)) ...[
+                        if (canEdit(state.users, state.uid)) ...[
                           GGButtonWidget(
                             title: 'Edit',
                             onPressed: () => context.goNamed(
@@ -186,39 +203,5 @@ class GroupDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // 0:Superadmin:There must at least be 1 superadmin in any group. The superadmin has all the privileges of the admin and can additionally delete the group and promote admin members.
-  // 1:Admin:There can be one of more admins. Admins can update groups as well as accept, kick, promote, demote, ban or add members.
-  // 2:Member:Regular group member. They cannot accept join requests from new users.
-  // 3:Join request:A new join request from a new user. This does not count towards the maximum group member count.
-  bool _canEdit({required List<GroupUser> users, required String uid}) {
-    final me = users.where((item) => item.user.id == uid).firstOrNull;
-    if (me == null) return false;
-    return me.state == GroupMembershipState.superadmin ||
-        me.state == GroupMembershipState.admin;
-  }
-
-  bool _canDelete({required List<GroupUser> users, required String uid}) {
-    final me = users.where((item) => item.user.id == uid).firstOrNull;
-    if (me == null) return false;
-    return me.state == GroupMembershipState.superadmin;
-  }
-
-  bool _canLeave({required List<GroupUser> users, required String uid}) {
-    final me = users.where((item) => item.user.id == uid).firstOrNull;
-    if (me == null) return false;
-    return me.state != GroupMembershipState.superadmin;
-  }
-
-  bool _canJoin({required List<GroupUser> users, required String uid}) {
-    if (group.maxCount == null) {
-      throw Exception('Max count is null');
-    }
-
-    final notPresent = !users.any((groupUser) => groupUser.user.id == uid);
-    final notFull = group.maxCount! > users.length;
-
-    return notPresent && notFull;
   }
 }
