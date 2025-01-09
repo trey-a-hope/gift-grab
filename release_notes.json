@@ -1,6 +1,0 @@
-[
-    {
-        "language": "en-US",
-        "text": "* Created AccountDeleteId method on server. * Provided delete method on FE."
-    }
-]
