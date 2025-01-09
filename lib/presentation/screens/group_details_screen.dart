@@ -80,6 +80,19 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                             itemBuilder: (c, i) => GroupMemberDetailsWidget(
                               groupUser: state.users[i],
                               isMe: state.users[i].user.id == state.uid,
+                              banUserAction: canBan(
+                                state.users,
+                                state.uid,
+                                state.users[i].user.id,
+                              )
+                                  ? () {
+                                      context.read<GroupUsersBloc>().add(
+                                            BanUserFromGroup(
+                                                groupId: group.id,
+                                                uid: state.users[i].user.id),
+                                          );
+                                    }
+                                  : null,
                               kickUserAction: canKick(
                                 state.users,
                                 state.uid,

@@ -32,3 +32,10 @@ class KickUserFromGroup extends GroupUsersEvent {
 
   KickUserFromGroup({required this.groupId, required this.uid});
 }
+
+class BanUserFromGroup extends GroupUsersEvent {
+  final String groupId;
+  final String uid;
+
+  BanUserFromGroup({required this.groupId, required this.uid});
+}

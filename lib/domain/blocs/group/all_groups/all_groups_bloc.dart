@@ -32,7 +32,6 @@ class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState> {
         );
 
         _cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
-
         emit(
           AllGroupsLoaded(
             groups: allGroupList.groups ?? [],

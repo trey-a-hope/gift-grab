@@ -7,6 +7,9 @@ import 'package:nakama/nakama.dart';
 part 'group_users_event.dart';
 part 'group_users_state.dart';
 
+// addGroupUsers: wait for a users listing page.
+// TODO: demoteGroupUsers, promoteGroupUsers
+
 class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
   final AccountBloc accountBloc;
 
@@ -16,6 +19,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     on<LeaveGroup>(_onLeaveGroup);
     on<DeleteGroup>(_onDeleteGroup);
     on<KickUserFromGroup>(_onKickUserFromGroup);
+    on<BanUserFromGroup>(_onBanUserFromGroup);
   }
 
   Future<void> _onFetchGroupUsers(
@@ -134,7 +138,34 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
           userIds: [event.uid],
         );
 
-        emit(GroupUsersActionSuccess('User kicked successfully', true));
+        emit(GroupUsersActionSuccess('User kicked successfully', false));
+      }
+    } catch (e) {
+      emit(GroupUsersError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onBanUserFromGroup(
+    BanUserFromGroup event,
+    Emitter<GroupUsersState> emit,
+  ) async {
+    emit(GroupUsersLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        throw Exception('Session expired...');
+      } else {
+        await getNakamaClient().banGroupUsers(
+          session: session,
+          groupId: event.groupId,
+          userIds: [event.uid],
+        );
+
+        emit(GroupUsersActionSuccess('User banned successfully', false));
+
+        // TODO: Save uid of banned user in group meta data.
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));

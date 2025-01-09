@@ -7,11 +7,13 @@ class GroupMemberDetailsWidget extends StatelessWidget {
   final GroupUser groupUser;
   final bool isMe;
   final void Function()? kickUserAction;
+  final void Function()? banUserAction;
 
   const GroupMemberDetailsWidget({
     required this.groupUser,
     required this.isMe,
     this.kickUserAction,
+    this.banUserAction,
     super.key,
   });
 
@@ -40,16 +42,17 @@ class GroupMemberDetailsWidget extends StatelessWidget {
           ).image,
         ),
       ),
-      title: Text(
-        user.username ?? 'No Display Name',
-        style: theme.textTheme.displayMedium,
-      ),
-      subtitle: Text(
-        groupMembershipState.name,
-        style: theme.textTheme.displaySmall,
-      ),
-      trailing: kickUserAction != null
-          ? IconButton(
+      title: Row(
+        children: [
+          Text(
+            user.username ?? 'No Display Name',
+            style: theme.textTheme.displayMedium,
+          ),
+          Spacer(),
+          // Kick User
+          if (kickUserAction != null) ...[
+            IconButton.filled(
+              color: Colors.black,
               onPressed: () async {
                 final confirm = await ModalService.showConfirmation(
                   context: context,
@@ -69,7 +72,37 @@ class GroupMemberDetailsWidget extends StatelessWidget {
                 Icons.logout,
               ),
             )
-          : null,
+          ],
+          // Ban User
+          if (banUserAction != null) ...[
+            IconButton.filled(
+              color: Colors.black,
+              onPressed: () async {
+                final confirm = await ModalService.showConfirmation(
+                  context: context,
+                  title: 'Ban ${user.username} from group?',
+                  message: 'Are you sure?',
+                );
+
+                if (confirm == null || confirm == false) {
+                  return;
+                }
+
+                if (!context.mounted) return;
+
+                banUserAction!();
+              },
+              icon: Icon(
+                Icons.cancel,
+              ),
+            )
+          ],
+        ],
+      ),
+      subtitle: Text(
+        groupMembershipState.name,
+        style: theme.textTheme.displaySmall,
+      ),
     );
   }
 }

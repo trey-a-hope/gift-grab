@@ -40,6 +40,10 @@ mixin GroupPermissions {
     return false;
   }
 
+  // TODO: Validate if these permissions are the same or not.
+  bool canBan(List<GroupUser> users, String currentUid, String targetUid) =>
+      canKick(users, currentUid, targetUid);
+
   bool canDelete(List<GroupUser> users, String uid) {
     final me = findUserInGroup(users, uid);
     if (me == null) return false;
