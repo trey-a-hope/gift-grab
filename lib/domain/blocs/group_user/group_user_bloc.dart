@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
 import 'package:nakama/nakama.dart';
 
 part 'group_user_event.dart';
@@ -28,19 +29,15 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
       if (session == null) {
         throw Exception('Session expired...');
       } else {
-        // Get the current account state to access user ID
-        final accountState = accountBloc.state;
-        final String uid = switch (accountState) {
-          AccountLoaded() => accountState.account.user.id,
-          _ => throw Exception('Account not loaded'),
-        };
-
         final groupUserList = await getNakamaClient().listGroupUsers(
           session: session,
           groupId: event.groupId,
         );
 
-        emit(GroupUsersLoaded(uid: uid, users: groupUserList.groupUsers));
+        emit(GroupUsersLoaded(
+          uid: accountBloc.uid,
+          users: groupUserList.groupUsers,
+        ));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));

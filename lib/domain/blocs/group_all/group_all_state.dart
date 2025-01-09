@@ -1,4 +1,4 @@
-import 'package:nakama/nakama.dart';
+part of 'group_all_bloc.dart';
 
 abstract class GroupAllState {
   GroupAllState();

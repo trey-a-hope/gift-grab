@@ -1,12 +1,13 @@
-import 'package:gift_grab/domain/blocs/group_all/group_all_event.dart';
-import 'package:gift_grab/domain/blocs/group_all/group_all_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:nakama/nakama.dart';
 
+part 'group_all_event.dart';
+part 'group_all_state.dart';
+
 class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
   String? _cursor;
-  final int _limit = 2;
 
   GroupAllBloc() : super(GroupAllInitial()) {
     on<FetchGroups>(_onFetchGroups);
@@ -27,7 +28,7 @@ class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
       } else {
         final allGroupList = await getNakamaClient().listGroups(
           session: session,
-          limit: _limit,
+          limit: Globals.paginationLimit,
         );
 
         _cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
@@ -56,7 +57,7 @@ class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
       } else {
         final allGroupList = await getNakamaClient().listGroups(
           session: session,
-          limit: _limit,
+          limit: Globals.paginationLimit,
           cursor: _cursor,
         );
 

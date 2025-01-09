@@ -1,6 +1,8 @@
 class Globals {
   Globals._();
 
+  static int paginationLimit = 20;
+
   static final nakamaConfig = _NakamaConfig();
   static final routes = _Routes();
   static final timeLimits = _TimeLimits();

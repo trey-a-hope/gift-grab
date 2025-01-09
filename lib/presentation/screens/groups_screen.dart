@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/group_all/group_all_bloc.dart';
 import 'package:gift_grab/domain/blocs/group_all/group_all_list_view.dart';
+import 'package:gift_grab/domain/blocs/group_my/group_my_bloc.dart' as m;
+import 'package:gift_grab/domain/blocs/group_my/group_my_list_view.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../domain/blocs/group_all/group_all_event.dart';
 
 class GroupsScreen extends StatefulWidget {
   const GroupsScreen({super.key});
@@ -26,7 +27,7 @@ class _GroupsScreenState extends State<GroupsScreen>
     super.initState();
     _tabController = TabController(
       initialIndex: 0,
-      length: 1,
+      length: 2,
       vsync: this,
     );
   }
@@ -42,7 +43,13 @@ class _GroupsScreenState extends State<GroupsScreen>
         child: MultiBlocProvider(
           providers: [
             BlocProvider<GroupAllBloc>(
-                create: (context) => GroupAllBloc()..add(FetchGroups())),
+              create: (context) => GroupAllBloc()..add(FetchGroups()),
+            ),
+            // BlocProvider<m.GroupMyBloc>(
+            //   create: (context) => m.GroupMyBloc(
+            //     accountBloc: context.read<AccountBloc>(),
+            //   )..add(m.FetchGroups()),
+            // ),
           ],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +62,8 @@ class _GroupsScreenState extends State<GroupsScreen>
                 unselectedLabelColor: Colors.grey,
                 controller: _tabController,
                 tabs: const [
-                  Text('All'),
+                  Text('All Groups'),
+                  Text('My Groups'),
                 ],
               ),
               Expanded(
@@ -63,6 +71,7 @@ class _GroupsScreenState extends State<GroupsScreen>
                   controller: _tabController,
                   children: [
                     GroupAllListView(),
+                    GroupMyListView(),
                   ],
                 ),
               ),

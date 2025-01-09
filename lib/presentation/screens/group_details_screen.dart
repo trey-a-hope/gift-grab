@@ -5,6 +5,7 @@ import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/group_persmissions.dart';
+import 'package:gift_grab/domain/blocs/group_my/group_my_bloc.dart' as m;
 import 'package:gift_grab/domain/blocs/group_user/group_user_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
@@ -43,7 +44,10 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                     ..add(
                       LoadGroupsEvent(),
                     ),
-            )
+            ),
+            BlocProvider.value(
+              value: context.read<m.GroupMyBloc>(), //
+            ),
           ],
           child: BlocConsumer<GroupUserBloc, GroupUserState>(
             listener: (context, state) {
@@ -51,9 +55,16 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.message)),
                 );
-                context.read<GroupUserBloc>().add(LoadGroupUsersEvent(
-                      groupId: group.id,
-                    ));
+                context.read<GroupUserBloc>().add(
+                      LoadGroupUsersEvent(
+                        groupId: group.id,
+                      ),
+                    );
+
+                context.read<m.GroupMyBloc>().add(
+                      m.RefreshGroups(),
+                    );
+
                 if (state.goBack) {
                   context.goNamed(Globals.routes.groups);
                 }

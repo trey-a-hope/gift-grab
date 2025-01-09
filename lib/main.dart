@@ -5,6 +5,7 @@ import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
+import 'package:gift_grab/domain/blocs/group_my/group_my_bloc.dart' as m;
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -50,6 +51,10 @@ class MyApp extends StatelessWidget {
             accountBloc: context.read<AccountBloc>(),
           ),
         ),
+        BlocProvider<m.GroupMyBloc>(
+            create: (context) => m.GroupMyBloc(
+                  accountBloc: context.read<AccountBloc>(),
+                )..add(m.FetchGroups())),
       ],
       child: ToastificationWrapper(
         child: MaterialApp.router(

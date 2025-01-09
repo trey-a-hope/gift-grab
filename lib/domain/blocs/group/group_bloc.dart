@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
 import 'package:gift_grab/presentation/models/groups_entry.dart';
 import 'package:nakama/nakama.dart';
 
@@ -29,52 +30,15 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       if (session == null) {
         throw Exception('Session expired...');
       } else {
-        // Get the current account state to access user ID
-        final accountState = accountBloc.state;
-        final String uid = switch (accountState) {
-          AccountLoaded() => accountState.account.user.id,
-          _ => throw Exception('Account not loaded'),
-        };
-
         final allGroupList = await getNakamaClient().listGroups(
           session: session,
         );
 
-        // final adminGroupList = await getNakamaClient().listUserGroups(
-        //   session: session,
-        //   userId: uid,
-        //   state: GroupMembershipState.admin,
-        // );
-
-        // final superAdminGroupList = await getNakamaClient().listUserGroups(
-        //   session: session,
-        //   userId: uid,
-        //   state: GroupMembershipState.superadmin,
-        // );
-
-        // final memberGroupList = await getNakamaClient().listUserGroups(
-        //   session: session,
-        //   userId: uid,
-        //   state: GroupMembershipState.member,
-        // );
-
-        // final joinRequestGroupList = await getNakamaClient().listUserGroups(
-        //   session: session,
-        //   userId: uid,
-        //   state: GroupMembershipState.joinRequest,
-        // );
-
         emit(
           GroupsLoaded(
-            uid: uid,
+            uid: accountBloc.uid,
             entry: GroupsEntry(
               allGroups: allGroupList.groups ?? [],
-              // adminGroups: _userGroupsToGroups(adminGroupList.userGroups),
-              // superAdminGroups:
-              //     _userGroupsToGroups(superAdminGroupList.userGroups),
-              // memberGroups: _userGroupsToGroups(memberGroupList.userGroups),
-              // joinRequestGroups:
-              //     _userGroupsToGroups(joinRequestGroupList.userGroups),
             ),
           ),
         );
