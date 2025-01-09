@@ -2,57 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
-import 'package:gift_grab/presentation/models/groups_entry.dart';
 import 'package:nakama/nakama.dart';
 
-part 'group_event.dart';
-part 'group_state.dart';
+part 'groups_event.dart';
+part 'groups_state.dart';
 
-class GroupBloc extends Bloc<GroupEvent, GroupState> {
+class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
   final AccountBloc accountBloc;
 
-  GroupBloc({required this.accountBloc}) : super(GroupInitial()) {
-    on<LoadGroupsEvent>(_onLoadGroups);
+  GroupsBloc({required this.accountBloc}) : super(GroupsInitial()) {
     on<CreateGroupEvent>(_onCreateGroup);
     on<UpdateGroupEvent>(_onUpdateGroupEvent);
   }
 
-  Future<void> _onLoadGroups(
-    LoadGroupsEvent event,
-    Emitter<GroupState> emit,
-  ) async {
-    emit(GroupLoading());
-
-    try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        final allGroupList = await getNakamaClient().listGroups(
-          session: session,
-        );
-
-        emit(
-          GroupsLoaded(
-            uid: accountBloc.uid,
-            entry: GroupsEntry(
-              allGroups: allGroupList.groups ?? [],
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      emit(GroupError(message: e.toString()));
-    }
-  }
-
   Future<void> _onCreateGroup(
     CreateGroupEvent event,
-    Emitter<GroupState> emit,
+    Emitter<GroupsState> emit,
   ) async {
-    emit(GroupLoading());
+    emit(GroupsLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -70,18 +37,18 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
         debugPrint(newGroup.toString());
 
-        emit(GroupEventSuccess('Group created successfully'));
+        emit(GroupsActionSuccess('Group created successfully'));
       }
     } catch (e) {
-      emit(GroupError(message: e.toString()));
+      emit(GroupsError(message: e.toString()));
     }
   }
 
   Future<void> _onUpdateGroupEvent(
     UpdateGroupEvent event,
-    Emitter<GroupState> emit,
+    Emitter<GroupsState> emit,
   ) async {
-    emit(GroupLoading());
+    emit(GroupsLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -100,10 +67,10 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
           maxCount: event.maxCount, // TODO: Count is not updating, (api bug)...
         );
 
-        emit(GroupEventSuccess('Group updated successfully'));
+        emit(GroupsActionSuccess('Group updated successfully'));
       }
     } catch (e) {
-      emit(GroupError(message: e.toString()));
+      emit(GroupsError(message: e.toString()));
     }
   }
 }

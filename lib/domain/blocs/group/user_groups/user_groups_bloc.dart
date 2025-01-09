@@ -5,29 +5,24 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
 import 'package:nakama/nakama.dart';
 
-part 'group_my_event.dart';
-part 'group_my_state.dart';
+part 'user_groups_event.dart';
+part 'user_groups_state.dart';
 
-class GroupMyBloc extends Bloc<GroupMyEvent, GroupMyState> {
+class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
   final AccountBloc accountBloc;
 
   String? _cursor;
 
-  GroupMyBloc({required this.accountBloc}) : super(GroupMyInitial()) {
+  UserGroupsBloc({required this.accountBloc}) : super(UserGroupsInitial()) {
     on<FetchGroups>(_onFetchGroups);
     on<FetchMoreGroups>(_onFetchMoreGroups);
-    on<RefreshGroups>(_onRefreshGroups);
-  }
-  // New simple handler that just calls FetchGroups
-  void _onRefreshGroups(RefreshGroups event, Emitter<GroupMyState> emit) async {
-    add(FetchGroups());
   }
 
   Future<void> _onFetchGroups(
     FetchGroups event,
-    Emitter<GroupMyState> emit,
+    Emitter<UserGroupsState> emit,
   ) async {
-    emit(GroupMyLoading());
+    emit(UserGroupsLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -44,20 +39,20 @@ class GroupMyBloc extends Bloc<GroupMyEvent, GroupMyState> {
         _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
 
         emit(
-          GroupMyLoaded(
+          UserGroupsLoaded(
             groups: _userGroupsToGroups(myGroupsList.userGroups ?? []),
             hasMore: _cursor != null,
           ),
         );
       }
     } catch (e) {
-      emit(GroupMyError(message: e.toString()));
+      emit(UserGroupsError(message: e.toString()));
     }
   }
 
   Future<void> _onFetchMoreGroups(
     FetchMoreGroups event,
-    Emitter<GroupMyState> emit,
+    Emitter<UserGroupsState> emit,
   ) async {
     try {
       final session = await NakamaService().getValidSession();
@@ -75,7 +70,7 @@ class GroupMyBloc extends Bloc<GroupMyEvent, GroupMyState> {
         _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
 
         emit(
-          GroupMyLoaded(
+          UserGroupsLoaded(
             groups: [
               ...event.groups,
               ..._userGroupsToGroups(myGroupsList.userGroups ?? [])
@@ -85,7 +80,7 @@ class GroupMyBloc extends Bloc<GroupMyEvent, GroupMyState> {
         );
       }
     } catch (e) {
-      emit(GroupMyError(message: e.toString()));
+      emit(UserGroupsError(message: e.toString()));
     }
   }
 

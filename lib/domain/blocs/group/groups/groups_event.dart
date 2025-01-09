@@ -1,16 +1,8 @@
-part of 'group_bloc.dart';
+part of 'groups_bloc.dart';
 
-abstract class GroupEvent {}
+abstract class GroupsEvent {}
 
-class LoadGroupsEvent extends GroupEvent {}
-
-class LoadGroupEvent extends GroupEvent {
-  final String groupId;
-
-  LoadGroupEvent(this.groupId);
-}
-
-class UpdateGroupEvent extends GroupEvent {
+class UpdateGroupEvent extends GroupsEvent {
   final String groupId;
   final bool open;
   final String? name;
@@ -30,7 +22,7 @@ class UpdateGroupEvent extends GroupEvent {
   });
 }
 
-class CreateGroupEvent extends GroupEvent {
+class CreateGroupEvent extends GroupsEvent {
   final String name;
   final String description;
   final int maxCount;
@@ -42,16 +34,4 @@ class CreateGroupEvent extends GroupEvent {
     required this.maxCount,
     required this.open,
   });
-}
-
-class FetchGroups extends GroupEvent {
-  final String? nameFilter;
-
-  FetchGroups({this.nameFilter});
-}
-
-class LoadMoreGroups extends GroupEvent {
-  final String? nameFilter;
-
-  LoadMoreGroups({this.nameFilter});
 }

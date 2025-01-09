@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/domain/blocs/group_all/group_all_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart';
 import 'package:gift_grab/presentation/widgets/group_details_widget.dart';
 
-class GroupAllListView extends StatelessWidget {
-  const GroupAllListView({super.key});
+class PaginatedUserGroups extends StatelessWidget {
+  const PaginatedUserGroups({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GroupAllBloc, GroupAllState>(
+    return BlocConsumer<UserGroupsBloc, UserGroupsState>(
+      listener: (context, state) {},
       builder: (context, state) {
         return switch (state) {
-          GroupAllLoading() => const Center(child: CircularProgressIndicator()),
-          GroupAllLoaded() => Column(
+          UserGroupsLoading() =>
+            const Center(child: CircularProgressIndicator()),
+          UserGroupsLoaded() => Column(
               children: [
                 Expanded(
                   child: ListView.builder(
@@ -27,14 +29,14 @@ class GroupAllListView extends StatelessWidget {
                 if (state.hasMore) ...[
                   ElevatedButton(
                     onPressed: () => context
-                        .read<GroupAllBloc>()
+                        .read<UserGroupsBloc>()
                         .add(FetchMoreGroups(groups: state.groups)),
                     child: Text('Fetch More'),
                   ),
                 ]
               ],
             ),
-          GroupAllError() => Text('Error'),
+          UserGroupsError() => Text('Error'),
           _ => Text('UNKNOWN'),
         };
       },

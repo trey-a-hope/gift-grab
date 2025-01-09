@@ -3,22 +3,22 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:nakama/nakama.dart';
 
-part 'group_all_event.dart';
-part 'group_all_state.dart';
+part 'all_groups_event.dart';
+part 'all_groups_state.dart';
 
-class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
+class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState> {
   String? _cursor;
 
-  GroupAllBloc() : super(GroupAllInitial()) {
+  AllGroupsBloc() : super(AllGroupsInitial()) {
     on<FetchGroups>(_onFetchGroups);
     on<FetchMoreGroups>(_onFetchMoreGroups);
   }
 
   Future<void> _onFetchGroups(
     FetchGroups event,
-    Emitter<GroupAllState> emit,
+    Emitter<AllGroupsState> emit,
   ) async {
-    emit(GroupAllLoading());
+    emit(AllGroupsLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -34,20 +34,20 @@ class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
         _cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
 
         emit(
-          GroupAllLoaded(
+          AllGroupsLoaded(
             groups: allGroupList.groups ?? [],
             hasMore: _cursor != null,
           ),
         );
       }
     } catch (e) {
-      emit(GroupAllError(message: e.toString()));
+      emit(AllGroupsError(message: e.toString()));
     }
   }
 
   Future<void> _onFetchMoreGroups(
     FetchMoreGroups event,
-    Emitter<GroupAllState> emit,
+    Emitter<AllGroupsState> emit,
   ) async {
     try {
       final session = await NakamaService().getValidSession();
@@ -64,14 +64,14 @@ class GroupAllBloc extends Bloc<GroupAllEvent, GroupAllState> {
         _cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
 
         emit(
-          GroupAllLoaded(
+          AllGroupsLoaded(
             groups: [...event.groups, ...allGroupList.groups ?? []],
             hasMore: _cursor != null,
           ),
         );
       }
     } catch (e) {
-      emit(GroupAllError(message: e.toString()));
+      emit(AllGroupsError(message: e.toString()));
     }
   }
 }

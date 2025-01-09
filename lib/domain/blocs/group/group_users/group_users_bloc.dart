@@ -4,25 +4,25 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
 import 'package:nakama/nakama.dart';
 
-part 'group_user_event.dart';
-part 'group_user_state.dart';
+part 'group_users_event.dart';
+part 'group_users_state.dart';
 
-class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
+class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
   final AccountBloc accountBloc;
 
-  GroupUserBloc({required this.accountBloc}) : super(GroupUserInitial()) {
-    on<LoadGroupUsersEvent>(_onLoadGroupUsersEvent);
-    on<JoinGroupEvent>(_onJoinGroupEvent);
-    on<LeaveGroupEvent>(_onLeaveGroupEvent);
-    on<DeleteGroupEvent>(_onDeleteGroupEvent);
-    on<KickUserEvent>(_onKickUserEvent);
+  GroupUsersBloc({required this.accountBloc}) : super(GroupUsersInitial()) {
+    on<FetchGroupUsers>(_onFetchGroupUsers);
+    on<JoinGroup>(_onJoinGroup);
+    on<LeaveGroup>(_onLeaveGroup);
+    on<DeleteGroup>(_onDeleteGroup);
+    on<KickUserFromGroup>(_onKickUserFromGroup);
   }
 
-  Future<void> _onLoadGroupUsersEvent(
-    LoadGroupUsersEvent event,
-    Emitter<GroupUserState> emit,
+  Future<void> _onFetchGroupUsers(
+    FetchGroupUsers event,
+    Emitter<GroupUsersState> emit,
   ) async {
-    emit(GroupUserLoading());
+    emit(GroupUsersLoading());
     try {
       final session = await NakamaService().getValidSession();
 
@@ -44,11 +44,11 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
     }
   }
 
-  Future<void> _onJoinGroupEvent(
-    JoinGroupEvent event,
-    Emitter<GroupUserState> emit,
+  Future<void> _onJoinGroup(
+    JoinGroup event,
+    Emitter<GroupUsersState> emit,
   ) async {
-    emit(GroupUserLoading());
+    emit(GroupUsersLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -61,18 +61,18 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
           groupId: event.groupId,
         );
 
-        emit(GroupUserEventSuccess('Group joined successfully', false));
+        emit(GroupUsersActionSuccess('Group joined successfully', false));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }
   }
 
-  Future<void> _onLeaveGroupEvent(
-    LeaveGroupEvent event,
-    Emitter<GroupUserState> emit,
+  Future<void> _onLeaveGroup(
+    LeaveGroup event,
+    Emitter<GroupUsersState> emit,
   ) async {
-    emit(GroupUserLoading());
+    emit(GroupUsersLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -85,18 +85,18 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
           groupId: event.groupId,
         );
 
-        emit(GroupUserEventSuccess('Left group successfully', false));
+        emit(GroupUsersActionSuccess('Left group successfully', false));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }
   }
 
-  Future<void> _onDeleteGroupEvent(
-    DeleteGroupEvent event,
-    Emitter<GroupUserState> emit,
+  Future<void> _onDeleteGroup(
+    DeleteGroup event,
+    Emitter<GroupUsersState> emit,
   ) async {
-    emit(GroupUserLoading());
+    emit(GroupUsersLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -109,18 +109,18 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
           groupId: event.groupId,
         );
 
-        emit(GroupUserEventSuccess('Group deleted successfully', true));
+        emit(GroupUsersActionSuccess('Group deleted successfully', true));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }
   }
 
-  Future<void> _onKickUserEvent(
-    KickUserEvent event,
-    Emitter<GroupUserState> emit,
+  Future<void> _onKickUserFromGroup(
+    KickUserFromGroup event,
+    Emitter<GroupUsersState> emit,
   ) async {
-    emit(GroupUserLoading());
+    emit(GroupUsersLoading());
 
     try {
       final session = await NakamaService().getValidSession();
@@ -134,7 +134,7 @@ class GroupUserBloc extends Bloc<GroupUserEvent, GroupUserState> {
           userIds: [event.uid],
         );
 
-        emit(GroupUserEventSuccess('User kicked successfully', true));
+        emit(GroupUsersActionSuccess('User kicked successfully', true));
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));

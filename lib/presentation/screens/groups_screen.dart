@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/blocs/group_all/group_all_bloc.dart';
-import 'package:gift_grab/domain/blocs/group_all/group_all_list_view.dart';
-import 'package:gift_grab/domain/blocs/group_my/group_my_bloc.dart' as m;
-import 'package:gift_grab/domain/blocs/group_my/group_my_list_view.dart';
+import 'package:gift_grab/presentation/widgets/paginated_all_groups.dart';
+import 'package:gift_grab/presentation/widgets/paginated_user_groups.dart';
 import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -40,48 +36,36 @@ class _GroupsScreenState extends State<GroupsScreen>
       title: 'Groups',
       goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<GroupAllBloc>(
-              create: (context) => GroupAllBloc()..add(FetchGroups()),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TabBar(
+              padding: EdgeInsets.all(16),
+              labelColor: Colors.white,
+              labelStyle: theme.textTheme.displayLarge,
+              indicatorColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              controller: _tabController,
+              tabs: const [
+                Text('All Groups'),
+                Text('My Groups'),
+              ],
             ),
-            // BlocProvider<m.GroupMyBloc>(
-            //   create: (context) => m.GroupMyBloc(
-            //     accountBloc: context.read<AccountBloc>(),
-            //   )..add(m.FetchGroups()),
-            // ),
-          ],
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TabBar(
-                padding: EdgeInsets.all(16),
-                labelColor: Colors.white,
-                labelStyle: theme.textTheme.displayLarge,
-                indicatorColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
+            Expanded(
+              child: TabBarView(
                 controller: _tabController,
-                tabs: const [
-                  Text('All Groups'),
-                  Text('My Groups'),
+                children: [
+                  PaginatedAllGroups(),
+                  PaginatedUserGroups(),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    GroupAllListView(),
-                    GroupMyListView(),
-                  ],
-                ),
-              ),
-              const Gap(16),
-              GGButtonWidget(
-                title: 'Create Group',
-                onPressed: () => context.goNamed(Globals.routes.createGroup),
-              ),
-            ],
-          ),
+            ),
+            const Gap(16),
+            GGButtonWidget(
+              title: 'Create Group',
+              onPressed: () => context.goNamed(Globals.routes.createGroup),
+            ),
+          ],
         ),
       ),
     );

@@ -4,8 +4,12 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/group_bloc.dart';
-import 'package:gift_grab/domain/blocs/group_my/group_my_bloc.dart' as m;
+import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
+    as ugb;
+import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
+    as agb;
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -38,23 +42,37 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
+        // Auth
         BlocProvider<AuthBloc>(
           create: (context) => authBloc,
         ),
+        // Account
         BlocProvider<AccountBloc>(
           create: (context) => AccountBloc(
             authBloc: authBloc,
           ),
         ),
-        BlocProvider<GroupBloc>(
-          create: (context) => GroupBloc(
+        // Group
+        BlocProvider<GroupsBloc>(
+          create: (context) => GroupsBloc(
             accountBloc: context.read<AccountBloc>(),
           ),
         ),
-        BlocProvider<m.GroupMyBloc>(
-            create: (context) => m.GroupMyBloc(
+        // Group Users
+        BlocProvider<GroupUsersBloc>(
+          create: (context) => GroupUsersBloc(
+            accountBloc: context.read<AccountBloc>(),
+          ),
+        ),
+        // All Groups
+        BlocProvider<agb.AllGroupsBloc>(
+          create: (context) => agb.AllGroupsBloc()..add(agb.FetchGroups()),
+        ),
+        // User Groups
+        BlocProvider<ugb.UserGroupsBloc>(
+            create: (context) => ugb.UserGroupsBloc(
                   accountBloc: context.read<AccountBloc>(),
-                )..add(m.FetchGroups())),
+                )..add(ugb.FetchGroups())),
       ],
       child: ToastificationWrapper(
         child: MaterialApp.router(
