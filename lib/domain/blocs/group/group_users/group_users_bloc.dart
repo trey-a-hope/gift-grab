@@ -7,9 +7,6 @@ import 'package:nakama/nakama.dart';
 part 'group_users_event.dart';
 part 'group_users_state.dart';
 
-// addGroupUsers: wait for a users listing page.
-// TODO: demoteGroupUsers, promoteGroupUsers
-
 class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
   final AccountBloc accountBloc;
 
@@ -164,8 +161,6 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         );
 
         emit(GroupUsersActionSuccess('User banned successfully', false));
-
-        // TODO: Save uid of banned user in group meta data.
       }
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
