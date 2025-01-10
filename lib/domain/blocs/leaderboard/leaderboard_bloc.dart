@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:nakama/nakama.dart';
 
@@ -8,9 +9,13 @@ part 'leaderboard_event.dart';
 part 'leaderboard_state.dart';
 
 class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
+  final AuthBloc authBloc;
+
   final _leaderboardName = 'weekly_leaderboard';
 
-  LeaderboardBloc() : super(LeaderboardInitial()) {
+  LeaderboardBloc({
+    required this.authBloc,
+  }) : super(LeaderboardInitial()) {
     on<FetchLeaderboardEvent>(_onFetchLeaderboardEvent);
     on<SubmitScoreEvent>(_onSubmitScoreEvent);
   }
@@ -25,40 +30,41 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
+        authBloc.add(LogoutEvent());
+        return;
+      }
+
+      final leaderboard = await getNakamaClient().listLeaderboardRecords(
+        session: session,
+        leaderboardName: _leaderboardName,
+      );
+
+      if (leaderboard.records == null) {
+        emit(LeaderboardLoaded(entries: []));
       } else {
-        final leaderboard = await getNakamaClient().listLeaderboardRecords(
+        final records = leaderboard.records!;
+
+        final ownerIds = records
+            .where((record) => record.ownerId != null)
+            .map((record) => record.ownerId as String)
+            .toList();
+
+        final users = await getNakamaClient().getUsers(
           session: session,
-          leaderboardName: _leaderboardName,
+          ids: ownerIds,
         );
 
-        if (leaderboard.records == null) {
-          emit(LeaderboardLoaded(entries: []));
-        } else {
-          final records = leaderboard.records!;
-
-          final ownerIds = records
-              .where((record) => record.ownerId != null)
-              .map((record) => record.ownerId as String)
-              .toList();
-
-          final users = await getNakamaClient().getUsers(
-            session: session,
-            ids: ownerIds,
+        final results =
+            records.where((record) => record.ownerId != null).map((record) {
+          final user = users.firstWhere(
+            (u) => u.id == record.ownerId,
+            orElse: () =>
+                throw Exception('No user found for ID: ${record.ownerId}'),
           );
+          return LeaderboardEntry(record: record, user: user);
+        }).toList();
 
-          final results =
-              records.where((record) => record.ownerId != null).map((record) {
-            final user = users.firstWhere(
-              (u) => u.id == record.ownerId,
-              orElse: () =>
-                  throw Exception('No user found for ID: ${record.ownerId}'),
-            );
-            return LeaderboardEntry(record: record, user: user);
-          }).toList();
-
-          emit(LeaderboardLoaded(entries: results));
-        }
+        emit(LeaderboardLoaded(entries: results));
       }
     } catch (e) {
       emit(LeaderboardError(message: e.toString()));
@@ -77,17 +83,18 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        await getNakamaClient().writeLeaderboardRecord(
-          session: session,
-          leaderboardName: _leaderboardName,
-          score: event.score,
-        );
-
-        // Refresh leaderboard after updating
-        add(FetchLeaderboardEvent());
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      await getNakamaClient().writeLeaderboardRecord(
+        session: session,
+        leaderboardName: _leaderboardName,
+        score: event.score,
+      );
+
+      // Refresh leaderboard after updating
+      add(FetchLeaderboardEvent());
     } catch (e) {
       emit(LeaderboardError(message: e.toString()));
     }

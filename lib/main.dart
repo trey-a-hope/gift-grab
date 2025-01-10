@@ -10,6 +10,7 @@ import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
     as ugb;
 import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
+import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -56,23 +57,34 @@ class MyApp extends StatelessWidget {
         BlocProvider<GroupsBloc>(
           create: (context) => GroupsBloc(
             accountBloc: context.read<AccountBloc>(),
+            authBloc: context.read<AuthBloc>(),
           ),
         ),
         // Group Users
         BlocProvider<GroupUsersBloc>(
           create: (context) => GroupUsersBloc(
             accountBloc: context.read<AccountBloc>(),
+            authBloc: context.read<AuthBloc>(),
           ),
         ),
         // All Groups
         BlocProvider<agb.AllGroupsBloc>(
-          create: (context) => agb.AllGroupsBloc()..add(agb.FetchGroups()),
+          create: (context) => agb.AllGroupsBloc(
+            authBloc: context.read<AuthBloc>(),
+          )..add(agb.FetchGroups()),
         ),
         // User Groups
         BlocProvider<ugb.UserGroupsBloc>(
             create: (context) => ugb.UserGroupsBloc(
                   accountBloc: context.read<AccountBloc>(),
+                  authBloc: context.read<AuthBloc>(),
                 )..add(ugb.FetchGroups())),
+        // Leaderboard
+        BlocProvider<LeaderboardBloc>(
+          create: (context) => LeaderboardBloc(
+            authBloc: context.read<AuthBloc>(),
+          ),
+        ),
       ],
       child: ToastificationWrapper(
         child: MaterialApp.router(

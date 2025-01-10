@@ -29,12 +29,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        debugPrint(session.toString());
-        final account = await getNakamaClient().getAccount(session);
-        emit(AccountLoaded(account: account));
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      debugPrint(session.toString());
+      final account = await getNakamaClient().getAccount(session);
+      emit(AccountLoaded(account: account));
     } catch (e) {
       if (e is GrpcError) {
         switch (e.codeName) {
@@ -64,14 +65,16 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        await getNakamaClient().updateAccount(
-          session: session,
-          username: event.username,
-        );
-        add(FetchAccountEvent());
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      await getNakamaClient().updateAccount(
+        session: session,
+        username: event.username,
+      );
+
+      add(FetchAccountEvent());
     } catch (e) {
       emit(AccountError(message: e.toString()));
     }
@@ -87,14 +90,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        await getNakamaClient().rpc(session: session, id: 'account_delete_id');
-
-        await NakamaService().clearTokens();
-
-        authBloc.add(CheckAuthStatusEvent());
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      await getNakamaClient().rpc(session: session, id: 'account_delete_id');
+      await NakamaService().clearTokens();
+      authBloc.add(LogoutEvent());
     } catch (e) {
       emit(AccountError(message: e.toString()));
     }

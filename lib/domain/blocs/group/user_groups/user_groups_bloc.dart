@@ -3,6 +3,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'user_groups_event.dart';
@@ -10,10 +11,14 @@ part 'user_groups_state.dart';
 
 class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
   final AccountBloc accountBloc;
+  final AuthBloc authBloc;
 
   String? _cursor;
 
-  UserGroupsBloc({required this.accountBloc}) : super(UserGroupsInitial()) {
+  UserGroupsBloc({
+    required this.accountBloc,
+    required this.authBloc,
+  }) : super(UserGroupsInitial()) {
     on<FetchGroups>(_onFetchGroups);
     on<FetchMoreGroups>(_onFetchMoreGroups);
   }
@@ -28,23 +33,24 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        final myGroupsList = await getNakamaClient().listUserGroups(
-          session: session,
-          limit: Globals.paginationLimit,
-          userId: accountBloc.uid,
-        );
-
-        _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
-
-        emit(
-          UserGroupsLoaded(
-            groups: _userGroupsToGroups(myGroupsList.userGroups ?? []),
-            hasMore: _cursor != null,
-          ),
-        );
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      final myGroupsList = await getNakamaClient().listUserGroups(
+        session: session,
+        limit: Globals.paginationLimit,
+        userId: accountBloc.uid,
+      );
+
+      _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
+
+      emit(
+        UserGroupsLoaded(
+          groups: _userGroupsToGroups(myGroupsList.userGroups ?? []),
+          hasMore: _cursor != null,
+        ),
+      );
     } catch (e) {
       emit(UserGroupsError(message: e.toString()));
     }
@@ -58,27 +64,28 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        throw Exception('Session expired...');
-      } else {
-        final myGroupsList = await getNakamaClient().listUserGroups(
-          session: session,
-          limit: Globals.paginationLimit,
-          userId: accountBloc.uid,
-          cursor: _cursor,
-        );
-
-        _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
-
-        emit(
-          UserGroupsLoaded(
-            groups: [
-              ...event.groups,
-              ..._userGroupsToGroups(myGroupsList.userGroups ?? [])
-            ],
-            hasMore: _cursor != null,
-          ),
-        );
+        authBloc.add(LogoutEvent());
+        return;
       }
+
+      final myGroupsList = await getNakamaClient().listUserGroups(
+        session: session,
+        limit: Globals.paginationLimit,
+        userId: accountBloc.uid,
+        cursor: _cursor,
+      );
+
+      _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
+
+      emit(
+        UserGroupsLoaded(
+          groups: [
+            ...event.groups,
+            ..._userGroupsToGroups(myGroupsList.userGroups ?? [])
+          ],
+          hasMore: _cursor != null,
+        ),
+      );
     } catch (e) {
       emit(UserGroupsError(message: e.toString()));
     }

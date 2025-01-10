@@ -15,50 +15,48 @@ class LeaderboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    context.read<LeaderboardBloc>().add(FetchLeaderboardEvent());
+
     return GGScaffoldWidget(
       title: 'Leaderboard',
       goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
-        child: BlocProvider(
-          create: (context) => LeaderboardBloc()..add(FetchLeaderboardEvent()),
-          child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
-            builder: (context, state) => switch (state) {
-              LeaderboardLoading() =>
-                Center(child: const CircularProgressIndicator()),
-              LeaderboardError() => Text('Error: ${state.message}'),
-              LeaderboardLoaded() => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32),
-                      child: Text(
-                        'Resets every Monday at 12:00am.',
-                        style: theme.textTheme.headlineSmall!.copyWith(
-                          fontSize: Globals.isTablet
-                              ? theme.textTheme.headlineSmall!.fontSize! * 2
-                              : theme.textTheme.headlineSmall!.fontSize,
-                        ),
+        child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
+          builder: (context, state) => switch (state) {
+            LeaderboardLoading() =>
+              Center(child: const CircularProgressIndicator()),
+            LeaderboardError() => Text('Error: ${state.message}'),
+            LeaderboardLoaded() => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Text(
+                      'Resets every Monday at 12:00am.',
+                      style: theme.textTheme.headlineSmall!.copyWith(
+                        fontSize: Globals.isTablet
+                            ? theme.textTheme.headlineSmall!.fontSize! * 2
+                            : theme.textTheme.headlineSmall!.fontSize,
                       ),
                     ),
-                    Expanded(
-                      child: state.entries.isEmpty
-                          ? Center(
-                              child: Text('No records for this week yet...',
-                                  style: theme.textTheme.displayLarge),
-                            )
-                          : ListView.builder(
-                              itemCount: state.entries.length,
-                              itemBuilder: ((_, index) =>
-                                  LeaderboardRecordWidget(
-                                    entry: state.entries[index],
-                                  )),
-                            ),
-                    ),
-                  ],
-                ),
-              _ => const SizedBox(),
-            },
-          ),
+                  ),
+                  Expanded(
+                    child: state.entries.isEmpty
+                        ? Center(
+                            child: Text('No records for this week yet...',
+                                style: theme.textTheme.displayLarge),
+                          )
+                        : ListView.builder(
+                            itemCount: state.entries.length,
+                            itemBuilder: ((_, index) => LeaderboardRecordWidget(
+                                  entry: state.entries[index],
+                                )),
+                          ),
+                  ),
+                ],
+              ),
+            _ => const SizedBox(),
+          },
         ),
       ),
     );

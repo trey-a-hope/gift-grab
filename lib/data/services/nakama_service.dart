@@ -13,45 +13,50 @@ class NakamaService {
     }
   }
 
-  // TODO: This method should only be called in the AuthBloc.
-  // All bloc should then call the CheckAuthStatusEvent
   Future<Session?> getValidSession() async {
-    final token = await _storage.read(key: 'token');
-    final refreshToken = await _storage.read(key: 'refreshToken');
+    try {
+      final token = await _storage.read(key: 'token');
+      final refreshToken = await _storage.read(key: 'refreshToken');
 
-    if (token == null || refreshToken == null) {
-      return null;
-    }
+      if (token == null || refreshToken == null) {
+        return null;
+      }
 
-    final session = Session.restore(
-      token: token,
-      refreshToken: refreshToken,
-    );
+      final session = Session.restore(
+        token: token,
+        refreshToken: refreshToken,
+      );
 
-    if (session == null) {
-      return null;
-    }
+      if (session == null) {
+        // Clear invalid tokens from storage
+        await _storage.delete(key: 'token');
+        await _storage.delete(key: 'refreshToken');
+        return null;
+      }
 
-    // Check if session is expired or close to expiry
-    if (session.isExpired ||
-        session.hasExpired(DateTime.now().add(Duration(hours: 1)))) {
-      try {
-        // Try to refresh the session
+      // Check if session is expired or close to expiry
+      if (session.isExpired ||
+          session.hasExpired(DateTime.now().add(const Duration(hours: 1)))) {
         final client = getNakamaClient();
         final newSession = await client.sessionRefresh(session: session);
 
         // Save new tokens
-        await _storage.write(key: 'token', value: newSession.token);
-        await _storage.write(
-            key: 'refreshToken', value: newSession.refreshToken);
+        await Future.wait([
+          _storage.write(key: 'token', value: newSession.token),
+          _storage.write(key: 'refreshToken', value: newSession.refreshToken),
+        ]);
 
         return newSession;
-      } catch (e) {
-        return null;
-        // throw Exception('Session expired and refresh failed');
       }
-    }
 
-    return session;
+      return session;
+    } catch (e) {
+      // Clear tokens on any error
+      await Future.wait([
+        _storage.delete(key: 'token'),
+        _storage.delete(key: 'refreshToken'),
+      ]);
+      return null;
+    }
   }
 }

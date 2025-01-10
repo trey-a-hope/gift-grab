@@ -15,30 +15,10 @@ import 'package:gift_grab/presentation/inputs/joystick.dart';
 
 class GameStateHandler extends Component
     with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
-  late final LeaderboardBloc leaderboardBloc;
-
-  @override
-  Future<void> onLoad() async {
-    // Navigate up through the component tree to find FlameMultiBlocProvider
-    Component? current = parent;
-    while (current != null && current is! FlameMultiBlocProvider) {
-      current = current.parent;
-    }
-
-    if (current is FlameMultiBlocProvider) {
-      final providers = current;
-      final leaderboardProvider = providers.children
-          .whereType<FlameBlocProvider<LeaderboardBloc, LeaderboardState>>()
-          .first;
-      leaderboardBloc = leaderboardProvider.bloc;
-    }
-  }
-
   @override
   void onNewState(GameState state) {
     if (state.isGameOver) {
-      leaderboardBloc.add(SubmitScoreEvent(score: state.score));
-
+      gameRef.leaderboardBloc.add(SubmitScoreEvent(score: state.score));
       // Flame -> Flutter Bloc conversion.
       gameRef.score = state.score;
       gameRef.resetGame = () {
@@ -56,12 +36,13 @@ class GameStateHandler extends Component
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   // Store state variables on the widget since Flame overlays are part of
   // the game engine system, and Flutter Bloc is part of the widget system.
+  final LeaderboardBloc leaderboardBloc;
   int score = 0;
   Function()? resetGame;
 
   late final JoystickComponent _joystick;
 
-  GiftGrabGame() {
+  GiftGrabGame({required this.leaderboardBloc}) {
     _joystick = createJoystick();
   }
 
@@ -70,15 +51,8 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
     await super.onLoad();
 
     await add(
-      FlameMultiBlocProvider(
-        providers: [
-          FlameBlocProvider<LeaderboardBloc, LeaderboardState>(
-            create: () => LeaderboardBloc(),
-          ),
-          FlameBlocProvider<GameBloc, GameState>(
-            create: () => GameBloc()..add(StartGameEvent()),
-          ),
-        ],
+      FlameBlocProvider<GameBloc, GameState>(
+        create: () => GameBloc()..add(StartGameEvent()),
         children: [
           PositionComponent(
             size: size,
