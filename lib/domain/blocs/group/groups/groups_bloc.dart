@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'groups_event.dart';
@@ -46,7 +47,17 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
       emit(GroupsActionSuccess('Group created successfully'));
     } catch (e) {
-      emit(GroupsError(message: e.toString()));
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          case 'ALREADY_EXISTS':
+            emit(GroupsError(message: 'Group name is in use.'));
+
+          default:
+            emit(GroupsError(message: 'Error with groups...'));
+        }
+      } else {
+        emit(GroupsError(message: e.toString()));
+      }
     }
   }
 

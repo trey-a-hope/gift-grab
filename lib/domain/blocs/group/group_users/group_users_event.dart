@@ -39,3 +39,10 @@ class BanUserFromGroup extends GroupUsersEvent {
 
   BanUserFromGroup({required this.groupId, required this.uid});
 }
+
+class PromoteUserInGroup extends GroupUsersEvent {
+  final String groupId;
+  final String uid;
+
+  PromoteUserInGroup({required this.groupId, required this.uid});
+}

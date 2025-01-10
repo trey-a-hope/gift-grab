@@ -22,6 +22,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     on<DeleteGroup>(_onDeleteGroup);
     on<KickUserFromGroup>(_onKickUserFromGroup);
     on<BanUserFromGroup>(_onBanUserFromGroup);
+    on<PromoteUserInGroup>(_onPromoteUserInGroup);
   }
 
   Future<void> _onFetchGroupUsers(
@@ -176,6 +177,33 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       );
 
       emit(GroupUsersActionSuccess('User banned successfully', false));
+    } catch (e) {
+      emit(GroupUsersError(message: e.toString()));
+    }
+  }
+
+  // TODO: Test
+  Future<void> _onPromoteUserInGroup(
+    PromoteUserInGroup event,
+    Emitter<GroupUsersState> emit,
+  ) async {
+    emit(GroupUsersLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        authBloc.add(LogoutEvent());
+        return;
+      }
+
+      await getNakamaClient().promoteGroupUsers(
+        session: session,
+        groupId: event.groupId,
+        userIds: [event.uid],
+      );
+
+      emit(GroupUsersActionSuccess('User promoted successfully', false));
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }

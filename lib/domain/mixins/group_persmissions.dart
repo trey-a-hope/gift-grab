@@ -17,6 +17,7 @@ mixin GroupPermissions {
         me.state == GroupMembershipState.admin;
   }
 
+  // TODO: Rename this to admin permissions? accept, kick, promote, demote, ban or add members are similar...
   bool canKick(List<GroupUser> users, String currentUid, String targetUid) {
     if (currentUid == targetUid) return false;
 
@@ -40,8 +41,10 @@ mixin GroupPermissions {
     return false;
   }
 
-  // TODO: Validate if these permissions are the same or not.
   bool canBan(List<GroupUser> users, String currentUid, String targetUid) =>
+      canKick(users, currentUid, targetUid);
+
+  bool canPromote(List<GroupUser> users, String currentUid, String targetUid) =>
       canKick(users, currentUid, targetUid);
 
   bool canDelete(List<GroupUser> users, String uid) {

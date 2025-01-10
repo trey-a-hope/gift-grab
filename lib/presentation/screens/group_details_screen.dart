@@ -106,6 +106,19 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                                           );
                                     }
                                   : null,
+                              promoteUserAction: canPromote(
+                                state.users,
+                                state.uid,
+                                state.users[i].user.id,
+                              )
+                                  ? () {
+                                      context.read<GroupUsersBloc>().add(
+                                            PromoteUserInGroup(
+                                                groupId: group.id,
+                                                uid: state.users[i].user.id),
+                                          );
+                                    }
+                                  : null,
                             ),
                           ),
                   ),

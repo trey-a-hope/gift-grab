@@ -8,12 +8,14 @@ class GroupMemberDetailsWidget extends StatelessWidget {
   final bool isMe;
   final void Function()? kickUserAction;
   final void Function()? banUserAction;
+  final void Function()? promoteUserAction;
 
   const GroupMemberDetailsWidget({
     required this.groupUser,
     required this.isMe,
     this.kickUserAction,
     this.banUserAction,
+    this.promoteUserAction,
     super.key,
   });
 
@@ -49,7 +51,7 @@ class GroupMemberDetailsWidget extends StatelessWidget {
             style: theme.textTheme.displayMedium,
           ),
           Spacer(),
-          // Kick User
+          // Kick user
           if (kickUserAction != null) ...[
             IconButton.filled(
               color: Colors.black,
@@ -73,7 +75,7 @@ class GroupMemberDetailsWidget extends StatelessWidget {
               ),
             )
           ],
-          // Ban User
+          // Ban user
           if (banUserAction != null) ...[
             IconButton.filled(
               color: Colors.black,
@@ -94,6 +96,30 @@ class GroupMemberDetailsWidget extends StatelessWidget {
               },
               icon: Icon(
                 Icons.cancel,
+              ),
+            )
+          ],
+          // Promote user
+          if (promoteUserAction != null) ...[
+            IconButton.filled(
+              color: Colors.black,
+              onPressed: () async {
+                final confirm = await ModalService.showConfirmation(
+                  context: context,
+                  title: 'Promote ${user.username} in group?',
+                  message: 'Are you sure?',
+                );
+
+                if (confirm == null || confirm == false) {
+                  return;
+                }
+
+                if (!context.mounted) return;
+
+                promoteUserAction!();
+              },
+              icon: Icon(
+                Icons.arrow_upward_sharp,
               ),
             )
           ],
