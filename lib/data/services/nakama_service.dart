@@ -13,6 +13,8 @@ class NakamaService {
     }
   }
 
+  // TODO: This method should only be called in the AuthBloc.
+  // All bloc should then call the CheckAuthStatusEvent
   Future<Session?> getValidSession() async {
     final token = await _storage.read(key: 'token');
     final refreshToken = await _storage.read(key: 'refreshToken');
