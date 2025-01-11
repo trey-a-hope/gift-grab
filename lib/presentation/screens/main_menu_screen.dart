@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,23 +55,23 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               },
             ),
             const Gap(64),
-            GGButtonWidget(
-              title: 'Play',
+            ElevatedButton(
+              child: Text('Play'),
               onPressed: () => context.goNamed(Globals.routes.game),
             ),
             const Gap(16),
-            GGButtonWidget(
-              title: 'Leaderboard',
+            ElevatedButton(
+              child: Text('Leaderboard'),
               onPressed: () => context.goNamed(Globals.routes.leaderboard),
             ),
             const Gap(16),
-            GGButtonWidget(
-              title: 'Groups',
+            ElevatedButton(
+              child: Text('Groups'),
               onPressed: () => context.goNamed(Globals.routes.groups),
             ),
             const Gap(16),
-            GGButtonWidget(
-              title: 'Settings',
+            ElevatedButton(
+              child: Text('Settings'),
               onPressed: () => context.goNamed(Globals.routes.settings),
             ),
             const Gap(50),

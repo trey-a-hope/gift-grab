@@ -9,6 +9,8 @@ class GroupMemberDetailsWidget extends StatelessWidget {
   final void Function()? kickUserAction;
   final void Function()? banUserAction;
   final void Function()? promoteUserAction;
+  final void Function()? demoteUserAction;
+  final void Function()? acceptUserAction;
 
   const GroupMemberDetailsWidget({
     required this.groupUser,
@@ -16,6 +18,8 @@ class GroupMemberDetailsWidget extends StatelessWidget {
     this.kickUserAction,
     this.banUserAction,
     this.promoteUserAction,
+    this.demoteUserAction,
+    this.acceptUserAction,
     super.key,
   });
 
@@ -120,6 +124,54 @@ class GroupMemberDetailsWidget extends StatelessWidget {
               },
               icon: Icon(
                 Icons.arrow_upward_sharp,
+              ),
+            )
+          ],
+          // Demote user
+          if (demoteUserAction != null) ...[
+            IconButton.filled(
+              color: Colors.black,
+              onPressed: () async {
+                final confirm = await ModalService.showConfirmation(
+                  context: context,
+                  title: 'Demote ${user.username} in group?',
+                  message: 'Are you sure?',
+                );
+
+                if (confirm == null || confirm == false) {
+                  return;
+                }
+
+                if (!context.mounted) return;
+
+                demoteUserAction!();
+              },
+              icon: Icon(
+                Icons.arrow_downward_sharp,
+              ),
+            )
+          ],
+          // Accept user
+          if (acceptUserAction != null) ...[
+            IconButton.filled(
+              color: Colors.black,
+              onPressed: () async {
+                final confirm = await ModalService.showConfirmation(
+                  context: context,
+                  title: 'Accept ${user.username} into group?',
+                  message: 'Are you sure?',
+                );
+
+                if (confirm == null || confirm == false) {
+                  return;
+                }
+
+                if (!context.mounted) return;
+
+                acceptUserAction!();
+              },
+              icon: Icon(
+                Icons.check,
               ),
             )
           ],

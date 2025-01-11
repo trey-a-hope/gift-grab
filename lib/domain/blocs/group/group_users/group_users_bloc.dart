@@ -23,6 +23,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     on<KickUserFromGroup>(_onKickUserFromGroup);
     on<BanUserFromGroup>(_onBanUserFromGroup);
     on<PromoteUserInGroup>(_onPromoteUserInGroup);
+    on<DemoteUserInGroup>(_onDemoteUserInGroup);
+    on<AddUserIntoGroup>(_onAddUserIntoGroup);
   }
 
   Future<void> _onFetchGroupUsers(
@@ -74,7 +76,11 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         groupId: event.groupId,
       );
 
-      emit(GroupUsersActionSuccess('Group joined successfully', false));
+      emit(
+        GroupUsersActionSuccess(
+            '${event.isJoinRequest ? 'Request sent' : 'Group joined'} successfully',
+            false),
+      );
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }
@@ -99,7 +105,11 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         groupId: event.groupId,
       );
 
-      emit(GroupUsersActionSuccess('Left group successfully', false));
+      emit(
+        GroupUsersActionSuccess(
+            '${event.isJoinRequest ? 'Request deleted' : 'Left group'} successfully',
+            false),
+      );
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }
@@ -182,7 +192,6 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     }
   }
 
-  // TODO: Test
   Future<void> _onPromoteUserInGroup(
     PromoteUserInGroup event,
     Emitter<GroupUsersState> emit,
@@ -204,6 +213,58 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       );
 
       emit(GroupUsersActionSuccess('User promoted successfully', false));
+    } catch (e) {
+      emit(GroupUsersError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onDemoteUserInGroup(
+    DemoteUserInGroup event,
+    Emitter<GroupUsersState> emit,
+  ) async {
+    emit(GroupUsersLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        authBloc.add(LogoutEvent());
+        return;
+      }
+
+      await getNakamaClient().demoteGroupUsers(
+        session: session,
+        groupId: event.groupId,
+        userIds: [event.uid],
+      );
+
+      emit(GroupUsersActionSuccess('User demoted successfully', false));
+    } catch (e) {
+      emit(GroupUsersError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onAddUserIntoGroup(
+    AddUserIntoGroup event,
+    Emitter<GroupUsersState> emit,
+  ) async {
+    emit(GroupUsersLoading());
+
+    try {
+      final session = await NakamaService().getValidSession();
+
+      if (session == null) {
+        authBloc.add(LogoutEvent());
+        return;
+      }
+
+      await getNakamaClient().addGroupUsers(
+        session: session,
+        groupId: event.groupId,
+        userIds: [event.uid],
+      );
+
+      emit(GroupUsersActionSuccess('User added successfully', false));
     } catch (e) {
       emit(GroupUsersError(message: e.toString()));
     }

@@ -5,7 +5,6 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/widgets/paginated_all_groups.dart';
 import 'package:gift_grab/presentation/widgets/paginated_user_groups.dart';
-import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -71,8 +70,8 @@ class _GroupsScreenState extends State<GroupsScreen>
                 ),
               ),
               const Gap(16),
-              GGButtonWidget(
-                title: 'Create Group',
+              ElevatedButton(
+                child: Text('Create Group'),
                 onPressed: () => context.goNamed(Globals.routes.createGroup),
               ),
             ],

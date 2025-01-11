@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
@@ -24,14 +23,14 @@ class SettingsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Gap(32),
-            GGButtonWidget(
-              title: 'Edit Profile',
+            ElevatedButton(
+              child: Text('Edit Profile'),
               onPressed: () => context.goNamed(Globals.routes.editProfile),
             ),
             const Gap(16),
             BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) => GGButtonWidget(
-                title: 'Sign Out',
+              builder: (context, state) => ElevatedButton(
+                child: Text('Sign Out'),
                 onPressed: () async {
                   final confirm = await ModalService.showConfirmation(
                     context: context,
@@ -52,8 +51,8 @@ class SettingsScreen extends StatelessWidget {
             const Gap(16),
             BlocBuilder<AccountBloc, AccountState>(
               builder: (context, state) => switch (state) {
-                AccountLoaded() => GGButtonWidget(
-                    title: 'Delete Profile',
+                AccountLoaded() => ElevatedButton(
+                    child: Text('Delete Profile'),
                     onPressed: () async {
                       final confirm =
                           await ModalService.showInputMatchConfirmation(

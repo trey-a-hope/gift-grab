@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -134,13 +133,15 @@ class _BaseGroupFormState extends State<BaseGroupForm> {
               ),
             ),
             const Gap(16),
-            GGButtonWidget(
-              title: widget.submitButtonText,
-              onPressed: () => widget.onSubmit(
-                _name ?? 'NO NAME GROUP',
-                _description ?? 'NO DESCRIPTION GROUP',
-                _groupCount,
-                _isOpen,
+            Center(
+              child: ElevatedButton(
+                child: Text(widget.submitButtonText),
+                onPressed: () => widget.onSubmit(
+                  _name ?? 'NO NAME GROUP',
+                  _description ?? 'NO DESCRIPTION GROUP',
+                  _groupCount,
+                  _isOpen,
+                ),
               ),
             ),
           ],

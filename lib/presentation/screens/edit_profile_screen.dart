@@ -48,16 +48,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       const Gap(16),
-                      SizedBox(
-                        width: Globals.isTablet ? 400 : 200,
-                        height: Globals.isTablet ? 100 : 50,
-                        child: ElevatedButton(
-                          onPressed: () => _attemptSaveUsername(context),
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                              fontSize: Globals.isTablet ? 50 : 25,
-                            ),
+                      ElevatedButton(
+                        onPressed: () => _attemptSaveUsername(context),
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                            fontSize: Globals.isTablet ? 50 : 25,
                           ),
                         ),
                       ),

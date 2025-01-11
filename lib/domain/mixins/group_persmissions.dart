@@ -17,7 +17,6 @@ mixin GroupPermissions {
         me.state == GroupMembershipState.admin;
   }
 
-  // TODO: Rename this to admin permissions? accept, kick, promote, demote, ban or add members are similar...
   bool canKick(List<GroupUser> users, String currentUid, String targetUid) {
     if (currentUid == targetUid) return false;
 
@@ -26,6 +25,11 @@ mixin GroupPermissions {
 
     final target = findUserInGroup(users, targetUid);
     if (target == null) return false;
+
+    // Cannot perform action on non active member.
+    if (target.state == GroupMembershipState.joinRequest) {
+      return false;
+    }
 
     // Superadmins can kick anyone.
     if (me.state == GroupMembershipState.superadmin) {
@@ -41,11 +45,125 @@ mixin GroupPermissions {
     return false;
   }
 
-  bool canBan(List<GroupUser> users, String currentUid, String targetUid) =>
-      canKick(users, currentUid, targetUid);
+  bool canBan(List<GroupUser> users, String currentUid, String targetUid) {
+    if (currentUid == targetUid) return false;
 
-  bool canPromote(List<GroupUser> users, String currentUid, String targetUid) =>
-      canKick(users, currentUid, targetUid);
+    final me = findUserInGroup(users, currentUid);
+    if (me == null) return false;
+
+    final target = findUserInGroup(users, targetUid);
+    if (target == null) return false;
+
+    // Cannot perform action on non active member.
+    if (target.state == GroupMembershipState.joinRequest) {
+      return false;
+    }
+
+    // Superadmins can kick anyone.
+    if (me.state == GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    // Admins can remove all but superadmins.
+    if (me.state == GroupMembershipState.admin &&
+        target.state != GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool canPromote(List<GroupUser> users, String currentUid, String targetUid) {
+    // Cannot perform action on self.
+    if (currentUid == targetUid) return false;
+
+    final me = findUserInGroup(users, currentUid);
+    if (me == null) return false;
+
+    final target = findUserInGroup(users, targetUid);
+    if (target == null) return false;
+
+    // Cannot perform action on non active member.
+    if (target.state == GroupMembershipState.joinRequest) {
+      return false;
+    }
+
+    // Cannot go any higher than Super Admin.
+    if (target.state == GroupMembershipState.superadmin) {
+      return false;
+    }
+
+    // Superadmins promote anyone.
+    if (me.state == GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    // Admins can remove all but superadmins.
+    if (me.state == GroupMembershipState.admin &&
+        target.state != GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool canDemote(List<GroupUser> users, String currentUid, String targetUid) {
+    // Cannot perform action on self.
+    if (currentUid == targetUid) return false;
+
+    final me = findUserInGroup(users, currentUid);
+    if (me == null) return false;
+
+    final target = findUserInGroup(users, targetUid);
+    if (target == null) return false;
+
+    // Cannot perform action on non active member.
+    if (target.state == GroupMembershipState.joinRequest) {
+      return false;
+    }
+
+    // Cannot go any lower than member.
+    if (target.state == GroupMembershipState.member) {
+      return false;
+    }
+
+    // Superadmins can demote anyone.
+    if (me.state == GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    // Admins can remove all but superadmins.
+    if (me.state == GroupMembershipState.admin &&
+        target.state != GroupMembershipState.superadmin) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool canAccept(List<GroupUser> users, String currentUid, String targetUid) {
+    // Cannot perform action on self.
+    if (currentUid == targetUid) return false;
+
+    final me = findUserInGroup(users, currentUid);
+    if (me == null) return false;
+
+    final target = findUserInGroup(users, targetUid);
+    if (target == null) return false;
+
+    // Cannot perform action on non active member.
+    if (target.state != GroupMembershipState.joinRequest) {
+      return false;
+    }
+
+    // Superadmins can demote anyone.
+    if (me.state == GroupMembershipState.superadmin ||
+        me.state == GroupMembershipState.admin) {
+      return true;
+    }
+
+    return false;
+  }
 
   bool canDelete(List<GroupUser> users, String uid) {
     final me = findUserInGroup(users, uid);

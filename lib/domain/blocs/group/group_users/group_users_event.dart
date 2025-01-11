@@ -10,14 +10,22 @@ class FetchGroupUsers extends GroupUsersEvent {
 
 class JoinGroup extends GroupUsersEvent {
   final String groupId;
+  final bool isJoinRequest;
 
-  JoinGroup({required this.groupId});
+  JoinGroup({
+    required this.groupId,
+    required this.isJoinRequest,
+  });
 }
 
 class LeaveGroup extends GroupUsersEvent {
   final String groupId;
+  final bool isJoinRequest;
 
-  LeaveGroup({required this.groupId});
+  LeaveGroup({
+    required this.groupId,
+    required this.isJoinRequest,
+  });
 }
 
 class DeleteGroup extends GroupUsersEvent {
@@ -45,4 +53,18 @@ class PromoteUserInGroup extends GroupUsersEvent {
   final String uid;
 
   PromoteUserInGroup({required this.groupId, required this.uid});
+}
+
+class DemoteUserInGroup extends GroupUsersEvent {
+  final String groupId;
+  final String uid;
+
+  DemoteUserInGroup({required this.groupId, required this.uid});
+}
+
+class AddUserIntoGroup extends GroupUsersEvent {
+  final String groupId;
+  final String uid;
+
+  AddUserIntoGroup({required this.groupId, required this.uid});
 }

@@ -8,7 +8,6 @@ import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
-import 'package:gift_grab/presentation/widgets/gg_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
@@ -119,6 +118,32 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                                           );
                                     }
                                   : null,
+                              demoteUserAction: canDemote(
+                                state.users,
+                                state.uid,
+                                state.users[i].user.id,
+                              )
+                                  ? () {
+                                      context.read<GroupUsersBloc>().add(
+                                            DemoteUserInGroup(
+                                                groupId: group.id,
+                                                uid: state.users[i].user.id),
+                                          );
+                                    }
+                                  : null,
+                              acceptUserAction: canAccept(
+                                state.users,
+                                state.uid,
+                                state.users[i].user.id,
+                              )
+                                  ? () {
+                                      context.read<GroupUsersBloc>().add(
+                                            AddUserIntoGroup(
+                                                groupId: group.id,
+                                                uid: state.users[i].user.id),
+                                          );
+                                    }
+                                  : null,
                             ),
                           ),
                   ),
@@ -126,12 +151,16 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       if (canJoin(state.users, state.uid, group)) ...[
-                        GGButtonWidget(
-                          title: 'Join',
+                        ElevatedButton(
+                          child: Text(group.open == true
+                              ? 'Join'
+                              : 'Submit Join Request'),
                           onPressed: () async {
                             final confirm = await ModalService.showConfirmation(
                               context: context,
-                              title: 'Join Group?',
+                              title: group.open == true
+                                  ? 'Join Group?'
+                                  : 'Submit Join Request',
                               message: 'Are you sure?',
                             );
 
@@ -142,18 +171,31 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                             if (!context.mounted) return;
 
                             context.read<GroupUsersBloc>().add(
-                                  JoinGroup(groupId: group.id),
+                                  JoinGroup(
+                                    groupId: group.id,
+                                    isJoinRequest: findUserInGroup(
+                                            state.users, state.uid) ==
+                                        null,
+                                  ),
                                 );
                           },
                         ),
                       ],
                       if (canLeave(state.users, state.uid)) ...[
-                        GGButtonWidget(
-                          title: 'Leave',
+                        ElevatedButton(
+                          child: Text(
+                              findUserInGroup(state.users, state.uid)?.state ==
+                                      GroupMembershipState.joinRequest
+                                  ? 'Remove Request'
+                                  : 'Leave'),
                           onPressed: () async {
                             final confirm = await ModalService.showConfirmation(
                               context: context,
-                              title: 'Leave Group?',
+                              title: findUserInGroup(state.users, state.uid)
+                                          ?.state ==
+                                      GroupMembershipState.joinRequest
+                                  ? 'Delete Join Request?'
+                                  : 'Leave Group?',
                               message: 'Are you sure?',
                             );
 
@@ -164,14 +206,20 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                             if (!context.mounted) return;
 
                             context.read<GroupUsersBloc>().add(
-                                  LeaveGroup(groupId: group.id),
+                                  LeaveGroup(
+                                    groupId: group.id,
+                                    isJoinRequest:
+                                        findUserInGroup(state.users, state.uid)
+                                                ?.state ==
+                                            GroupMembershipState.joinRequest,
+                                  ),
                                 );
                           },
                         ),
                       ],
                       if (canDelete(state.users, state.uid)) ...[
-                        GGButtonWidget(
-                          title: 'Delete',
+                        ElevatedButton(
+                          child: Text('Delete'),
                           onPressed: () async {
                             final confirm = await ModalService.showConfirmation(
                               context: context,
@@ -192,8 +240,8 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
                         ),
                       ],
                       if (canEdit(state.users, state.uid)) ...[
-                        GGButtonWidget(
-                          title: 'Edit',
+                        ElevatedButton(
+                          child: Text('Edit'),
                           onPressed: () => context.goNamed(
                             Globals.routes.editGroup,
                             pathParameters: {'groupId': group.id},
