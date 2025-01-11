@@ -44,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
 
                   if (!context.mounted) return;
 
-                  context.read<AuthBloc>().add(LogoutEvent());
+                  context.read<AuthBloc>().add(Logout());
                 },
               ),
             ),
@@ -68,7 +68,7 @@ class SettingsScreen extends StatelessWidget {
 
                       if (!context.mounted) return;
 
-                      context.read<AccountBloc>().add(DeleteAccountEvent());
+                      context.read<AccountBloc>().add(DeleteAccount());
                     },
                   ),
                 _ => const SizedBox(),

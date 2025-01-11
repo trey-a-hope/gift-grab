@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "955072082839",
     "project_id": "gift-grab-27141",
-    "storage_bucket": "gift-grab-27141.appspot.com"
+    "storage_bucket": "gift-grab-27141.firebasestorage.app"
   },
   "client": [
     {
@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "955072082839-06r8l1rbbl85g31j6upge0jhsuqh2qrn.apps.googleusercontent.com",
+          "client_id": "955072082839-vgl36rk1ca2dvqpji22ifs1pobometg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.io.gift_grab",
+            "certificate_hash": "139601a909adc9c0faf6308543c4177d992ce6a8"
+          }
+        },
+        {
+          "client_id": "955072082839-j2utdj2h98rj5q54pev8o8mrmfot8qab.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

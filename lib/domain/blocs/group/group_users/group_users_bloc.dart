@@ -37,7 +37,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -67,7 +67,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -96,7 +96,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -125,7 +125,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -150,7 +150,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -176,7 +176,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -202,7 +202,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -228,7 +228,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -254,7 +254,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 

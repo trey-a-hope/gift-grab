@@ -17,7 +17,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AccountBloc>().add(FetchAccountEvent());
+    context.read<AccountBloc>().add(FetchAccount());
   }
 
   @override

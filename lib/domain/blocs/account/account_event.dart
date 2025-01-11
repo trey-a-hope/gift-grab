@@ -2,14 +2,14 @@ part of 'account_bloc.dart';
 
 abstract class AccountEvent {}
 
-class FetchAccountEvent extends AccountEvent {}
+class FetchAccount extends AccountEvent {}
 
-class UpdateAccountEvent extends AccountEvent {
+class UpdateAccount extends AccountEvent {
   final String username;
 
-  UpdateAccountEvent({
+  UpdateAccount({
     required this.username,
   });
 }
 
-class DeleteAccountEvent extends AccountEvent {}
+class DeleteAccount extends AccountEvent {}

@@ -21,3 +21,9 @@ class AccountError extends AccountState {
 
   AccountError({required this.message});
 }
+
+class AccountActionSuccess extends AccountState {
+  final String message;
+
+  AccountActionSuccess({required this.message});
+}

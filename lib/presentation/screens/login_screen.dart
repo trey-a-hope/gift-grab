@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
@@ -48,6 +49,15 @@ class LoginScreen extends StatelessWidget {
             email: data.name,
             password: data.password,
           ),
+          loginProviders: [
+            LoginProvider(
+              icon: FontAwesomeIcons.google,
+              label: 'Google',
+              callback: () async => await _onLoginGoogle(
+                context: context,
+              ),
+            ),
+          ],
         ),
       );
 
@@ -74,7 +84,7 @@ class LoginScreen extends StatelessWidget {
       );
 
       context.read<AuthBloc>().add(
-            SignUpEvent(
+            SignUp(
               email: email,
               password: password,
               username: username,
@@ -87,6 +97,7 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
+  // Note, there is no GoogleSignUp with FlutterLogin package.
   Future<String?> _onLogin({
     required BuildContext context,
     required String email,
@@ -108,11 +119,34 @@ class LoginScreen extends StatelessWidget {
     );
 
     context.read<AuthBloc>().add(
-          LoginEvent(
+          LoginEmail(
             email: email,
             password: password,
           ),
         );
+
+    return await completer.future;
+  }
+
+  Future<String?> _onLoginGoogle({
+    required BuildContext context,
+  }) async {
+    final completer = Completer<String?>();
+
+    late final StreamSubscription subscription;
+    subscription = context.read<AuthBloc>().stream.listen(
+      (state) {
+        if (state is AuthError && !completer.isCompleted) {
+          completer.complete(state.message);
+          subscription.cancel();
+        } else if (state is Authenticated && !completer.isCompleted) {
+          completer.complete(null);
+          subscription.cancel();
+        }
+      },
+    );
+
+    context.read<AuthBloc>().add(LoginGoogle());
 
     return await completer.future;
   }

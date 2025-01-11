@@ -33,7 +33,7 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -64,7 +64,7 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 

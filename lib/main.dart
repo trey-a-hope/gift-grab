@@ -33,7 +33,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final AuthBloc authBloc = AuthBloc()..add(CheckAuthStatusEvent());
+  final AuthBloc authBloc = AuthBloc()..add(CheckAuthStatus());
 
   MyApp({super.key});
 
@@ -71,14 +71,15 @@ class MyApp extends StatelessWidget {
         BlocProvider<agb.AllGroupsBloc>(
           create: (context) => agb.AllGroupsBloc(
             authBloc: context.read<AuthBloc>(),
-          )..add(agb.FetchGroups()),
+          ),
         ),
         // User Groups
         BlocProvider<ugb.UserGroupsBloc>(
-            create: (context) => ugb.UserGroupsBloc(
-                  accountBloc: context.read<AccountBloc>(),
-                  authBloc: context.read<AuthBloc>(),
-                )..add(ugb.FetchGroups())),
+          create: (context) => ugb.UserGroupsBloc(
+            accountBloc: context.read<AccountBloc>(),
+            authBloc: context.read<AuthBloc>(),
+          ),
+        ),
         // Leaderboard
         BlocProvider<LeaderboardBloc>(
           create: (context) => LeaderboardBloc(

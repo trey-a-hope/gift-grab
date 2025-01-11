@@ -9,6 +9,7 @@ class PaginatedUserGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<UserGroupsBloc>().add(FetchGroups());
     return BlocConsumer<UserGroupsBloc, UserGroupsState>(
       listener: (context, state) {},
       builder: (context, state) {

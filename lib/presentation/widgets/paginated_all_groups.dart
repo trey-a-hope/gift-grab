@@ -9,6 +9,7 @@ class PaginatedAllGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AllGroupsBloc>().add(FetchGroups());
     return BlocBuilder<AllGroupsBloc, AllGroupsState>(
       builder: (context, state) {
         return switch (state) {

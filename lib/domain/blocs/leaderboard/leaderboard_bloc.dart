@@ -30,7 +30,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -83,7 +83,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 

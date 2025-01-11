@@ -14,13 +14,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AuthBloc authBloc;
 
   AccountBloc({required this.authBloc}) : super(AccountInitial()) {
-    on<FetchAccountEvent>(_onFetchAccount);
-    on<UpdateAccountEvent>(_onUpdateAccount);
-    on<DeleteAccountEvent>(_onDeleteAccount);
+    on<FetchAccount>(_onFetchAccount);
+    on<UpdateAccount>(_onUpdateAccount);
+    on<DeleteAccount>(_onDeleteAccount);
   }
 
   Future<void> _onFetchAccount(
-    FetchAccountEvent event,
+    FetchAccount event,
     Emitter<AccountState> emit,
   ) async {
     emit(AccountLoading());
@@ -29,7 +29,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -56,7 +56,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   }
 
   Future<void> _onUpdateAccount(
-    UpdateAccountEvent event,
+    UpdateAccount event,
     Emitter<AccountState> emit,
   ) async {
     emit(AccountLoading());
@@ -65,7 +65,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
@@ -74,14 +74,23 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         username: event.username,
       );
 
-      add(FetchAccountEvent());
+      emit(AccountActionSuccess(message: 'Username updated successfully.'));
     } catch (e) {
-      emit(AccountError(message: e.toString()));
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          case 'INVALID_ARGUMENT':
+            emit(AccountError(message: 'Username is already in use.'));
+          default:
+            emit(AccountError(message: 'Update failed: ${e.message}'));
+        }
+      } else {
+        emit(AccountError(message: e.toString()));
+      }
     }
   }
 
   Future<void> _onDeleteAccount(
-    DeleteAccountEvent event,
+    DeleteAccount event,
     Emitter<AccountState> emit,
   ) async {
     emit(AccountLoading());
@@ -90,13 +99,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await NakamaService().getValidSession();
 
       if (session == null) {
-        authBloc.add(LogoutEvent());
+        authBloc.add(Logout());
         return;
       }
 
       await getNakamaClient().rpc(session: session, id: 'account_delete_id');
       await NakamaService().clearTokens();
-      authBloc.add(LogoutEvent());
+      authBloc.add(Logout());
     } catch (e) {
       emit(AccountError(message: e.toString()));
     }

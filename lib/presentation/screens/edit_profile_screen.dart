@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
@@ -24,7 +23,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       title: 'Edit Profile',
       goBack: () => context.goNamed(Globals.routes.settings),
       child: Center(
-        child: BlocBuilder<AccountBloc, AccountState>(
+        child: BlocConsumer<AccountBloc, AccountState>(
+          listener: (context, state) {
+            if (state is AccountError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+
+              context.read<AccountBloc>().add(FetchAccount());
+            }
+            if (state is AccountActionSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+
+              context.read<AccountBloc>().add(FetchAccount());
+            }
+          },
           builder: (context, state) => switch (state) {
             AccountLoading() =>
               Center(child: const CircularProgressIndicator()),
@@ -49,7 +64,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       const Gap(16),
                       ElevatedButton(
-                        onPressed: () => _attemptSaveUsername(context),
+                        onPressed: () => context.read<AccountBloc>().add(
+                              UpdateAccount(username: _controller.text),
+                            ),
                         child: Text(
                           'Save',
                           style: TextStyle(
@@ -67,21 +84,5 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
     );
-  }
-
-  void _attemptSaveUsername(BuildContext context) async {
-    try {
-      context.read<AccountBloc>().add(
-            UpdateAccountEvent(username: _controller.text),
-          );
-
-      ModalService.showSuccess(
-        title: 'Username has been updated.',
-      );
-    } catch (e) {
-      ModalService.showError(
-        title: e.toString(),
-      );
-    }
   }
 }
