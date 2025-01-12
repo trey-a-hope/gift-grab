@@ -31,155 +31,117 @@ class GroupMemberDetailsWidget extends StatelessWidget {
 
     final user = groupUser.user;
 
+    final username = user.username ?? 'No Display Name';
+
     return ListTile(
-      leading: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.purple,
-            width: isMe ? 3.0 : 0.0,
-          ),
-        ),
-        child: CircleAvatar(
-          backgroundImage: Image.network(
-            user.avatarUrl == null || user.avatarUrl!.isEmpty
-                ? Globals.emptyProfile
-                : user.avatarUrl!,
-          ).image,
-        ),
-      ),
+      leading: _buildAvatar(user, isMe),
       title: Row(
         children: [
           Text(
             user.username ?? 'No Display Name',
-            style: theme.textTheme.displayMedium,
+            style: theme.textTheme.displayLarge,
           ),
           Spacer(),
-          // Kick user
-          if (kickUserAction != null) ...[
-            IconButton.filled(
-              color: Colors.black,
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context: context,
-                  title: 'Kick ${user.username} from group?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm == null || confirm == false) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                kickUserAction!();
-              },
-              icon: Icon(
-                Icons.logout,
-              ),
-            )
-          ],
-          // Ban user
-          if (banUserAction != null) ...[
-            IconButton.filled(
-              color: Colors.black,
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context: context,
-                  title: 'Ban ${user.username} from group?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm == null || confirm == false) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                banUserAction!();
-              },
-              icon: Icon(
-                Icons.cancel,
-              ),
-            )
-          ],
-          // Promote user
-          if (promoteUserAction != null) ...[
-            IconButton.filled(
-              color: Colors.black,
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context: context,
-                  title: 'Promote ${user.username} in group?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm == null || confirm == false) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                promoteUserAction!();
-              },
-              icon: Icon(
-                Icons.arrow_upward_sharp,
-              ),
-            )
-          ],
-          // Demote user
-          if (demoteUserAction != null) ...[
-            IconButton.filled(
-              color: Colors.black,
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context: context,
-                  title: 'Demote ${user.username} in group?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm == null || confirm == false) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                demoteUserAction!();
-              },
-              icon: Icon(
-                Icons.arrow_downward_sharp,
-              ),
-            )
-          ],
-          // Accept user
-          if (acceptUserAction != null) ...[
-            IconButton.filled(
-              color: Colors.black,
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context: context,
-                  title: 'Accept ${user.username} into group?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm == null || confirm == false) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                acceptUserAction!();
-              },
-              icon: Icon(
-                Icons.check,
-              ),
-            )
-          ],
+          if (kickUserAction != null)
+            _buildActionButton(
+              icon: Icons.logout,
+              action: 'Kick',
+              onAction: kickUserAction!,
+              context: context,
+              username: username,
+            ),
+          if (banUserAction != null)
+            _buildActionButton(
+              icon: Icons.cancel,
+              action: 'Ban',
+              onAction: banUserAction!,
+              context: context,
+              username: username,
+            ),
+          if (promoteUserAction != null)
+            _buildActionButton(
+              icon: Icons.arrow_upward_sharp,
+              action: 'Promote',
+              onAction: promoteUserAction!,
+              context: context,
+              username: username,
+            ),
+          if (demoteUserAction != null)
+            _buildActionButton(
+              icon: Icons.arrow_downward_sharp,
+              action: 'Demote',
+              onAction: demoteUserAction!,
+              context: context,
+              username: username,
+            ),
+          if (acceptUserAction != null)
+            _buildActionButton(
+              icon: Icons.check,
+              action: 'Accept',
+              onAction: acceptUserAction!,
+              context: context,
+              username: username,
+            ),
         ],
       ),
       subtitle: Text(
-        groupMembershipState.name,
-        style: theme.textTheme.displaySmall,
+        switch (groupMembershipState) {
+          GroupMembershipState.superadmin => 'Super Admin',
+          GroupMembershipState.admin => 'Admin',
+          GroupMembershipState.member => 'Member',
+          GroupMembershipState.joinRequest => 'Waiting Approval...',
+        },
+        style: theme.textTheme.headlineMedium,
+      ),
+    );
+  }
+
+  Future<bool> _showConfirmationDialog(
+    BuildContext context,
+    String username,
+    String action,
+  ) async {
+    final confirm = await ModalService.showConfirmation(
+      context: context,
+      title: '$action $username in group?',
+      message: 'Are you sure?',
+    );
+    return confirm ?? false;
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String action,
+    required VoidCallback onAction,
+    required BuildContext context,
+    required String username,
+  }) {
+    return IconButton.filled(
+      color: Colors.black,
+      onPressed: () async {
+        if (await _showConfirmationDialog(context, username, action)) {
+          if (context.mounted) onAction();
+        }
+      },
+      icon: Icon(icon),
+    );
+  }
+
+  Widget _buildAvatar(User user, bool isMe) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.purple,
+          width: isMe ? 3.0 : 0.0,
+        ),
+      ),
+      child: CircleAvatar(
+        backgroundImage: Image.network(
+          user.avatarUrl?.isEmpty ?? true
+              ? Globals.emptyProfile
+              : user.avatarUrl!,
+        ).image,
       ),
     );
   }
