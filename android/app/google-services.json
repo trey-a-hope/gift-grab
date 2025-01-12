@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "955072082839-3avdnfo33101s50hm9labje9addlh7a8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.io.gift_grab",
+            "certificate_hash": "624d62d725bbb99c99d78812b1956c18337f6b5a"
+          }
+        },
+        {
+          "client_id": "955072082839-hcpqsm0hgpevh5l758kk3mrt6f13ojdr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.io.gift_grab",
+            "certificate_hash": "159f830ab2d222ff35b61bf129d2193fe3705abc"
+          }
+        },
+        {
           "client_id": "955072082839-vgl36rk1ca2dvqpji22ifs1pobometg7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
