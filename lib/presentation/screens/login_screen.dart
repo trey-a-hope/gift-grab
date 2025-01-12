@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
               return 'Email/Password/Username cannot be null...';
             }
 
-            return _onSignUp(
+            return _onSignUpEmail(
               context: context,
               email: data.name!,
               password: data.password!,
@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
           onRecoverPassword: (email) {
             return null;
           },
-          onLogin: (data) async => await _onLogin(
+          onLogin: (data) async => await _onLoginEmail(
             context: context,
             email: data.name,
             password: data.password,
@@ -57,11 +57,18 @@ class LoginScreen extends StatelessWidget {
                 context: context,
               ),
             ),
+            LoginProvider(
+              icon: FontAwesomeIcons.apple,
+              label: 'Apple',
+              callback: () async => await _onLoginApple(
+                context: context,
+              ),
+            ),
           ],
         ),
       );
 
-  Future<String?> _onSignUp({
+  Future<String?> _onSignUpEmail({
     required BuildContext context,
     required String email,
     required String password,
@@ -84,7 +91,7 @@ class LoginScreen extends StatelessWidget {
       );
 
       context.read<AuthBloc>().add(
-            SignUp(
+            SignUpEmail(
               email: email,
               password: password,
               username: username,
@@ -98,7 +105,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   // Note, there is no GoogleSignUp with FlutterLogin package.
-  Future<String?> _onLogin({
+  Future<String?> _onLoginEmail({
     required BuildContext context,
     required String email,
     required String password,
@@ -147,6 +154,29 @@ class LoginScreen extends StatelessWidget {
     );
 
     context.read<AuthBloc>().add(LoginGoogle());
+
+    return await completer.future;
+  }
+
+  Future<String?> _onLoginApple({
+    required BuildContext context,
+  }) async {
+    final completer = Completer<String?>();
+
+    late final StreamSubscription subscription;
+    subscription = context.read<AuthBloc>().stream.listen(
+      (state) {
+        if (state is AuthError && !completer.isCompleted) {
+          completer.complete(state.message);
+          subscription.cancel();
+        } else if (state is Authenticated && !completer.isCompleted) {
+          completer.complete(null);
+          subscription.cancel();
+        }
+      },
+    );
+
+    context.read<AuthBloc>().add(LoginApple());
 
     return await completer.future;
   }

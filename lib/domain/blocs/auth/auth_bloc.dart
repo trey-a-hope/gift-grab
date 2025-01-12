@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,6 +5,7 @@ import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -21,7 +20,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<LoginEmail>(_onLoginEmail);
     on<LoginGoogle>(_onLoginGoogle);
-    on<SignUp>(_onSignUp);
+    on<LoginApple>(_onLoginApple);
+    on<SignUpEmail>(_onSignUpEmail);
     on<Logout>(_onLogout);
     on<CheckAuthStatus>(_onCheckAuthStatus);
   }
@@ -118,8 +118,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onSignUp(
-    SignUp event,
+  Future<void> _onLoginApple(
+    LoginApple event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) throw Exception('ID token is null');
+
+      final session = await getNakamaClient().authenticateApple(
+        token: idToken,
+        create: true,
+      );
+
+      debugPrint(
+        'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
+      );
+
+      await _storage.write(key: _token, value: session.token);
+      await _storage.write(key: _refreshToken, value: session.refreshToken);
+
+      emit(Authenticated());
+    } catch (e) {
+      if (e is GrpcError) {
+        switch (e.codeName) {
+          // TODO: Erroring right here...
+          case 'FAILED_PRECONDITION':
+            emit(AuthError(message: 'Apple authentication is not configured.'));
+          default:
+            emit(AuthError(message: 'Authentication failed: ${e.message}'));
+        }
+      } else {
+        emit(AuthError(message: e.toString()));
+      }
+    }
+  }
+
+  Future<void> _onSignUpEmail(
+    SignUpEmail event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());

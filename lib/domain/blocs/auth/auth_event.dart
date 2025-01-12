@@ -14,12 +14,14 @@ class LoginEmail extends AuthEvent {
 
 class LoginGoogle extends AuthEvent {}
 
-class SignUp extends AuthEvent {
+class LoginApple extends AuthEvent {}
+
+class SignUpEmail extends AuthEvent {
   final String email;
   final String password;
   final String username;
 
-  SignUp({
+  SignUpEmail({
     required this.email,
     required this.password,
     required this.username,
