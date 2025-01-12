@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,15 +71,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      const List<String> scopes = <String>[
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ];
-
       final googleSignIn = GoogleSignIn(
-        clientId:
-            '955072082839-oo9gainsq9d4scss7kjuttqt5u54vshj.apps.googleusercontent.com',
-        scopes: scopes,
+        scopes: [
+          'email',
+          'https://www.googleapis.com/auth/contacts.readonly',
+        ],
       );
 
       final res = await googleSignIn.signIn();

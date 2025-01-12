@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "955072082839-jbo9604vv6i7npj6gtek3329vnno94ei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.io.gift_grab",
+            "certificate_hash": "663d94b2d5a9b6fe3033b324a38a4617a0fee7ef"
+          }
+        },
+        {
           "client_id": "955072082839-vgl36rk1ca2dvqpji22ifs1pobometg7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
