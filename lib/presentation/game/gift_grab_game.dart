@@ -18,7 +18,7 @@ class GameStateHandler extends Component
   @override
   void onNewState(GameState state) {
     if (state.isGameOver) {
-      gameRef.leaderboardBloc.add(SubmitScoreEvent(score: state.score));
+      gameRef.leaderboardBloc.add(SubmitScore(score: state.score));
       // Flame -> Flutter Bloc conversion.
       gameRef.score = state.score;
       gameRef.resetGame = () {

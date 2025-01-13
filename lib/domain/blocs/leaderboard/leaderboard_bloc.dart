@@ -2,37 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
+import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'leaderboard_event.dart';
 part 'leaderboard_state.dart';
 
-class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
+class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState>
+    with GrpcErrorHandlerMixin<LeaderboardState> {
   final AuthBloc authBloc;
 
   final _leaderboardName = 'weekly_leaderboard';
+  final NakamaService _nakamaService;
 
   LeaderboardBloc({
     required this.authBloc,
-  }) : super(LeaderboardInitial()) {
-    on<FetchLeaderboardEvent>(_onFetchLeaderboardEvent);
-    on<SubmitScoreEvent>(_onSubmitScoreEvent);
+  })  : _nakamaService = NakamaService(),
+        super(LeaderboardInitial()) {
+    on<FetchLeaderboard>(_onFetchLeaderboard);
+    on<SubmitScore>(_onSubmitScore);
   }
 
-  Future<void> _onFetchLeaderboardEvent(
-    FetchLeaderboardEvent event,
+  Future<void> _onFetchLeaderboard(
+    FetchLeaderboard event,
     Emitter<LeaderboardState> emit,
   ) async {
     emit(LeaderboardLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
 
       final leaderboard = await getNakamaClient().listLeaderboardRecords(
         session: session,
@@ -66,26 +67,24 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
         emit(LeaderboardLoaded(entries: results));
       }
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => LeaderboardError(message: message));
     } catch (e) {
-      emit(LeaderboardError(message: e.toString()));
+      emit(LeaderboardError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
-  Future<void> _onSubmitScoreEvent(
-    SubmitScoreEvent event,
+  Future<void> _onSubmitScore(
+    SubmitScore event,
     Emitter<LeaderboardState> emit,
   ) async {
     emit(LeaderboardLoading());
 
     try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
       debugPrint('Score: ${event.score}');
-
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
 
       await getNakamaClient().writeLeaderboardRecord(
         session: session,
@@ -93,10 +92,11 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
         score: event.score,
       );
 
-      // Refresh leaderboard after updating
-      add(FetchLeaderboardEvent());
+      emit(LeaderboardActionSuccess(message: 'Score submitted succesfully'));
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => LeaderboardError(message: message));
     } catch (e) {
-      emit(LeaderboardError(message: e.toString()));
+      emit(LeaderboardError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 }

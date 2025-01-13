@@ -8,6 +8,7 @@ import 'package:gift_grab/presentation/screens/game_screen.dart';
 import 'package:gift_grab/presentation/screens/group_details_screen.dart';
 import 'package:gift_grab/presentation/screens/groups_screen.dart';
 import 'package:gift_grab/presentation/screens/leaderboard_screen.dart';
+import 'package:gift_grab/presentation/screens/linked_accounts_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -98,10 +99,14 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const SettingsScreen(),
               routes: [
                 GoRoute(
-                  path:
-                      '/${Globals.routes.main}/${Globals.routes.settings}/${Globals.routes.editProfile}',
+                  path: '/editProfile',
                   name: Globals.routes.editProfile,
                   builder: (context, state) => const EditProfileScreen(),
+                ),
+                GoRoute(
+                  path: '/linkedAccounts',
+                  name: Globals.routes.linkedAccounts,
+                  builder: (context, state) => const LinkedAccountsScreen(),
                 ),
               ],
             ),

@@ -4,59 +4,72 @@ import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
+import 'package:gift_grab/presentation/widgets/state_content_builder.dart';
 import 'package:go_router/go_router.dart';
 
-class LeaderboardScreen extends StatelessWidget {
+class LeaderboardScreen
+    extends StateContentBuilder<LeaderboardBloc, LeaderboardState> {
   const LeaderboardScreen({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildLoadedContent(BuildContext context, dynamic state) {
     final theme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 32),
+          child: Text(
+            'Resets every Monday at 12:00am.',
+            style: theme.textTheme.headlineSmall!.copyWith(
+              fontSize: Globals.isTablet
+                  ? theme.textTheme.headlineSmall!.fontSize! * 2
+                  : theme.textTheme.headlineSmall!.fontSize,
+            ),
+          ),
+        ),
+        Expanded(
+          child: state.entries.isEmpty
+              ? Center(
+                  child: Text('No records for this week yet...',
+                      style: theme.textTheme.displayLarge),
+                )
+              : ListView.builder(
+                  itemCount: state.entries.length,
+                  itemBuilder: ((_, index) => LeaderboardRecordWidget(
+                        entry: state.entries[index],
+                      )),
+                ),
+        ),
+      ],
+    );
+  }
 
-    context.read<LeaderboardBloc>().add(FetchLeaderboardEvent());
+  @override
+  bool shouldShowMessage(LeaderboardState state) =>
+      state is LeaderboardError || state is LeaderboardActionSuccess;
+
+  @override
+  void onAfterMessage(BuildContext context) =>
+      context.read<LeaderboardBloc>().add(
+            FetchLeaderboard(),
+          );
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<LeaderboardBloc>().add(FetchLeaderboard());
 
     return GGScaffoldWidget(
       title: 'Leaderboard',
       goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
-        child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
-          builder: (context, state) => switch (state) {
-            LeaderboardLoading() =>
-              Center(child: const CircularProgressIndicator()),
-            LeaderboardError() => Text('Error: ${state.message}'),
-            LeaderboardLoaded() => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 32),
-                    child: Text(
-                      'Resets every Monday at 12:00am.',
-                      style: theme.textTheme.headlineSmall!.copyWith(
-                        fontSize: Globals.isTablet
-                            ? theme.textTheme.headlineSmall!.fontSize! * 2
-                            : theme.textTheme.headlineSmall!.fontSize,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: state.entries.isEmpty
-                        ? Center(
-                            child: Text('No records for this week yet...',
-                                style: theme.textTheme.displayLarge),
-                          )
-                        : ListView.builder(
-                            itemCount: state.entries.length,
-                            itemBuilder: ((_, index) => LeaderboardRecordWidget(
-                                  entry: state.entries[index],
-                                )),
-                          ),
-                  ),
-                ],
-              ),
-            _ => const SizedBox(),
-          },
+        child: Center(
+          child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
+            listener: listener,
+            builder: builder,
+          ),
         ),
       ),
     );

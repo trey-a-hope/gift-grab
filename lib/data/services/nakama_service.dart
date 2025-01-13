@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:nakama/nakama.dart';
 
 class NakamaService {
@@ -13,6 +14,15 @@ class NakamaService {
     }
   }
 
+  Future<Session?> getValidSessionOrLogout(AuthBloc authBloc) async {
+    final session = await getValidSession();
+    if (session == null) {
+      authBloc.add(Logout());
+    }
+    return session;
+  }
+
+  // TODO: Make this method private, and only call the above method in classes.
   Future<Session?> getValidSession() async {
     try {
       final token = await _storage.read(key: 'token');

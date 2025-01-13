@@ -2,10 +2,10 @@ part of 'leaderboard_bloc.dart';
 
 abstract class LeaderboardEvent {}
 
-class FetchLeaderboardEvent extends LeaderboardEvent {}
+class FetchLeaderboard extends LeaderboardEvent {}
 
-class SubmitScoreEvent extends LeaderboardEvent {
+class SubmitScore extends LeaderboardEvent {
   final int score;
 
-  SubmitScoreEvent({required this.score});
+  SubmitScore({required this.score});
 }

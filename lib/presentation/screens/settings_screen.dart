@@ -28,6 +28,11 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => context.goNamed(Globals.routes.editProfile),
             ),
             const Gap(16),
+            ElevatedButton(
+              child: Text('Linked Accounts'),
+              onPressed: () => context.goNamed(Globals.routes.linkedAccounts),
+            ),
+            const Gap(16),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) => ElevatedButton(
                 child: Text('Sign Out'),

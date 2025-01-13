@@ -13,3 +13,15 @@ class UpdateAccount extends AccountEvent {
 }
 
 class DeleteAccount extends AccountEvent {}
+
+class LinkEmailAccount extends AccountEvent {}
+
+class UnlinkEmailAccount extends AccountEvent {}
+
+class LinkGoogleAccount extends AccountEvent {}
+
+class UnlinkGoogleAccount extends AccountEvent {}
+
+class LinkAppleAccount extends AccountEvent {}
+
+class UnlinkAppleAccount extends AccountEvent {}

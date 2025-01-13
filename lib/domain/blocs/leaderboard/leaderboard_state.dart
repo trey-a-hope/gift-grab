@@ -1,27 +1,25 @@
 part of 'leaderboard_bloc.dart';
 
-abstract class LeaderboardState {
-  final bool isLoading;
+abstract class LeaderboardState {}
 
-  LeaderboardState({required this.isLoading});
-}
+class LeaderboardInitial extends LeaderboardState {}
 
-class LeaderboardInitial extends LeaderboardState {
-  LeaderboardInitial() : super(isLoading: false);
-}
-
-class LeaderboardLoading extends LeaderboardState {
-  LeaderboardLoading() : super(isLoading: true);
-}
+class LeaderboardLoading extends LeaderboardState {}
 
 class LeaderboardLoaded extends LeaderboardState {
   final List<LeaderboardEntry> entries;
 
-  LeaderboardLoaded({required this.entries}) : super(isLoading: false);
+  LeaderboardLoaded({required this.entries});
+}
+
+class LeaderboardActionSuccess extends LeaderboardState {
+  final String message;
+
+  LeaderboardActionSuccess({required this.message});
 }
 
 class LeaderboardError extends LeaderboardState {
   final String message;
 
-  LeaderboardError({required this.message}) : super(isLoading: false);
+  LeaderboardError({required this.message});
 }

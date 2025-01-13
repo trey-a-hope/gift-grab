@@ -14,8 +14,6 @@ class AccountLoaded extends AccountState {
   });
 }
 
-class AccountDeleted extends AccountState {}
-
 class AccountError extends AccountState {
   final String message;
 

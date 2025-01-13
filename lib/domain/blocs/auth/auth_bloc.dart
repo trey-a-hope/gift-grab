@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gift_grab/data/services/social_auth_service.dart';
+import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState>
+    with GrpcErrorHandlerMixin<AuthState> {
   static const _storage = FlutterSecureStorage();
   static const _token = 'token';
   static const _refreshToken = 'refreshToken';
 
+  final SocialAuthService _socialAuthService;
+
   final inOneHour = DateTime.now().add(Duration(hours: 1));
 
-  AuthBloc() : super(AuthInitial()) {
+  AuthBloc()
+      : _socialAuthService = SocialAuthService(),
+        super(AuthInitial()) {
     on<LoginEmail>(_onLoginEmail);
     on<LoginGoogle>(_onLoginGoogle);
     on<LoginApple>(_onLoginApple);
@@ -45,22 +50,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _storage.write(key: _refreshToken, value: session.refreshToken);
 
       emit(Authenticated());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AuthError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'NOT_FOUND':
-            emit(AuthError(
-                message: 'Account not found. Please check your credentials.'));
-          case 'INVALID_ARGUMENT':
-            emit(AuthError(message: 'Invalid email or password.'));
-          case 'UNAUTHENTICATED':
-            emit(AuthError(message: 'Invalid credentials.'));
-          default:
-            emit(AuthError(message: 'Authentication failed: ${e.message}'));
-        }
-      } else {
-        emit(AuthError(message: e.toString()));
-      }
+      emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -71,22 +64,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final googleSignIn = GoogleSignIn(
-        scopes: [
-          'email',
-          'https://www.googleapis.com/auth/contacts.readonly',
-        ],
-      );
-
-      final res = await googleSignIn.signIn();
-
-      if (res == null) throw Exception('res is null');
-
-      debugPrint(res.toString());
-
-      final googleAuth = await res.authentication;
-      final idToken = googleAuth.idToken;
-      if (idToken == null) throw Exception('ID token is null');
+      final idToken = await _socialAuthService.getGoogleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Google authentication.');
+      }
 
       final session =
           await getNakamaClient().authenticateGoogle(token: idToken);
@@ -99,22 +80,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _storage.write(key: _refreshToken, value: session.refreshToken);
 
       emit(Authenticated());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AuthError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'NOT_FOUND':
-            emit(AuthError(
-                message: 'Account not found. Please check your credentials.'));
-          case 'INVALID_ARGUMENT':
-            emit(AuthError(message: 'Invalid email or password.'));
-          case 'UNAUTHENTICATED':
-            emit(AuthError(message: 'Invalid credentials.'));
-          default:
-            emit(AuthError(message: 'Authentication failed: ${e.message}'));
-        }
-      } else {
-        emit(AuthError(message: e.toString()));
-      }
+      emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -125,16 +94,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
-
-      final idToken = credential.identityToken;
-      if (idToken == null) throw Exception('ID token is null');
-      debugPrint('ID Token: $idToken');
+      final idToken = await _socialAuthService.getAppleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Google authentication.');
+      }
 
       final session = await getNakamaClient().authenticateApple(
         token: idToken,
@@ -148,19 +111,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _storage.write(key: _refreshToken, value: session.refreshToken);
 
       emit(Authenticated());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AuthError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'INTERNAL':
-            emit(AuthError(message: 'Error finding or creating user account.'));
-          case 'FAILED_PRECONDITION':
-            emit(AuthError(message: 'Apple authentication is not configured.'));
-          default:
-            emit(AuthError(message: 'Authentication failed: ${e.message}'));
-        }
-      } else {
-        emit(AuthError(message: e.toString()));
-      }
+      emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -185,19 +139,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _storage.write(key: _refreshToken, value: session.refreshToken);
 
       emit(Authenticated());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AuthError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'INVALID_ARGUMENT':
-            emit(AuthError(message: 'Invalid email or password.'));
-          case 'UNAUTHENTICATED':
-            emit(AuthError(message: 'Invalid credentials.'));
-          default:
-            emit(AuthError(message: 'Authentication failed: ${e.message}'));
-        }
-      } else {
-        emit(AuthError(message: e.toString()));
-      }
+      emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -212,8 +157,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _storage.delete(key: _refreshToken);
 
       emit(Unauthenticated());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AuthError(message: message));
     } catch (e) {
-      emit(AuthError(message: e.toString()));
+      emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 

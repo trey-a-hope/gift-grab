@@ -1,22 +1,35 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';
 
-class AccountBloc extends Bloc<AccountEvent, AccountState> {
+class AccountBloc extends Bloc<AccountEvent, AccountState>
+    with GrpcErrorHandlerMixin<AccountState> {
   final AuthBloc authBloc;
+  final SocialAuthService _socialAuthService;
+  final NakamaService _nakamaService;
 
-  AccountBloc({required this.authBloc}) : super(AccountInitial()) {
+  AccountBloc({
+    required this.authBloc,
+  })  : _socialAuthService = SocialAuthService(),
+        _nakamaService = NakamaService(),
+        super(AccountInitial()) {
     on<FetchAccount>(_onFetchAccount);
     on<UpdateAccount>(_onUpdateAccount);
     on<DeleteAccount>(_onDeleteAccount);
+    on<LinkEmailAccount>(_onLinkEmailAccount);
+    on<UnlinkEmailAccount>(_onUnlinkEmailAccount);
+    on<LinkGoogleAccount>(_onLinkGoogleAccount);
+    on<UnlinkGoogleAccount>(_onUnlinkGoogleAccount);
+    on<LinkAppleAccount>(_onLinkAppleAccount);
+    on<UnlinkAppleAccount>(_onUnlinkAppleAccount);
   }
 
   Future<void> _onFetchAccount(
@@ -26,32 +39,16 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(AccountLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
 
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
-
-      debugPrint(session.toString());
       final account = await getNakamaClient().getAccount(session);
+
       emit(AccountLoaded(account: account));
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'NOT_FOUND':
-            emit(AccountError(
-                message: 'Account not found. Please check your credentials.'));
-          case 'INVALID_ARGUMENT':
-            emit(AccountError(message: 'Invalid email or password.'));
-          case 'UNAUTHENTICATED':
-            emit(AccountError(message: 'Auth token invalid.'));
-          default:
-            emit(AccountError(message: 'Authentication failed: ${e.message}'));
-        }
-      } else {
-        emit(AccountError(message: e.toString()));
-      }
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -62,12 +59,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(AccountLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
 
       await getNakamaClient().updateAccount(
         session: session,
@@ -75,17 +68,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(AccountActionSuccess(message: 'Username updated successfully.'));
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'INVALID_ARGUMENT':
-            emit(AccountError(message: 'Username is already in use.'));
-          default:
-            emit(AccountError(message: 'Update failed: ${e.message}'));
-        }
-      } else {
-        emit(AccountError(message: e.toString()));
-      }
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -96,18 +82,191 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     emit(AccountLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
 
       await getNakamaClient().rpc(session: session, id: 'account_delete_id');
-      await NakamaService().clearTokens();
+
+      await _nakamaService.clearTokens();
+
       authBloc.add(Logout());
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
     } catch (e) {
-      emit(AccountError(message: e.toString()));
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onLinkEmailAccount(
+    LinkEmailAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      // TODO: Remove hard-coded values
+      await getNakamaClient().linkEmail(
+        session: session,
+        email: 'trey.a.hope@gmail.com',
+        password: 'Peachy4040',
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Email account linked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onUnlinkEmailAccount(
+    UnlinkEmailAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      await getNakamaClient().unlinkEmail(
+        session: session,
+        email: 'trey.a.hope@gmail.com',
+        password: 'Peachy4040',
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Email account unlinked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onLinkGoogleAccount(
+    LinkGoogleAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final idToken = await _socialAuthService.getGoogleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Google authentication.');
+      }
+
+      await getNakamaClient().linkGoogle(
+        session: session,
+        token: idToken,
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Google account linked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onUnlinkGoogleAccount(
+    UnlinkGoogleAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final idToken = await _socialAuthService.getGoogleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Google authentication.');
+      }
+
+      await getNakamaClient().unlinkGoogle(
+        session: session,
+        token: idToken,
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Google account unlinked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onLinkAppleAccount(
+    LinkAppleAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final idToken = await _socialAuthService.getAppleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Apple authentication.');
+      }
+
+      await getNakamaClient().linkApple(
+        session: session,
+        token: idToken,
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Apple account linked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onUnlinkAppleAccount(
+    UnlinkAppleAccount event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(AccountLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final idToken = await _socialAuthService.getAppleToken();
+      if (idToken == null) {
+        throw Exception('Failed to get Apple authentication.');
+      }
+
+      await getNakamaClient().unlinkApple(
+        session: session,
+        token: idToken,
+      );
+
+      emit(
+        AccountActionSuccess(message: 'Apple account unlinked successfully.'),
+      );
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => AccountError(message: message));
+    } catch (e) {
+      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 }
