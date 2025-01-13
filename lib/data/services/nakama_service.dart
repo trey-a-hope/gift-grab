@@ -15,15 +15,14 @@ class NakamaService {
   }
 
   Future<Session?> getValidSessionOrLogout(AuthBloc authBloc) async {
-    final session = await getValidSession();
+    final session = await _getValidSession();
     if (session == null) {
       authBloc.add(Logout());
     }
     return session;
   }
 
-  // TODO: Make this method private, and only call the above method in classes.
-  Future<Session?> getValidSession() async {
+  Future<Session?> _getValidSession() async {
     try {
       final token = await _storage.read(key: 'token');
       final refreshToken = await _storage.read(key: 'refreshToken');

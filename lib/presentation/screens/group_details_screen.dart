@@ -230,7 +230,7 @@ class GroupDetailsScreen extends StatelessBloc<GroupUsersBloc, GroupUsersState>
     context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
     context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
 
-    // TODO:
+    // TODO: Provide better way for navigating back...
     // if (state.goBack) {
     //   context.goNamed(Globals.routes.groups);
     // }

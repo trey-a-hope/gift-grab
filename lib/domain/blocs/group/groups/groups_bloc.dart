@@ -30,15 +30,10 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState>
     emit(GroupsLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       final newGroup = await getNakamaClient().createGroup(
-        session: session,
+        session: session!,
         name: event.name,
         description: event.description,
         maxCount: event.maxCount,
@@ -62,15 +57,10 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState>
     emit(GroupsLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().updateGroup(
-        session: session,
+        session: session!,
         groupId: event.groupId,
         open: event.open,
         name: event.name,

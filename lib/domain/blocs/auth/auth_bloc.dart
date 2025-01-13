@@ -164,6 +164,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
     }
   }
 
+  // TODO: This method still looks a bit weird to me.
   Future<void> _onCheckAuthStatus(
     CheckAuthStatus event,
     Emitter<AuthState> emit,
@@ -171,13 +172,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
     emit(AuthLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        emit(Unauthenticated());
-      } else {
-        emit(Authenticated());
-      }
+      final session = await NakamaService().getValidSessionOrLogout(this);
+      session == null ? emit(Unauthenticated()) : emit(Authenticated());
     } catch (e) {
       emit(Unauthenticated());
     }

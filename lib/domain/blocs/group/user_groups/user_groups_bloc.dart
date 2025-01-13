@@ -33,15 +33,10 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState>
     emit(UserGroupsLoading());
 
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       final myGroupsList = await getNakamaClient().listUserGroups(
-        session: session,
+        session: session!,
         limit: Globals.paginationLimit,
         userId: accountBloc.uid,
       );
@@ -66,15 +61,10 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState>
     Emitter<UserGroupsState> emit,
   ) async {
     try {
-      final session = await NakamaService().getValidSession();
-
-      if (session == null) {
-        authBloc.add(Logout());
-        return;
-      }
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       final myGroupsList = await getNakamaClient().listUserGroups(
-        session: session,
+        session: session!,
         limit: Globals.paginationLimit,
         userId: accountBloc.uid,
         cursor: _cursor,
