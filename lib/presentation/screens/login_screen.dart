@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,13 +58,15 @@ class LoginScreen extends StatelessWidget {
                 context: context,
               ),
             ),
-            LoginProvider(
-              icon: FontAwesomeIcons.apple,
-              label: 'Apple',
-              callback: () async => await _onLoginApple(
-                context: context,
+            if (Platform.isIOS) ...[
+              LoginProvider(
+                icon: FontAwesomeIcons.apple,
+                label: 'Apple',
+                callback: () async => await _onLoginApple(
+                  context: context,
+                ),
               ),
-            ),
+            ]
           ],
         ),
       );
