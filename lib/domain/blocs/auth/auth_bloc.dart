@@ -134,10 +134,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final idToken = credential.identityToken;
       if (idToken == null) throw Exception('ID token is null');
+      debugPrint('ID Token: $idToken');
 
       final session = await getNakamaClient().authenticateApple(
         token: idToken,
-        create: true,
       );
 
       debugPrint(
@@ -151,7 +151,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       if (e is GrpcError) {
         switch (e.codeName) {
-          // TODO: Erroring right here...
+          case 'INTERNAL':
+            emit(AuthError(message: 'Error finding or creating user account.'));
           case 'FAILED_PRECONDITION':
             emit(AuthError(message: 'Apple authentication is not configured.'));
           default:
