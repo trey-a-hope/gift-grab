@@ -6,9 +6,10 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatelessBloc<AccountBloc, AccountState> {
   const SettingsScreen({
     super.key,
   });
@@ -18,7 +19,15 @@ class SettingsScreen extends StatelessWidget {
     return GGScaffoldWidget(
       title: 'Settings',
       goBack: () => context.goNamed(Globals.routes.main),
-      child: Center(
+      child: BlocConsumer<AccountBloc, AccountState>(
+        listener: listener,
+        builder: builder,
+      ),
+    );
+  }
+
+  @override
+  Widget buildLoadedContent(BuildContext context, state) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -33,55 +42,45 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => context.goNamed(Globals.routes.linkedAccounts),
             ),
             const Gap(16),
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) => ElevatedButton(
-                child: Text('Sign Out'),
-                onPressed: () async {
-                  final confirm = await ModalService.showConfirmation(
-                    context: context,
-                    title: 'Sign Out?',
-                    message: 'Are you sure?',
-                  );
+            ElevatedButton(
+              child: Text('Sign Out'),
+              onPressed: () async {
+                final confirm = await ModalService.showConfirmation(
+                  context: context,
+                  title: 'Sign Out?',
+                  message: 'Are you sure?',
+                );
 
-                  if (confirm == null || confirm == false) {
-                    return;
-                  }
+                if (confirm == null || confirm == false) {
+                  return;
+                }
 
-                  if (!context.mounted) return;
+                if (!context.mounted) return;
 
-                  context.read<AuthBloc>().add(Logout());
-                },
-              ),
+                context.read<AuthBloc>().add(Logout());
+              },
             ),
             const Gap(16),
-            BlocBuilder<AccountBloc, AccountState>(
-              builder: (context, state) => switch (state) {
-                AccountLoaded() => ElevatedButton(
-                    child: Text('Delete Profile'),
-                    onPressed: () async {
-                      final confirm =
-                          await ModalService.showInputMatchConfirmation(
-                        context: context,
-                        title: 'Delete Account?',
-                        hintText: 'Enter your email to confirm.',
-                        match: state.account.email!,
-                      );
+            ElevatedButton(
+              child: Text('Delete Profile'),
+              onPressed: () async {
+                final confirm = await ModalService.showInputMatchConfirmation(
+                  context: context,
+                  title: 'Delete Account?',
+                  hintText: 'Enter your email to confirm.',
+                  match: state.account.email!,
+                );
 
-                      if (confirm == null || confirm == false) {
-                        return;
-                      }
+                if (confirm == null || confirm == false) {
+                  return;
+                }
 
-                      if (!context.mounted) return;
+                if (!context.mounted) return;
 
-                      context.read<AccountBloc>().add(DeleteAccount());
-                    },
-                  ),
-                _ => const SizedBox(),
+                context.read<AccountBloc>().add(DeleteAccount());
               },
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
 }

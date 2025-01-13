@@ -5,25 +5,16 @@ import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/screens/base_group_form.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateGroupScreen extends StatelessWidget {
+class CreateGroupScreen extends StatelessBloc<GroupsBloc, GroupsState> {
   const CreateGroupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<GroupsBloc, GroupsState>(
-      listener: (context, state) {
-        if (state is GroupsActionSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-
-          context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
-
-          context.goNamed(Globals.routes.groups);
-        }
-      },
+      listener: listener,
       child: BaseGroupForm(
         title: 'Create Group',
         goBack: () => context.goNamed(Globals.routes.groups),
@@ -40,5 +31,19 @@ class CreateGroupScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  @override
+  Widget buildLoadedContent(BuildContext context, state) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool shouldShowMessage(GroupsState state) => state is GroupsActionSuccess;
+
+  @override
+  void onAfterMessage(BuildContext context) {
+    context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
+    context.goNamed(Globals.routes.groups);
   }
 }

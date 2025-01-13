@@ -4,11 +4,10 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/presentation/widgets/state_content_builder.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class LinkedAccountsScreen
-    extends StateContentBuilder<AccountBloc, AccountState> {
+class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
   const LinkedAccountsScreen({super.key});
 
   @override

@@ -9,19 +9,232 @@ import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
 // https://heroiclabs.com/docs/nakama/concepts/groups/
 
-class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
+class GroupDetailsScreen extends StatelessBloc<GroupUsersBloc, GroupUsersState>
+    with GroupPermissions {
   final Group group;
 
   const GroupDetailsScreen({
     required this.group,
     super.key,
   });
+
+  @override
+  Widget buildLoadedContent(BuildContext context, dynamic state) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32),
+            child: Text(
+              group.description ?? 'No Description...',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          Expanded(
+            child: state.users.isEmpty
+                ? const Center(
+                    child: Text('No Members'),
+                  )
+                : ListView.builder(
+                    itemCount: state.users.length,
+                    itemBuilder: (c, i) => GroupMemberDetailsWidget(
+                      groupUser: state.users[i],
+                      isMe: state.users[i].user.id == state.uid,
+                      banUserAction: canBan(
+                        state.users,
+                        state.uid,
+                        state.users[i].user.id,
+                      )
+                          ? () {
+                              context.read<GroupUsersBloc>().add(
+                                    BanUserFromGroup(
+                                        groupId: group.id,
+                                        uid: state.users[i].user.id),
+                                  );
+                            }
+                          : null,
+                      kickUserAction: canKick(
+                        state.users,
+                        state.uid,
+                        state.users[i].user.id,
+                      )
+                          ? () {
+                              context.read<GroupUsersBloc>().add(
+                                    KickUserFromGroup(
+                                        groupId: group.id,
+                                        uid: state.users[i].user.id),
+                                  );
+                            }
+                          : null,
+                      promoteUserAction: canPromote(
+                        state.users,
+                        state.uid,
+                        state.users[i].user.id,
+                      )
+                          ? () {
+                              context.read<GroupUsersBloc>().add(
+                                    PromoteUserInGroup(
+                                        groupId: group.id,
+                                        uid: state.users[i].user.id),
+                                  );
+                            }
+                          : null,
+                      demoteUserAction: canDemote(
+                        state.users,
+                        state.uid,
+                        state.users[i].user.id,
+                      )
+                          ? () {
+                              context.read<GroupUsersBloc>().add(
+                                    DemoteUserInGroup(
+                                        groupId: group.id,
+                                        uid: state.users[i].user.id),
+                                  );
+                            }
+                          : null,
+                      acceptUserAction: canAccept(
+                        state.users,
+                        state.uid,
+                        state.users[i].user.id,
+                      )
+                          ? () {
+                              context.read<GroupUsersBloc>().add(
+                                    AddUserIntoGroup(
+                                        groupId: group.id,
+                                        uid: state.users[i].user.id),
+                                  );
+                            }
+                          : null,
+                    ),
+                  ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (canJoin(state.users, state.uid, group)) ...[
+                ElevatedButton(
+                  child:
+                      Text(group.open == true ? 'Join' : 'Submit Join Request'),
+                  onPressed: () async {
+                    final confirm = await ModalService.showConfirmation(
+                      context: context,
+                      title: group.open == true
+                          ? 'Join Group?'
+                          : 'Submit Join Request',
+                      message: 'Are you sure?',
+                    );
+
+                    if (confirm == null || confirm == false) {
+                      return;
+                    }
+
+                    if (!context.mounted) return;
+
+                    context.read<GroupUsersBloc>().add(
+                          JoinGroup(
+                            groupId: group.id,
+                            isJoinRequest:
+                                findUserInGroup(state.users, state.uid) == null,
+                          ),
+                        );
+                  },
+                ),
+              ],
+              if (canLeave(state.users, state.uid)) ...[
+                ElevatedButton(
+                  child: Text(findUserInGroup(state.users, state.uid)?.state ==
+                          GroupMembershipState.joinRequest
+                      ? 'Remove Request'
+                      : 'Leave'),
+                  onPressed: () async {
+                    final confirm = await ModalService.showConfirmation(
+                      context: context,
+                      title: findUserInGroup(state.users, state.uid)?.state ==
+                              GroupMembershipState.joinRequest
+                          ? 'Delete Join Request?'
+                          : 'Leave Group?',
+                      message: 'Are you sure?',
+                    );
+
+                    if (confirm == null || confirm == false) {
+                      return;
+                    }
+
+                    if (!context.mounted) return;
+
+                    context.read<GroupUsersBloc>().add(
+                          LeaveGroup(
+                            groupId: group.id,
+                            isJoinRequest:
+                                findUserInGroup(state.users, state.uid)
+                                        ?.state ==
+                                    GroupMembershipState.joinRequest,
+                          ),
+                        );
+                  },
+                ),
+              ],
+              if (canDelete(state.users, state.uid)) ...[
+                ElevatedButton(
+                  child: Text('Delete'),
+                  onPressed: () async {
+                    final confirm = await ModalService.showConfirmation(
+                      context: context,
+                      title: 'Delete Group?',
+                      message: 'Are you sure?',
+                    );
+
+                    if (confirm == null || confirm == false) {
+                      return;
+                    }
+
+                    if (!context.mounted) return;
+
+                    context.read<GroupUsersBloc>().add(
+                          DeleteGroup(groupId: group.id),
+                        );
+                  },
+                ),
+              ],
+              if (canEdit(state.users, state.uid)) ...[
+                ElevatedButton(
+                  child: Text('Edit'),
+                  onPressed: () => context.goNamed(
+                    Globals.routes.editGroup,
+                    pathParameters: {'groupId': group.id},
+                    extra: group,
+                  ),
+                ),
+              ],
+            ],
+          )
+        ],
+      );
+
+  @override
+  bool shouldShowMessage(GroupUsersState state) =>
+      state is GroupUsersActionSuccess || state is GroupUsersError;
+
+  @override
+  void onAfterMessage(BuildContext context) {
+    context.read<GroupUsersBloc>().add(
+          FetchGroupUsers(groupId: group.id),
+        );
+
+    context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
+    context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
+
+    // TODO:
+    // if (state.goBack) {
+    //   context.goNamed(Globals.routes.groups);
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,230 +245,8 @@ class GroupDetailsScreen extends StatelessWidget with GroupPermissions {
       goBack: () => context.goNamed(Globals.routes.groups),
       child: SafeArea(
         child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
-          listener: (context, state) {
-            if (state is GroupUsersActionSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-
-              context.read<GroupUsersBloc>().add(
-                    FetchGroupUsers(groupId: group.id),
-                  );
-
-              context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
-              context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
-
-              if (state.goBack) {
-                context.goNamed(Globals.routes.groups);
-              }
-            }
-
-            if (state is GroupUsersError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-          },
-          builder: (context, state) => switch (state) {
-            GroupUsersLoading() =>
-              Center(child: const CircularProgressIndicator()),
-            GroupUsersLoaded() => Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 32),
-                    child: Text(
-                      group.description ?? 'No Description...',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ),
-                  Expanded(
-                    child: state.users.isEmpty
-                        ? const Center(
-                            child: Text('No Members'),
-                          )
-                        : ListView.builder(
-                            itemCount: state.users.length,
-                            itemBuilder: (c, i) => GroupMemberDetailsWidget(
-                              groupUser: state.users[i],
-                              isMe: state.users[i].user.id == state.uid,
-                              banUserAction: canBan(
-                                state.users,
-                                state.uid,
-                                state.users[i].user.id,
-                              )
-                                  ? () {
-                                      context.read<GroupUsersBloc>().add(
-                                            BanUserFromGroup(
-                                                groupId: group.id,
-                                                uid: state.users[i].user.id),
-                                          );
-                                    }
-                                  : null,
-                              kickUserAction: canKick(
-                                state.users,
-                                state.uid,
-                                state.users[i].user.id,
-                              )
-                                  ? () {
-                                      context.read<GroupUsersBloc>().add(
-                                            KickUserFromGroup(
-                                                groupId: group.id,
-                                                uid: state.users[i].user.id),
-                                          );
-                                    }
-                                  : null,
-                              promoteUserAction: canPromote(
-                                state.users,
-                                state.uid,
-                                state.users[i].user.id,
-                              )
-                                  ? () {
-                                      context.read<GroupUsersBloc>().add(
-                                            PromoteUserInGroup(
-                                                groupId: group.id,
-                                                uid: state.users[i].user.id),
-                                          );
-                                    }
-                                  : null,
-                              demoteUserAction: canDemote(
-                                state.users,
-                                state.uid,
-                                state.users[i].user.id,
-                              )
-                                  ? () {
-                                      context.read<GroupUsersBloc>().add(
-                                            DemoteUserInGroup(
-                                                groupId: group.id,
-                                                uid: state.users[i].user.id),
-                                          );
-                                    }
-                                  : null,
-                              acceptUserAction: canAccept(
-                                state.users,
-                                state.uid,
-                                state.users[i].user.id,
-                              )
-                                  ? () {
-                                      context.read<GroupUsersBloc>().add(
-                                            AddUserIntoGroup(
-                                                groupId: group.id,
-                                                uid: state.users[i].user.id),
-                                          );
-                                    }
-                                  : null,
-                            ),
-                          ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (canJoin(state.users, state.uid, group)) ...[
-                        ElevatedButton(
-                          child: Text(group.open == true
-                              ? 'Join'
-                              : 'Submit Join Request'),
-                          onPressed: () async {
-                            final confirm = await ModalService.showConfirmation(
-                              context: context,
-                              title: group.open == true
-                                  ? 'Join Group?'
-                                  : 'Submit Join Request',
-                              message: 'Are you sure?',
-                            );
-
-                            if (confirm == null || confirm == false) {
-                              return;
-                            }
-
-                            if (!context.mounted) return;
-
-                            context.read<GroupUsersBloc>().add(
-                                  JoinGroup(
-                                    groupId: group.id,
-                                    isJoinRequest: findUserInGroup(
-                                            state.users, state.uid) ==
-                                        null,
-                                  ),
-                                );
-                          },
-                        ),
-                      ],
-                      if (canLeave(state.users, state.uid)) ...[
-                        ElevatedButton(
-                          child: Text(
-                              findUserInGroup(state.users, state.uid)?.state ==
-                                      GroupMembershipState.joinRequest
-                                  ? 'Remove Request'
-                                  : 'Leave'),
-                          onPressed: () async {
-                            final confirm = await ModalService.showConfirmation(
-                              context: context,
-                              title: findUserInGroup(state.users, state.uid)
-                                          ?.state ==
-                                      GroupMembershipState.joinRequest
-                                  ? 'Delete Join Request?'
-                                  : 'Leave Group?',
-                              message: 'Are you sure?',
-                            );
-
-                            if (confirm == null || confirm == false) {
-                              return;
-                            }
-
-                            if (!context.mounted) return;
-
-                            context.read<GroupUsersBloc>().add(
-                                  LeaveGroup(
-                                    groupId: group.id,
-                                    isJoinRequest:
-                                        findUserInGroup(state.users, state.uid)
-                                                ?.state ==
-                                            GroupMembershipState.joinRequest,
-                                  ),
-                                );
-                          },
-                        ),
-                      ],
-                      if (canDelete(state.users, state.uid)) ...[
-                        ElevatedButton(
-                          child: Text('Delete'),
-                          onPressed: () async {
-                            final confirm = await ModalService.showConfirmation(
-                              context: context,
-                              title: 'Delete Group?',
-                              message: 'Are you sure?',
-                            );
-
-                            if (confirm == null || confirm == false) {
-                              return;
-                            }
-
-                            if (!context.mounted) return;
-
-                            context.read<GroupUsersBloc>().add(
-                                  DeleteGroup(groupId: group.id),
-                                );
-                          },
-                        ),
-                      ],
-                      if (canEdit(state.users, state.uid)) ...[
-                        ElevatedButton(
-                          child: Text('Edit'),
-                          onPressed: () => context.goNamed(
-                            Globals.routes.editGroup,
-                            pathParameters: {'groupId': group.id},
-                            extra: group,
-                          ),
-                        ),
-                      ],
-                    ],
-                  )
-                ],
-              ),
-            GroupUsersError() => Center(),
-            _ => const SizedBox(),
-          },
+          listener: listener,
+          builder: builder,
         ),
       ),
     );

@@ -6,18 +6,30 @@ import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/widgets/paginated_all_groups.dart';
 import 'package:gift_grab/presentation/widgets/paginated_user_groups.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab/presentation/widgets/stateful_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class GroupsScreen extends StatefulWidget {
+class GroupsScreen extends StatefulBloc<GroupsBloc, GroupsState> {
   const GroupsScreen({super.key});
 
   @override
   State<GroupsScreen> createState() => _GroupsScreenState();
 }
 
-class _GroupsScreenState extends State<GroupsScreen>
+class _GroupsScreenState
+    extends StatefulBlocState<GroupsScreen, GroupsBloc, GroupsState>
     with TickerProviderStateMixin {
   late TabController _tabController;
+
+  @override
+  Widget buildLoadedContent(BuildContext context, dynamic state) =>
+      throw UnimplementedError();
+
+  @override
+  bool shouldShowMessage(GroupsState state) => state is GroupsError;
+
+  @override
+  void onAfterMessage(BuildContext context) {}
 
   @override
   void initState() {
@@ -37,13 +49,7 @@ class _GroupsScreenState extends State<GroupsScreen>
       title: 'Groups',
       goBack: () => context.goNamed(Globals.routes.main),
       child: BlocListener<GroupsBloc, GroupsState>(
-        listener: (context, state) {
-          if (state is GroupsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
+        listener: listener,
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

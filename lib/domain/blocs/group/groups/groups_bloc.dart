@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'groups_event.dart';
 part 'groups_state.dart';
 
-class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
+class GroupsBloc extends Bloc<GroupsEvent, GroupsState>
+    with GrpcErrorHandlerMixin<GroupsState> {
   final AccountBloc accountBloc;
   final AuthBloc authBloc;
 
@@ -46,18 +48,10 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       debugPrint(newGroup.toString());
 
       emit(GroupsActionSuccess('Group created successfully'));
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => GroupsError(message: message));
     } catch (e) {
-      if (e is GrpcError) {
-        switch (e.codeName) {
-          case 'ALREADY_EXISTS':
-            emit(GroupsError(message: 'Group name is in use.'));
-
-          default:
-            emit(GroupsError(message: 'Error with groups...'));
-        }
-      } else {
-        emit(GroupsError(message: e.toString()));
-      }
+      emit(GroupsError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 
@@ -87,8 +81,10 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       );
 
       emit(GroupsActionSuccess('Group updated successfully'));
+    } on GrpcError catch (e) {
+      handleGrpcError(e, emit, (message) => GroupsError(message: message));
     } catch (e) {
-      emit(GroupsError(message: e.toString()));
+      emit(GroupsError(message: 'Unexpected error: ${e.toString()}'));
     }
   }
 }

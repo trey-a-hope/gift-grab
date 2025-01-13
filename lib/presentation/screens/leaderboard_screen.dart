@@ -4,11 +4,11 @@ import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
-import 'package:gift_grab/presentation/widgets/state_content_builder.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LeaderboardScreen
-    extends StateContentBuilder<LeaderboardBloc, LeaderboardState> {
+    extends StatelessBloc<LeaderboardBloc, LeaderboardState> {
   const LeaderboardScreen({
     super.key,
   });

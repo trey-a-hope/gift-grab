@@ -3,6 +3,7 @@ import 'package:grpc/grpc.dart';
 
 mixin GrpcErrorHandlerMixin<T> {
   final Map<String, String> _defaultErrorMessages = {
+    'ALREADY_EXISTS': 'Group name is in use.',
     'NOT_FOUND': 'Account not found. Please check your credentials.',
     'INVALID_ARGUMENT': 'Invalid input provided.',
     'UNAUTHENTICATED': 'Authentication token invalid.',
