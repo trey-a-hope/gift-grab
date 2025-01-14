@@ -6,10 +6,10 @@ import 'package:gift_grab/presentation/extensions/build_context_extensions.dart'
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class EditProfileScreen extends StatelessBloc<AccountBloc, AccountState> {
+class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   const EditProfileScreen({super.key});
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {

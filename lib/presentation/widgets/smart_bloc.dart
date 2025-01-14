@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 
-mixin SmartBlocMixin<B extends Bloc, S> {
+// Alleviate some boiler plate code when dealing with the
+// listener and builder methods for a Bloc Consumer.
+abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
+  const SmartBloc({super.key});
+
   Widget buildLoadingContent() =>
       const Center(child: CircularProgressIndicator());
 
@@ -12,10 +16,7 @@ mixin SmartBlocMixin<B extends Bloc, S> {
 
   Widget buildLoadedContent(BuildContext context, dynamic state);
 
-  Widget builder<T>(
-    BuildContext context,
-    T state,
-  ) {
+  Widget builder<T>(BuildContext context, T state) {
     return switch (state) {
       final state when state.toString().contains('Loading') =>
         buildLoadingContent(),

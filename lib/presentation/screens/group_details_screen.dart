@@ -9,14 +9,14 @@ import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
 // https://heroiclabs.com/docs/nakama/concepts/groups/
 
-class GroupDetailsScreen extends StatelessBloc<GroupUsersBloc, GroupUsersState>
+class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
     with GroupPermissions {
   final Group group;
 

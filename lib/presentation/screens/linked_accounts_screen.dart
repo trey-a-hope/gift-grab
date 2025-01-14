@@ -5,10 +5,10 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
+class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
   const LinkedAccountsScreen({super.key});
 
   @override

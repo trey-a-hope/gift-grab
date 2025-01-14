@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/screens/base_group_form.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
@@ -11,7 +11,7 @@ import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
     as ugb;
 
-class EditGroupScreen extends StatelessBloc<GroupsBloc, GroupsState> {
+class EditGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
   final Group group;
 
   const EditGroupScreen({

@@ -9,10 +9,10 @@ import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingsScreen extends StatelessBloc<AccountBloc, AccountState> {
+class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
   const SettingsScreen({super.key});
 
   @override

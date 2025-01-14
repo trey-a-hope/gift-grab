@@ -6,9 +6,9 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 
-class MainMenuScreen extends StatelessBloc<AccountBloc, AccountState> {
+class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   const MainMenuScreen({super.key});
 
   static const buttons = [

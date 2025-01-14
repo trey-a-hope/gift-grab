@@ -5,10 +5,10 @@ import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/screens/base_group_form.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
+import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateGroupScreen extends StatelessBloc<GroupsBloc, GroupsState> {
+class CreateGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
   const CreateGroupScreen({super.key});
 
   @override
