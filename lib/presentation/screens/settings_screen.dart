@@ -4,6 +4,7 @@ import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -12,9 +13,7 @@ import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatelessBloc<AccountBloc, AccountState> {
-  const SettingsScreen({
-    super.key,
-  });
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +21,12 @@ class SettingsScreen extends StatelessBloc<AccountBloc, AccountState> {
       title: 'Settings',
       goBack: () => context.goNamed(Globals.routes.main),
       child: BlocConsumer<AccountBloc, AccountState>(
+        listenWhen: (previous, current) {
+          return context.listenWhen(
+                Globals.routes.settings,
+              ) &&
+              shouldShowMessage(current);
+        },
         listener: listener,
         builder: builder,
       ),

@@ -1,27 +1,42 @@
 part of 'account_bloc.dart';
 
-abstract class AccountState {}
+abstract class AccountState {
+  final Account? account;
 
-class AccountInitial extends AccountState {}
+  AccountState(this.account);
+}
 
-class AccountLoading extends AccountState {}
+class AccountInitial extends AccountState {
+  AccountInitial(super.account);
+}
+
+class AccountLoading extends AccountState {
+  AccountLoading(super.account);
+}
 
 class AccountLoaded extends AccountState {
-  final Account account;
+  final String currentUsername;
 
   AccountLoaded({
-    required this.account,
-  });
+    required this.currentUsername,
+    required Account account,
+  }) : super(account);
 }
 
 class AccountError extends AccountState {
   final String message;
 
-  AccountError({required this.message});
+  AccountError({
+    required this.message,
+    required Account account,
+  }) : super(account);
 }
 
 class AccountActionSuccess extends AccountState {
   final String message;
 
-  AccountActionSuccess({required this.message});
+  AccountActionSuccess({
+    required this.message,
+    required Account account,
+  }) : super(account);
 }

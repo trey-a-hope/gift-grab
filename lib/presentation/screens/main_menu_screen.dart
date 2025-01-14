@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
@@ -67,9 +66,8 @@ class _MainMenuScreenState
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Gift Grab',
-      child: BlocConsumer<AccountBloc, AccountState>(
+      child: BlocBuilder<AccountBloc, AccountState>(
         builder: builder,
-        listener: listener,
       ),
     );
   }

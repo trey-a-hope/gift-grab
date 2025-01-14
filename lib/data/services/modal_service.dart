@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/input_match_confirmation_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
@@ -41,14 +40,7 @@ class ModalService {
   }) {
     toastification.show(
       autoCloseDuration: const Duration(seconds: 3),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: Globals.isTablet ? 26 : 18,
-          fontFamily: 'Montserrat',
-        ),
-      ),
+      title: Text(title),
       type: toastificationType,
       style: ToastificationStyle.fillColored,
       icon: icon,

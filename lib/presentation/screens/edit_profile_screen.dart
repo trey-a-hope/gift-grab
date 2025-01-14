@@ -2,27 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/stateful_bloc.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class EditProfileScreen extends StatefulBloc<AccountBloc, AccountState> {
+class EditProfileScreen extends StatelessBloc<AccountBloc, AccountState> {
   const EditProfileScreen({super.key});
-
-  @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
-}
-
-class _EditProfileScreenState
-    extends StatefulBlocState<EditProfileScreen, AccountBloc, AccountState> {
-  final _controller = TextEditingController();
-
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
-    _controller.text = state.account.user.username ?? 'No Username';
-
+    state = state as AccountLoaded;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -31,17 +22,20 @@ class _EditProfileScreenState
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: GGInputFieldWidget(
             onChanged: (val) {
-              _controller.text = val;
+              context.read<AccountBloc>().add(UsernameChange(username: val));
             },
-            initialValue: _controller.text,
+            initialValue: state.currentUsername,
             hintText: 'Enter username...',
           ),
         ),
         const Gap(16),
         ElevatedButton(
-          onPressed: () => context.read<AccountBloc>().add(
-                UpdateAccount(username: _controller.text),
-              ),
+          onPressed: () {
+            debugPrint('Save button pressed');
+            context.read<AccountBloc>().add(
+                  SaveAccount(username: state.currentUsername),
+                );
+          },
           child: Text(
             'Save',
             style: TextStyle(
@@ -53,9 +47,9 @@ class _EditProfileScreenState
     );
   }
 
-  @override
-  bool shouldShowMessage(AccountState state) =>
-      state is AccountError || state is AccountActionSuccess;
+  // @override
+  // bool shouldShowMessage(AccountState state) =>
+  //     state is AccountError || state is AccountActionSuccess;
 
   @override
   void onAfterMessage(BuildContext context) =>
@@ -68,6 +62,12 @@ class _EditProfileScreenState
       goBack: () => context.goNamed(Globals.routes.settings),
       child: Center(
         child: BlocConsumer<AccountBloc, AccountState>(
+          listenWhen: (previous, current) {
+            return context.listenWhen(
+                  Globals.routes.editProfile,
+                ) &&
+                shouldShowMessage(current);
+          },
           listener: listener,
           builder: builder,
         ),

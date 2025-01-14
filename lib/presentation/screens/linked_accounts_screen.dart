@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
@@ -28,6 +29,12 @@ class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
         goBack: () => context.goNamed(Globals.routes.settings),
         child: Center(
           child: BlocConsumer<AccountBloc, AccountState>(
+            listenWhen: (previous, current) {
+              return context.listenWhen(
+                    Globals.routes.linkedAccounts,
+                  ) &&
+                  shouldShowMessage(current);
+            },
             listener: listener,
             builder: builder,
           ),
@@ -35,12 +42,12 @@ class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
       );
 
   Widget _buildAccountContent(BuildContext context, AccountLoaded state) {
-    final user = state.account.user;
+    final user = state.account!.user;
     final providers = [
       {
         'title': 'Email',
-        'subtitle': state.account.email ?? '',
-        'isLinked': state.account.email != '',
+        'subtitle': state.account!.email ?? '',
+        'isLinked': state.account!.email != '',
         'onLink': () => context.read<AccountBloc>().add(LinkEmailAccount()),
         'onUnlink': () => context.read<AccountBloc>().add(UnlinkEmailAccount()),
       },

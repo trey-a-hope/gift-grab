@@ -4,10 +4,10 @@ abstract class AccountEvent {}
 
 class FetchAccount extends AccountEvent {}
 
-class UpdateAccount extends AccountEvent {
+class SaveAccount extends AccountEvent {
   final String username;
 
-  UpdateAccount({
+  SaveAccount({
     required this.username,
   });
 }
@@ -25,3 +25,11 @@ class UnlinkGoogleAccount extends AccountEvent {}
 class LinkAppleAccount extends AccountEvent {}
 
 class UnlinkAppleAccount extends AccountEvent {}
+
+class UsernameChange extends AccountEvent {
+  final String username;
+
+  UsernameChange({
+    required this.username,
+  });
+}

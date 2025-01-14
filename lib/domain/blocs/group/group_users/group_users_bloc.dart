@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc_extension.dart';
+import 'package:gift_grab/domain/extensions/account_bloc_extension.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
 
 mixin SmartBlocMixin<B extends Bloc, S> {
   Widget buildLoadingContent() =>
@@ -32,16 +33,27 @@ mixin SmartBlocMixin<B extends Bloc, S> {
   }
 
   void listener(BuildContext context, S state) {
+    debugPrint('\n=== Listener Called ===');
+    debugPrint('State type: ${state.runtimeType}');
+    debugPrint('Should show message: ${shouldShowMessage(state)}');
+    debugPrint('Stack trace: ${StackTrace.current}');
+
     if (shouldShowMessage(state)) {
       final message = (state as dynamic).message as String?;
       if (message != null) {
-        // TODO: Update with visually more appealing toast.
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
+        if (state.toString().contains('Error')) {
+          ModalService.showError(title: message);
+        }
+
+        if (state.toString().contains('Success')) {
+          ModalService.showSuccess(title: message);
+        }
+
         onAfterMessage(context);
       }
     }
   }
 
+  // TODO: Remove {} and make every subclass have to override this method.
   void onAfterMessage(BuildContext context) {}
 }

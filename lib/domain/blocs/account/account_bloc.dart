@@ -20,9 +20,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     required this.authBloc,
   })  : _socialAuthService = SocialAuthService(),
         _nakamaService = NakamaService(),
-        super(AccountInitial()) {
+        super(AccountInitial(null)) {
     on<FetchAccount>(_onFetchAccount);
-    on<UpdateAccount>(_onUpdateAccount);
+    on<SaveAccount>(_onSaveAccount);
     on<DeleteAccount>(_onDeleteAccount);
     on<LinkEmailAccount>(_onLinkEmailAccount);
     on<UnlinkEmailAccount>(_onUnlinkEmailAccount);
@@ -30,13 +30,26 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     on<UnlinkGoogleAccount>(_onUnlinkGoogleAccount);
     on<LinkAppleAccount>(_onLinkAppleAccount);
     on<UnlinkAppleAccount>(_onUnlinkAppleAccount);
+    on<UsernameChange>(_onUsernameChange);
+  }
+
+  Future<void> _onUsernameChange(
+    UsernameChange event,
+    Emitter<AccountState> emit,
+  ) async {
+    emit(
+      AccountLoaded(
+        account: state.account!,
+        currentUsername: event.username,
+      ),
+    );
   }
 
   Future<void> _onFetchAccount(
     FetchAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -44,19 +57,33 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
 
       final account = await getNakamaClient().getAccount(session);
 
-      emit(AccountLoaded(account: account));
+      emit(
+        AccountLoaded(
+          account: account,
+          currentUsername: account.user.username ?? 'No Username',
+        ),
+      );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
-  Future<void> _onUpdateAccount(
-    UpdateAccount event,
+  Future<void> _onSaveAccount(
+    SaveAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -67,11 +94,23 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         username: event.username,
       );
 
-      emit(AccountActionSuccess(message: 'Username updated successfully.'));
+      emit(AccountActionSuccess(
+        message: 'Username updated successfully.',
+        account: state.account!,
+      ));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -79,7 +118,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     DeleteAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -91,9 +130,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
 
       authBloc.add(Logout());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -101,7 +149,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     LinkEmailAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -115,12 +163,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Email account linked successfully.'),
+        AccountActionSuccess(
+          message: 'Email account linked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -128,7 +188,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     UnlinkEmailAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -141,12 +201,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Email account unlinked successfully.'),
+        AccountActionSuccess(
+          message: 'Email account unlinked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -154,7 +226,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     LinkGoogleAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -171,12 +243,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Google account linked successfully.'),
+        AccountActionSuccess(
+          message: 'Google account linked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -184,7 +268,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     UnlinkGoogleAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -201,12 +285,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Google account unlinked successfully.'),
+        AccountActionSuccess(
+          message: 'Google account unlinked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -214,7 +310,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     LinkAppleAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -231,12 +327,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Apple account linked successfully.'),
+        AccountActionSuccess(
+          message: 'Apple account linked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 
@@ -244,7 +352,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
     UnlinkAppleAccount event,
     Emitter<AccountState> emit,
   ) async {
-    emit(AccountLoading());
+    emit(AccountLoading(state.account!));
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
@@ -261,12 +369,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
       );
 
       emit(
-        AccountActionSuccess(message: 'Apple account unlinked successfully.'),
+        AccountActionSuccess(
+          message: 'Apple account unlinked successfully.',
+          account: state.account!,
+        ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AccountError(message: message));
+      handleGrpcError(
+          e,
+          emit,
+          (message) => AccountError(
+                message: message,
+                account: state.account!,
+              ));
     } catch (e) {
-      emit(AccountError(message: 'Unexpected error: ${e.toString()}'));
+      emit(AccountError(
+        message: 'Unexpected error: ${e.toString()}',
+        account: state.account!,
+      ));
     }
   }
 }
