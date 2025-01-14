@@ -3,15 +3,13 @@ import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/extensions/account_bloc_extension.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'group_users_event.dart';
 part 'group_users_state.dart';
 
-class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
-    with GrpcErrorHandlerMixin<GroupUsersState> {
+class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
   final AccountBloc accountBloc;
   final AuthBloc authBloc;
 
@@ -51,7 +49,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -77,7 +76,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
             false),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -103,7 +103,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
             false),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -125,7 +126,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('Group deleted successfully', true));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -148,7 +150,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('User kicked successfully', false));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -171,7 +174,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('User banned successfully', false));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -194,7 +198,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('User promoted successfully', false));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -217,7 +222,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('User demoted successfully', false));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -240,7 +246,8 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState>
 
       emit(GroupUsersActionSuccess('User added successfully', false));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => GroupUsersError(message: message));
+      emit(GroupUsersError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(GroupUsersError(message: 'Unexpected error: ${e.toString()}'));
     }

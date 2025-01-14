@@ -2,15 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'all_groups_event.dart';
 part 'all_groups_state.dart';
 
-class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState>
-    with GrpcErrorHandlerMixin<AllGroupsState> {
+class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState> {
   final AuthBloc authBloc;
 
   String? _cursor;
@@ -43,7 +41,8 @@ class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AllGroupsError(message: message));
+      emit(AllGroupsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(AllGroupsError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -71,7 +70,8 @@ class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AllGroupsError(message: message));
+      emit(AllGroupsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(AllGroupsError(message: 'Unexpected error: ${e.toString()}'));
     }

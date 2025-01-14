@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -10,8 +9,7 @@ import 'package:nakama/nakama.dart';
 part 'leaderboard_event.dart';
 part 'leaderboard_state.dart';
 
-class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState>
-    with GrpcErrorHandlerMixin<LeaderboardState> {
+class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
   final AuthBloc authBloc;
 
   final _leaderboardName = 'weekly_leaderboard';
@@ -68,7 +66,8 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState>
         emit(LeaderboardLoaded(entries: results));
       }
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => LeaderboardError(message: message));
+      emit(LeaderboardError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(LeaderboardError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -94,7 +93,8 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState>
 
       emit(LeaderboardActionSuccess(message: 'Score submitted succesfully'));
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => LeaderboardError(message: message));
+      emit(LeaderboardError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(LeaderboardError(message: 'Unexpected error: ${e.toString()}'));
     }

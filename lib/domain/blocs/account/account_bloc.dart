@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';
 
-class AccountBloc extends Bloc<AccountEvent, AccountState>
-    with GrpcErrorHandlerMixin<AccountState> {
+class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AuthBloc authBloc;
   final SocialAuthService _socialAuthService;
   final NakamaService _nakamaService;
@@ -64,13 +62,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -99,13 +94,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         account: state.account!,
       ));
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -130,13 +122,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
 
       authBloc.add(Logout());
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -169,13 +158,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -207,13 +193,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -249,13 +232,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -291,13 +271,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -333,13 +310,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',
@@ -375,13 +349,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(
-          e,
-          emit,
-          (message) => AccountError(
-                message: message,
-                account: state.account!,
-              ));
+      emit(AccountError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        account: state.account!,
+      ));
     } catch (e) {
       emit(AccountError(
         message: 'Unexpected error: ${e.toString()}',

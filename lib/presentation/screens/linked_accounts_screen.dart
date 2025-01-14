@@ -91,16 +91,19 @@ class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: SwitchListTile(
-        tileColor: theme.colorScheme.primary,
-        title: Text(title, style: theme.textTheme.headlineMedium),
-        subtitle: Text(subtitle, style: theme.textTheme.headlineSmall),
-        value: isLinked,
-        onChanged: (bool? value) {
-          if (value == null) return;
-          debugPrint('Toggling $title connection: $value');
-          value ? onLink() : onUnlink();
-        },
+      child: Material(
+        borderRadius: BorderRadius.circular(16),
+        color: theme.colorScheme.onInverseSurface,
+        child: SwitchListTile(
+          title: Text(title, style: theme.textTheme.headlineMedium),
+          subtitle: Text(subtitle, style: theme.textTheme.headlineSmall),
+          value: isLinked,
+          onChanged: (bool? value) {
+            if (value == null) return;
+            debugPrint('Toggling $title connection: $value');
+            value ? onLink() : onUnlink();
+          },
+        ),
       ),
     );
   }

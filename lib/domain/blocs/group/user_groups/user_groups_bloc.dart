@@ -4,15 +4,13 @@ import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/extensions/account_bloc_extension.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'user_groups_event.dart';
 part 'user_groups_state.dart';
 
-class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState>
-    with GrpcErrorHandlerMixin<UserGroupsState> {
+class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
   final AccountBloc accountBloc;
   final AuthBloc authBloc;
 
@@ -50,7 +48,8 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => UserGroupsError(message: message));
+      emit(UserGroupsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(UserGroupsError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -82,7 +81,8 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState>
         ),
       );
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => UserGroupsError(message: message));
+      emit(UserGroupsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
       emit(UserGroupsError(message: 'Unexpected error: ${e.toString()}'));
     }

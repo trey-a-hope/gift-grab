@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
-import 'package:gift_grab/domain/mixins/grpc_error_handler_mixin.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState>
-    with GrpcErrorHandlerMixin<AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static const _storage = FlutterSecureStorage();
   static const _token = 'token';
   static const _refreshToken = 'refreshToken';
@@ -51,7 +49,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
       emit(Authenticated());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AuthError(message: message));
+      emit(
+        AuthError(message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'),
+      );
     } catch (e) {
       emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -81,7 +81,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
       emit(Authenticated());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AuthError(message: message));
+      emit(
+        AuthError(message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'),
+      );
     } catch (e) {
       emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -112,7 +114,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
       emit(Authenticated());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AuthError(message: message));
+      emit(
+        AuthError(message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'),
+      );
     } catch (e) {
       emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -140,7 +144,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
       emit(Authenticated());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AuthError(message: message));
+      emit(
+        AuthError(message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'),
+      );
     } catch (e) {
       emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }
@@ -158,7 +164,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
       emit(Unauthenticated());
     } on GrpcError catch (e) {
-      handleGrpcError(e, emit, (message) => AuthError(message: message));
+      emit(
+        AuthError(message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'),
+      );
     } catch (e) {
       emit(AuthError(message: 'Unexpected error: ${e.toString()}'));
     }

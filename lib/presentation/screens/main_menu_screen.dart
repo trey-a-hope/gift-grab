@@ -6,29 +6,17 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
-import 'package:gift_grab/presentation/widgets/stateful_bloc.dart';
+import 'package:gift_grab/presentation/widgets/stateless_bloc.dart';
 
-class MainMenuScreen extends StatefulBloc<AccountBloc, AccountState> {
+class MainMenuScreen extends StatelessBloc<AccountBloc, AccountState> {
   const MainMenuScreen({super.key});
 
-  @override
-  State<MainMenuScreen> createState() => _MainMenuScreenState();
-}
-
-class _MainMenuScreenState
-    extends StatefulBlocState<MainMenuScreen, AccountBloc, AccountState> {
   static const buttons = [
     MenuButton.play,
     MenuButton.leaderboard,
     MenuButton.groups,
     MenuButton.settings,
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<AccountBloc>().add(FetchAccount());
-  }
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
@@ -64,6 +52,8 @@ class _MainMenuScreenState
 
   @override
   Widget build(BuildContext context) {
+    context.read<AccountBloc>().add(FetchAccount());
+
     return GGScaffoldWidget(
       title: 'Gift Grab',
       child: BlocBuilder<AccountBloc, AccountState>(
