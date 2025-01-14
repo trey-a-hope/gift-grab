@@ -29,12 +29,9 @@ class LinkedAccountsScreen extends StatelessBloc<AccountBloc, AccountState> {
         goBack: () => context.goNamed(Globals.routes.settings),
         child: Center(
           child: BlocConsumer<AccountBloc, AccountState>(
-            listenWhen: (previous, current) {
-              return context.listenWhen(
-                    Globals.routes.linkedAccounts,
-                  ) &&
-                  shouldShowMessage(current);
-            },
+            listenWhen: (previous, current) => context.listenWhen(
+              'linkedAccounts',
+            ),
             listener: listener,
             builder: builder,
           ),

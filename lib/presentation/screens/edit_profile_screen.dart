@@ -47,10 +47,6 @@ class EditProfileScreen extends StatelessBloc<AccountBloc, AccountState> {
     );
   }
 
-  // @override
-  // bool shouldShowMessage(AccountState state) =>
-  //     state is AccountError || state is AccountActionSuccess;
-
   @override
   void onAfterMessage(BuildContext context) =>
       context.read<AccountBloc>().add(FetchAccount());
@@ -62,12 +58,9 @@ class EditProfileScreen extends StatelessBloc<AccountBloc, AccountState> {
       goBack: () => context.goNamed(Globals.routes.settings),
       child: Center(
         child: BlocConsumer<AccountBloc, AccountState>(
-          listenWhen: (previous, current) {
-            return context.listenWhen(
-                  Globals.routes.editProfile,
-                ) &&
-                shouldShowMessage(current);
-          },
+          listenWhen: (previous, current) => context.listenWhen(
+            'editProfile',
+          ),
           listener: listener,
           builder: builder,
         ),

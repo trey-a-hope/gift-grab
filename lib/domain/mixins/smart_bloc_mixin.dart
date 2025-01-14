@@ -33,11 +33,6 @@ mixin SmartBlocMixin<B extends Bloc, S> {
   }
 
   void listener(BuildContext context, S state) {
-    debugPrint('\n=== Listener Called ===');
-    debugPrint('State type: ${state.runtimeType}');
-    debugPrint('Should show message: ${shouldShowMessage(state)}');
-    debugPrint('Stack trace: ${StackTrace.current}');
-
     if (shouldShowMessage(state)) {
       final message = (state as dynamic).message as String?;
       if (message != null) {
@@ -54,6 +49,5 @@ mixin SmartBlocMixin<B extends Bloc, S> {
     }
   }
 
-  // TODO: Remove {} and make every subclass have to override this method.
   void onAfterMessage(BuildContext context) {}
 }

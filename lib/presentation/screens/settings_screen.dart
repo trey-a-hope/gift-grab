@@ -21,12 +21,9 @@ class SettingsScreen extends StatelessBloc<AccountBloc, AccountState> {
       title: 'Settings',
       goBack: () => context.goNamed(Globals.routes.main),
       child: BlocConsumer<AccountBloc, AccountState>(
-        listenWhen: (previous, current) {
-          return context.listenWhen(
-                Globals.routes.settings,
-              ) &&
-              shouldShowMessage(current);
-        },
+        listenWhen: (previous, current) => context.listenWhen(
+          'settings',
+        ),
         listener: listener,
         builder: builder,
       ),
