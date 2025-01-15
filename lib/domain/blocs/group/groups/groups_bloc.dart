@@ -66,7 +66,8 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
         avatarUrl: event.avatarUrl,
         description: event.description,
         langTag: event.langTag ?? 'en', // Group language cannot be empty.
-        maxCount: event.maxCount, // TODO: Count is not updating, (api bug)...
+        maxCount: event
+            .maxCount, // TODO: Count is not updating, (api bug)...Put in an issue...
       );
 
       emit(GroupsActionSuccess('Group updated successfully'));

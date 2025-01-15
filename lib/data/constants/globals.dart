@@ -47,6 +47,7 @@ class _Routes {
   final String createGroup = 'create_group';
   final String groupDetails = 'group_details';
   final String editGroup = 'edit_group';
+  final String profile = 'profile';
   final String linkedAccounts = 'linked_accounts';
 }
 
