@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
+import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/screens/base_group_form.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
@@ -21,6 +22,7 @@ class EditGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
 
   @override
   Widget build(BuildContext context) => BlocListener<GroupsBloc, GroupsState>(
+        listenWhen: (previous, current) => context.listenWhen('edit'),
         listener: listener,
         child: BaseGroupForm(
           title: 'Edit Group',
@@ -51,9 +53,6 @@ class EditGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
   @override
   Widget buildLoadedContent(BuildContext context, state) =>
       throw UnimplementedError();
-
-  @override
-  bool shouldShowMessage(GroupsState state) => state is GroupsActionSuccess;
 
   @override
   void onAfterMessage(BuildContext context) {

@@ -28,3 +28,9 @@ class GroupUsersActionSuccess extends GroupUsersState {
 
   GroupUsersActionSuccess(this.message, this.goBack);
 }
+
+class GroupUsersGoToRoute extends GroupUsersState {
+  final String route;
+
+  GroupUsersGoToRoute(this.route);
+}

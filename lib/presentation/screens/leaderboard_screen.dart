@@ -47,10 +47,6 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
   }
 
   @override
-  bool shouldShowMessage(LeaderboardState state) =>
-      state is LeaderboardError || state is LeaderboardActionSuccess;
-
-  @override
   void onAfterMessage(BuildContext context) =>
       context.read<LeaderboardBloc>().add(
             FetchLeaderboard(),

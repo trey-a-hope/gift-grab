@@ -84,7 +84,10 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
                   name: Globals.routes.groupDetails,
                   builder: (context, state) {
                     final group = state.extra as Group;
-                    return GroupDetailsScreen(group: group);
+                    return GroupDetailsScreen(
+                      group: group,
+                      initialContext: context,
+                    );
                   },
                   routes: [
                     GoRoute(

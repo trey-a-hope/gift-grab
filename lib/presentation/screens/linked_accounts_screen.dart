@@ -16,10 +16,6 @@ class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
       _buildAccountContent(context, state as AccountLoaded);
 
   @override
-  bool shouldShowMessage(AccountState state) =>
-      state is AccountError || state is AccountActionSuccess;
-
-  @override
   void onAfterMessage(BuildContext context) =>
       context.read<AccountBloc>().add(FetchAccount());
 

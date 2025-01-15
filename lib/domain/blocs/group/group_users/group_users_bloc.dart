@@ -40,6 +40,12 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         groupId: event.groupId,
       );
 
+      // If no users, that means the group was deleted; navigate back.
+      if (groupUserList.groupUsers.isEmpty) {
+        emit(GroupUsersGoToRoute('groups'));
+        return;
+      }
+
       emit(
         GroupUsersLoaded(
           uid: uid,

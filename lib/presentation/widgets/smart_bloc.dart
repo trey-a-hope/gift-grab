@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:go_router/go_router.dart';
 
 /// A smart widget that handles common Bloc state patterns and provides default UI implementations
 /// for different states (loading, error, etc.).
@@ -18,6 +19,7 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   static const _loaded = 'Loaded';
   static const _success = 'Success';
   static const _unknown = 'Unknown';
+  static const _goToRoute = 'GoToRoute';
 
   /// Creates a SmartBloc widget.
   ///
@@ -74,10 +76,15 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   ///
   /// [state] is the current state object.
   /// Returns true if the state contains either 'Error' or 'Success' in its string representation.
-  bool shouldShowMessage(S state) {
-    return state.toString().contains(_error) ||
-        state.toString().contains(_success);
-  }
+  bool shouldShowMessage(S state) =>
+      state.toString().contains(_error) || state.toString().contains(_success);
+
+  /// Determines if navigation should occur based on the current state.
+  ///
+  /// [state] is the current state object that will be evaluated.
+  /// Returns true if the state contains the string 'GoToRoute' in its representation,
+  /// indicating that navigation should take place.
+  bool shouldGoToRoute(S state) => state.toString().contains(_goToRoute);
 
   // MARK: - Listener Methods
 
@@ -92,6 +99,14 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   /// 3. Shows either an error or success modal based on the state type
   /// 4. Calls onAfterMessage() after showing the modal
   void listener(BuildContext context, S state) {
+    // Handle should go to route first.
+    if (shouldGoToRoute(state)) {
+      final route = (state as dynamic).route as String?;
+      if (route == null) return;
+      context.goNamed(route);
+      return;
+    }
+
     if (shouldShowMessage(state)) {
       final message = (state as dynamic).message as String?;
       if (message != null) {

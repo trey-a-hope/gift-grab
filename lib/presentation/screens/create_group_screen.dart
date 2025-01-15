@@ -39,9 +39,6 @@ class CreateGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
   }
 
   @override
-  bool shouldShowMessage(GroupsState state) => state is GroupsActionSuccess;
-
-  @override
   void onAfterMessage(BuildContext context) {
     context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
     context.goNamed(Globals.routes.groups);

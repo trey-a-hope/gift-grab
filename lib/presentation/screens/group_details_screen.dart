@@ -15,16 +15,23 @@ import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
-// https://heroiclabs.com/docs/nakama/concepts/groups/
-
 class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
     with GroupPermissions {
   final Group group;
+  // "initialContext" is used to make single call to FetchGroupUsers, and only once when the page is present.
+  // Do this on any page that needs to request fresh data but also has modals or any widgets that could
+  // cause the widget to rebuilt.
+  final BuildContext initialContext;
 
-  const GroupDetailsScreen({
+  GroupDetailsScreen({
     required this.group,
+    required this.initialContext,
     super.key,
-  });
+  }) {
+    initialContext.read<GroupUsersBloc>().add(
+          FetchGroupUsers(groupId: group.id),
+        );
+  }
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) => Column(
@@ -219,10 +226,6 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
       );
 
   @override
-  bool shouldShowMessage(GroupUsersState state) =>
-      state is GroupUsersActionSuccess || state is GroupUsersError;
-
-  @override
   void onAfterMessage(BuildContext context) {
     context.read<GroupUsersBloc>().add(
           FetchGroupUsers(groupId: group.id),
@@ -230,27 +233,18 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
 
     context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
     context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
-
-    // TODO: Provide better way for navigating back...
-    // if (state.goBack) {
-    //   context.goNamed(Globals.routes.groups);
-    // }
   }
 
   @override
-  Widget build(BuildContext context) {
-    context.read<GroupUsersBloc>().add(FetchGroupUsers(groupId: group.id));
-
-    return GGScaffoldWidget(
-      title: group.name ?? 'Unknown Name',
-      goBack: () => context.goNamed(Globals.routes.groups),
-      child: SafeArea(
-        child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
-          listenWhen: (previous, current) => context.listenWhen(group.id),
-          listener: listener,
-          builder: builder,
+  Widget build(BuildContext context) => GGScaffoldWidget(
+        title: group.name ?? 'Unknown Name',
+        goBack: () => context.goNamed(Globals.routes.groups),
+        child: SafeArea(
+          child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
+            listenWhen: (previous, current) => context.listenWhen(group.id),
+            listener: listener,
+            builder: builder,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
