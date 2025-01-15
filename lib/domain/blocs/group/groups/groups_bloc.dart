@@ -67,7 +67,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
         description: event.description,
         langTag: event.langTag ?? 'en', // Group language cannot be empty.
         maxCount: event
-            .maxCount, // TODO: Count is not updating, (api bug)...Put in an issue...
+            .maxCount, // TODO: https://github.com/heroiclabs/nakama-dart/issues/123
       );
 
       emit(GroupsActionSuccess('Group updated successfully'));

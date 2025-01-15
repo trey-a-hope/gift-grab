@@ -8,6 +8,7 @@ import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
+import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -245,6 +246,7 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
       goBack: () => context.goNamed(Globals.routes.groups),
       child: SafeArea(
         child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
+          listenWhen: (previous, current) => context.listenWhen(group.id),
           listener: listener,
           builder: builder,
         ),

@@ -33,8 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final account = await getNakamaClient().getAccount(session);
 
-      // TODO: Currently have an open issue for this problem...
-      // https://github.com/heroiclabs/nakama-dart/issues/122
+      // TODO: https://github.com/heroiclabs/nakama-dart/issues/122
       final leaderboard =
           await getNakamaClient().listLeaderboardRecordsAroundOwner(
         session: session,

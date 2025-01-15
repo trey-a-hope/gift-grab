@@ -49,9 +49,8 @@ class EditGroupScreen extends SmartBloc<GroupsBloc, GroupsState> {
       );
 
   @override
-  Widget buildLoadedContent(BuildContext context, state) {
-    throw UnimplementedError();
-  }
+  Widget buildLoadedContent(BuildContext context, state) =>
+      throw UnimplementedError();
 
   @override
   bool shouldShowMessage(GroupsState state) => state is GroupsActionSuccess;

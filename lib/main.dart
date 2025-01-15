@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         // Group Users
         BlocProvider<GroupUsersBloc>(
           create: (context) => GroupUsersBloc(
-            accountBloc: context.read<AccountBloc>(),
+            // accountBloc: context.read<AccountBloc>(),
             authBloc: context.read<AuthBloc>(),
           ),
         ),
@@ -77,7 +77,6 @@ class MyApp extends StatelessWidget {
         // User Groups
         BlocProvider<ugb.UserGroupsBloc>(
           create: (context) => ugb.UserGroupsBloc(
-            accountBloc: context.read<AccountBloc>(),
             authBloc: context.read<AuthBloc>(),
           ),
         ),

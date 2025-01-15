@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/extensions/account_bloc_extension.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -10,11 +8,9 @@ part 'group_users_event.dart';
 part 'group_users_state.dart';
 
 class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
-  final AccountBloc accountBloc;
   final AuthBloc authBloc;
 
   GroupUsersBloc({
-    required this.accountBloc,
     required this.authBloc,
   }) : super(GroupUsersInitial()) {
     on<FetchGroupUsers>(_onFetchGroupUsers);
@@ -37,14 +33,16 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
+      final uid = (await getNakamaClient().getAccount(session!)).user.id;
+
       final groupUserList = await getNakamaClient().listGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
       );
 
       emit(
         GroupUsersLoaded(
-          uid: accountBloc.uid,
+          uid: uid,
           users: groupUserList.groupUsers,
         ),
       );

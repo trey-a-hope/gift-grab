@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/extensions/account_bloc_extension.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -11,13 +9,13 @@ part 'user_groups_event.dart';
 part 'user_groups_state.dart';
 
 class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
-  final AccountBloc accountBloc;
+  // final AccountBloc accountBloc;
   final AuthBloc authBloc;
 
   String? _cursor;
 
   UserGroupsBloc({
-    required this.accountBloc,
+    // required this.accountBloc,
     required this.authBloc,
   }) : super(UserGroupsInitial()) {
     on<FetchGroups>(_onFetchGroups);
@@ -33,10 +31,12 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
+      final uid = (await getNakamaClient().getAccount(session!)).user.id;
+
       final myGroupsList = await getNakamaClient().listUserGroups(
-        session: session!,
+        session: session,
         limit: Globals.paginationLimit,
-        userId: accountBloc.uid,
+        userId: uid,
       );
 
       _cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
@@ -62,10 +62,12 @@ class UserGroupsBloc extends Bloc<UserGroupsEvent, UserGroupsState> {
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
+      final uid = (await getNakamaClient().getAccount(session!)).user.id;
+
       final myGroupsList = await getNakamaClient().listUserGroups(
-        session: session!,
+        session: session,
         limit: Globals.paginationLimit,
-        userId: accountBloc.uid,
+        userId: uid,
         cursor: _cursor,
       );
 
