@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 enum NoResultsEnum {
   groups(name: 'No Groups'),
+  users(name: 'No Users'),
   notifications(name: 'No Notifications');
 
   final String name;

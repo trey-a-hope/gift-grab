@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
@@ -11,11 +12,19 @@ import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
-  const ProfileScreen({super.key});
+  final String uid;
+  final String prevRoute;
+
+  const ProfileScreen({
+    required this.uid,
+    required this.prevRoute,
+    super.key,
+  });
 
   @override
-  void onAfterMessage(BuildContext context) =>
-      context.read<ProfileBloc>().add(FetchProfile());
+  void onAfterMessage(BuildContext context) => context.read<ProfileBloc>().add(
+        FetchProfile(),
+      );
 
   @override
   Widget buildLoadedContent(BuildContext context, state) {
@@ -28,6 +37,9 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(state.isMyProfile
+                ? 'This is my profile'
+                : 'Someone elses profile...'),
             CircleAvatar(
               radius: 100,
               backgroundImage: Image.network(
@@ -90,13 +102,18 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProfileBloc>().add(FetchProfile());
     return GGScaffoldWidget(
       title: 'Profile',
-      goBack: () => context.goNamed(Globals.routes.main),
-      child: BlocConsumer<ProfileBloc, ProfileState>(
-        listener: listener,
-        builder: builder,
+      goBack: () => context.goNamed(prevRoute),
+      child: BlocProvider(
+        create: (context) => ProfileBloc(
+          uid: uid,
+          authBloc: context.read<AuthBloc>(),
+        )..add(FetchProfile()),
+        child: BlocConsumer<ProfileBloc, ProfileState>(
+          listener: listener,
+          builder: builder,
+        ),
       ),
     );
   }

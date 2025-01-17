@@ -9,10 +9,12 @@ class ProfileLoading extends ProfileState {}
 class ProfileLoaded extends ProfileState {
   final User user;
   final LeaderboardRecord? record;
+  final bool isMyProfile;
 
   ProfileLoaded({
     required this.user,
     required this.record,
+    required this.isMyProfile,
   });
 }
 

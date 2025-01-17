@@ -9,6 +9,11 @@ enum MenuButton {
     'edit_profile',
     'https://lottie.host/cf6238c1-ebcc-4741-a1c2-15098c620b83/xQETyKlA5A.json',
   ),
+  friends(
+    'Friends',
+    'friends',
+    'https://lottie.host/1741de59-5532-45e4-b3f7-00ba3cfa92ad/0RBy5DNOHl.json',
+  ),
   groups(
     'Groups',
     'groups',
@@ -48,6 +53,11 @@ enum MenuButton {
     'Sign Out',
     null,
     'https://lottie.host/f88e459d-6b62-4d0f-a98c-c496fb0c325e/2gJWApc9pg.json',
+  ),
+  searchUsers(
+    'Search Users',
+    'search_users',
+    'https://lottie.host/e149d804-8452-4699-ad4f-32f48809a614/I8NzWu6KKY.json',
   );
 
   final String name;

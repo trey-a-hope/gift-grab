@@ -50,6 +50,8 @@ class _Routes {
   final String profile = 'profile';
   final String linkedAccounts = 'linked_accounts';
   final String notifications = 'notifications';
+  final String friends = 'friends';
+  final String searchUsers = 'search_users';
 }
 
 class _TimeLimits {

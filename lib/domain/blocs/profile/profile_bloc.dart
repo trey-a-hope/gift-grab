@@ -9,11 +9,13 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final AuthBloc authBloc;
+  final String uid;
 
   final _leaderboardName = 'weekly_leaderboard';
   final NakamaService _nakamaService;
 
   ProfileBloc({
+    required this.uid,
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
         super(ProfileInitial()) {
@@ -33,12 +35,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final account = await getNakamaClient().getAccount(session);
 
+      final user =
+          (await getNakamaClient().getUsers(session: session, ids: [uid]))
+              .first;
+
+      final isMyProfile = account.user.id == user.id;
+
       // TODO: https://github.com/heroiclabs/nakama-dart/issues/122
       final leaderboard =
           await getNakamaClient().listLeaderboardRecordsAroundOwner(
         session: session,
         leaderboardName: _leaderboardName,
-        ownerId: account.user.id,
+        ownerId: user.id,
       );
 
       LeaderboardRecord? record;
@@ -50,6 +58,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ProfileLoaded(
           user: account.user,
           record: record,
+          isMyProfile: isMyProfile,
         ),
       );
     } on GrpcError catch (e) {

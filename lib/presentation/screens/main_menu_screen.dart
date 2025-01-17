@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   const MainMenuScreen({super.key});
-
-  static const buttons = [
-    MenuButton.play,
-    MenuButton.profile,
-    MenuButton.notifications,
-    MenuButton.leaderboard,
-    MenuButton.groups,
-    MenuButton.settings,
-  ];
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
@@ -39,11 +32,61 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
             const Gap(16),
             Expanded(
               child: FlexGridviewWidget(
-                children: buttons
-                    .map(
-                      (e) => MenuButtonWidget(menuButton: e),
-                    )
-                    .toList(),
+                children: [
+                  MenuButtonWidget(
+                    menuButton: MenuButton.play,
+                    onTap: () => context.goNamed(
+                      Globals.routes.game,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.profile,
+                    onTap: () => context.goNamed(
+                      Globals.routes.profile,
+                      // TODO: Works, but doesn't fallback...
+                      pathParameters: {
+                        'uid': state.account.user.id,
+                        'prevRoute': 'main',
+                      },
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.notifications,
+                    onTap: () => context.goNamed(
+                      Globals.routes.notifications,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.friends,
+                    onTap: () => context.goNamed(
+                      Globals.routes.friends,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.leaderboard,
+                    onTap: () => context.goNamed(
+                      Globals.routes.leaderboard,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.groups,
+                    onTap: () => context.goNamed(
+                      Globals.routes.groups,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.searchUsers,
+                    onTap: () => context.goNamed(
+                      Globals.routes.searchUsers,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.settings,
+                    onTap: () => context.goNamed(
+                      Globals.routes.settings,
+                    ),
+                  )
+                ],
               ),
             )
           ],

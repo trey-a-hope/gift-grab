@@ -4,18 +4,16 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
-    as ugb;
-import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
-    as agb;
-import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
-import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
+    as agb;
+import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
+    as ugb;
 
 final _isDev = false;
 
@@ -57,45 +55,29 @@ class MyApp extends StatelessWidget {
             authBloc: authBloc,
           ),
         ),
-        // Group
+        // Note: These are needed in multiple different screens.
         BlocProvider<GroupsBloc>(
           create: (context) => GroupsBloc(
             accountBloc: context.read<AccountBloc>(),
             authBloc: context.read<AuthBloc>(),
           ),
         ),
-        // Group Users
         BlocProvider<GroupUsersBloc>(
           create: (context) => GroupUsersBloc(
-            // accountBloc: context.read<AccountBloc>(),
             authBloc: context.read<AuthBloc>(),
           ),
         ),
-        // All Groups
         BlocProvider<agb.AllGroupsBloc>(
           create: (context) => agb.AllGroupsBloc(
             authBloc: context.read<AuthBloc>(),
           ),
         ),
-        // User Groups
         BlocProvider<ugb.UserGroupsBloc>(
           create: (context) => ugb.UserGroupsBloc(
             authBloc: context.read<AuthBloc>(),
           ),
         ),
-        // Leaderboard
-        BlocProvider<LeaderboardBloc>(
-          create: (context) => LeaderboardBloc(
-            authBloc: context.read<AuthBloc>(),
-          ),
-        ),
-        // Profile
-        BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(
-            authBloc: context.read<AuthBloc>(),
-          ),
-        ),
-        // Notifications
+        // Note: Needed to start listening for incoming notifications.
         BlocProvider<NotificationsBloc>(
           create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),

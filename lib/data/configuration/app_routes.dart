@@ -4,6 +4,7 @@ import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
+import 'package:gift_grab/presentation/screens/friends_screen.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
 import 'package:gift_grab/presentation/screens/group_details_screen.dart';
 import 'package:gift_grab/presentation/screens/groups_screen.dart';
@@ -14,6 +15,7 @@ import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/notifications_screen.dart';
 import 'package:gift_grab/presentation/screens/profile_screen.dart';
+import 'package:gift_grab/presentation/screens/search_users_screen.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
@@ -66,9 +68,29 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const LeaderboardScreen(),
             ),
             GoRoute(
-              path: Globals.routes.profile,
+              path: Globals.routes.friends,
+              name: Globals.routes.friends,
+              builder: (context, state) => const FriendsScreen(),
+            ),
+            GoRoute(
+              path: Globals.routes.searchUsers,
+              name: Globals.routes.searchUsers,
+              builder: (context, state) => const SearchUsersScreen(),
+            ),
+            GoRoute(
+              path: 'profile/:uid/:prevRoute',
               name: Globals.routes.profile,
-              builder: (context, state) => const ProfileScreen(),
+              builder: (context, state) {
+                final uid = state.pathParameters['uid'];
+                final prevRoute = state.pathParameters['prevRoute'];
+
+                if (uid == null || prevRoute == null) throw Exception();
+
+                return ProfileScreen(
+                  uid: uid,
+                  prevRoute: prevRoute,
+                );
+              },
             ),
             GoRoute(
               path: Globals.routes.notifications,

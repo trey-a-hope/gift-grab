@@ -16,31 +16,26 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return GGScaffoldWidget(
-      title: 'Settings',
-      goBack: () => context.goNamed(Globals.routes.main),
-      child: BlocConsumer<AccountBloc, AccountState>(
-        listenWhen: (previous, current) => context.listenWhen(
-          'settings',
-        ),
-        listener: listener,
-        builder: builder,
-      ),
-    );
-  }
-
-  @override
   Widget buildLoadedContent(BuildContext context, state) => Center(
         child: Padding(
           padding: EdgeInsets.all(32),
           child: FlexGridviewWidget(
             children: [
-              MenuButtonWidget(menuButton: MenuButton.editProfile),
-              MenuButtonWidget(menuButton: MenuButton.linkedAccounts),
+              MenuButtonWidget(
+                menuButton: MenuButton.editProfile,
+                onTap: () => context.goNamed(
+                  Globals.routes.editProfile,
+                ),
+              ),
+              MenuButtonWidget(
+                menuButton: MenuButton.linkedAccounts,
+                onTap: () => context.goNamed(
+                  Globals.routes.linkedAccounts,
+                ),
+              ),
               MenuButtonWidget(
                 menuButton: MenuButton.signOut,
-                action: () async {
+                onTap: () async {
                   final confirm = await ModalService.showConfirmation(
                     context: context,
                     title: 'Sign Out?',
@@ -58,7 +53,7 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
               ),
               MenuButtonWidget(
                 menuButton: MenuButton.deleteAccount,
-                action: () async {
+                onTap: () async {
                   final confirm = await ModalService.showInputMatchConfirmation(
                     context: context,
                     title: 'Delete Account?',
@@ -79,4 +74,19 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
           ),
         ),
       );
+
+  @override
+  Widget build(BuildContext context) {
+    return GGScaffoldWidget(
+      title: 'Settings',
+      goBack: () => context.goNamed(Globals.routes.main),
+      child: BlocConsumer<AccountBloc, AccountState>(
+        listenWhen: (previous, current) => context.listenWhen(
+          'settings',
+        ),
+        listener: listener,
+        builder: builder,
+      ),
+    );
+  }
 }

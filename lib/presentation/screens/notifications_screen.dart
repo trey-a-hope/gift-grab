@@ -30,7 +30,6 @@ class NotificationsScreen
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as NotificationsLoaded;
 
-    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),

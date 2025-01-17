@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class MenuButtonWidget extends StatelessWidget {
   final MenuButton menuButton;
-  final VoidCallback? action;
+  final void Function()? onTap;
 
   const MenuButtonWidget({
     super.key,
     required this.menuButton,
-    this.action,
+    required this.onTap,
   });
 
   @override
@@ -18,9 +17,10 @@ class MenuButtonWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: () => menuButton.route == null
-          ? action!()
-          : context.goNamed(menuButton.route!),
+      onTap: onTap,
+      // onTap: () => menuButton.route == null
+      //     ? action!()
+      //     : context.goNamed(menuButton.route!),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(

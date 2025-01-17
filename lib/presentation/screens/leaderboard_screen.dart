@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -61,9 +62,14 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
       goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: Center(
-          child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
-            listener: listener,
-            builder: builder,
+          child: BlocProvider(
+            create: (context) => LeaderboardBloc(
+              authBloc: context.read<AuthBloc>(),
+            )..add(FetchLeaderboard()),
+            child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
+              listener: listener,
+              builder: builder,
+            ),
           ),
         ),
       ),
