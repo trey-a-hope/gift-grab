@@ -14,6 +14,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   static const buttons = [
     MenuButton.play,
     MenuButton.profile,
+    MenuButton.notifications,
     MenuButton.leaderboard,
     MenuButton.groups,
     MenuButton.settings,

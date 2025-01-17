@@ -12,6 +12,7 @@ import 'package:gift_grab/presentation/screens/linked_accounts_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/screens/notifications_screen.dart';
 import 'package:gift_grab/presentation/screens/profile_screen.dart';
 import 'package:gift_grab/presentation/screens/settings_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -68,6 +69,13 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               path: Globals.routes.profile,
               name: Globals.routes.profile,
               builder: (context, state) => const ProfileScreen(),
+            ),
+            GoRoute(
+              path: Globals.routes.notifications,
+              name: Globals.routes.notifications,
+              builder: (context, state) => NotificationsScreen(
+                initialContext: context,
+              ),
             ),
             GoRoute(
               path: Globals.routes.groups,

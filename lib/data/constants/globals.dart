@@ -49,6 +49,7 @@ class _Routes {
   final String editGroup = 'edit_group';
   final String profile = 'profile';
   final String linkedAccounts = 'linked_accounts';
+  final String notifications = 'notifications';
 }
 
 class _TimeLimits {

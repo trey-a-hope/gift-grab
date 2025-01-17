@@ -24,6 +24,11 @@ enum MenuButton {
     'linked_accounts',
     'https://lottie.host/c949d875-6223-4e7e-8eb0-dec46cca9f2b/JN9abpQohW.json',
   ),
+  notifications(
+    'Notifications',
+    'notifications',
+    'https://lottie.host/24b01879-03f1-44b2-bbef-427321e5a4f8/WY0iLNz97c.json',
+  ),
   play(
     'Play',
     'game',

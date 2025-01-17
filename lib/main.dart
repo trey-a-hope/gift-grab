@@ -11,12 +11,15 @@ import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
 import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
     as agb;
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
+import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final _isDev = false;
+
+// mason make bloc --name [BLOC NAME] --style basic
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +92,12 @@ class MyApp extends StatelessWidget {
         // Profile
         BlocProvider<ProfileBloc>(
           create: (context) => ProfileBloc(
+            authBloc: context.read<AuthBloc>(),
+          ),
+        ),
+        // Notifications
+        BlocProvider<NotificationsBloc>(
+          create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),
           ),
         ),
