@@ -15,11 +15,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static const _refreshToken = 'refreshToken';
 
   final SocialAuthService _socialAuthService;
+  final NakamaService _nakamaService;
 
   final inOneHour = DateTime.now().add(Duration(hours: 1));
 
   AuthBloc()
       : _socialAuthService = SocialAuthService(),
+        _nakamaService = NakamaService(),
         super(AuthInitial()) {
     on<LoginEmail>(_onLoginEmail);
     on<LoginGoogle>(_onLoginGoogle);
@@ -159,6 +161,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
+      final session = await _nakamaService.getValidSession();
+
+      if (session != null) {
+        await getNakamaClient().sessionLogout(session: session);
+      }
+
       await _storage.delete(key: _token);
       await _storage.delete(key: _refreshToken);
 
