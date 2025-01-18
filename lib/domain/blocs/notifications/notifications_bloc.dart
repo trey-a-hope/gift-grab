@@ -18,7 +18,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         super(NotificationsInitial(cursor: null)) {
     on<FetchNotifications>(_onFetchNotifications);
     on<FetchMoreNotifications>(_onFetchMoreNotifications);
-    on<AcceptFriendRequest>(_onAcceptFriendRequest);
+    on<DeleteNotification>(_onDeleteNotification);
   }
 
   Future<void> _onFetchNotifications(
@@ -94,8 +94,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     }
   }
 
-  Future<void> _onAcceptFriendRequest(
-    AcceptFriendRequest event,
+  Future<void> _onDeleteNotification(
+    DeleteNotification event,
     Emitter<NotificationsState> emit,
   ) async {
     emit(NotificationsLoading(cursor: state.cursor));
@@ -104,15 +104,14 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
-      await getNakamaClient().addFriends(
+      await getNakamaClient().deleteNotifications(
         session: session,
-        ids: [],
-        usernames: [event.username],
+        notificationIds: [event.id],
       );
 
       emit(
         NotificationsSuccess(
-          message: 'Friend request accepted',
+          message: 'Notification deleted successfully',
           cursor: state.cursor,
         ),
       );
@@ -121,8 +120,44 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           cursor: state.cursor,
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
     } catch (e) {
-      emit(NotificationsError(
-          cursor: state.cursor, message: 'Unexpected error: ${e.toString()}'));
+      emit(
+        NotificationsError(
+          cursor: state.cursor,
+          message: 'Unexpected error: ${e.toString()}',
+        ),
+      );
     }
   }
+
+  // Future<void> _onAcceptFriendRequest(
+  //   AcceptFriendRequest event,
+  //   Emitter<NotificationsState> emit,
+  // ) async {
+  //   emit(NotificationsLoading(cursor: state.cursor));
+
+  //   try {
+  //     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+  //     if (session == null) return;
+
+  //     await getNakamaClient().addFriends(
+  //       session: session,
+  //       ids: [],
+  //       usernames: [event.username],
+  //     );
+
+  //     emit(
+  //       NotificationsSuccess(
+  //         message: 'Friend request accepted',
+  //         cursor: state.cursor,
+  //       ),
+  //     );
+  //   } on GrpcError catch (e) {
+  //     emit(NotificationsError(
+  //         cursor: state.cursor,
+  //         message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
+  //   } catch (e) {
+  //     emit(NotificationsError(
+  //         cursor: state.cursor, message: 'Unexpected error: ${e.toString()}'));
+  //   }
+  // }
 }

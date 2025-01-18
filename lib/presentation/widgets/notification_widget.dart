@@ -16,24 +16,32 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationWidget extends StatelessWidget {
   final n.Notification notification;
-  final void Function() action;
+  final void Function() delete;
 
   const NotificationWidget(
     this.notification, {
-    required this.action,
+    required this.delete,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: action,
-      leading: _getIconFromCode(notification.code),
-      title: Text(notification.subject ?? 'No Subjet'),
-      trailing: Text(timeago.format(notification.createTime)),
+    final theme = Theme.of(context);
+    return Material(
+      child: ListTile(
+        tileColor: theme.colorScheme.onInverseSurface,
+        leading: _getIconFromCode(notification.code),
+        title: Text(notification.subject ?? 'No Subjet'),
+        subtitle: Text(timeago.format(notification.createTime)),
+        trailing: ElevatedButton(
+          onPressed: delete,
+          child: Text('Delete'),
+        ),
+      ),
     );
   }
 
+  // TODO: Finish icon assignments...
   Icon _getIconFromCode(int code) {
     switch (code) {
       case 0:

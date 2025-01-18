@@ -39,13 +39,18 @@ class NotificationsScreen
 
                   return NotificationWidget(
                     notification,
-                    action: () {
-                      context.read<NotificationsBloc>().add(
-                            AcceptFriendRequest(
-                              username: map['username'],
-                            ),
-                          );
-                    },
+                    delete: () => context.read<NotificationsBloc>().add(
+                          DeleteNotification(
+                            id: notification.id,
+                          ),
+                        ),
+                    // action: () {
+                    //   context.read<NotificationsBloc>().add(
+                    //         AcceptFriendRequest(
+                    //           username: map['username'],
+                    //         ),
+                    //       );
+                    // },
                   );
                 },
               ),
