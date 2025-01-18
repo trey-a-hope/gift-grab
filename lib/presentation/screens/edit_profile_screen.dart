@@ -7,7 +7,6 @@ import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   const EditProfileScreen({super.key});
@@ -55,7 +54,6 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Edit Profile',
-      goBack: () => context.goNamed(Globals.routes.settings),
       child: Center(
         child: BlocConsumer<AccountBloc, AccountState>(
           listenWhen: (previous, current) => context.listenWhen(

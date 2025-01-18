@@ -6,7 +6,6 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
   const LeaderboardScreen({
@@ -55,11 +54,8 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<LeaderboardBloc>().add(FetchLeaderboard());
-
     return GGScaffoldWidget(
       title: 'Leaderboard',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: Center(
           child: BlocProvider(

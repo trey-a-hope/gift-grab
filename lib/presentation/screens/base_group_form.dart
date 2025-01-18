@@ -60,7 +60,6 @@ class _BaseGroupFormState extends State<BaseGroupForm> {
 
     return GGScaffoldWidget(
       title: widget.title,
-      goBack: widget.goBack,
       child: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(16),

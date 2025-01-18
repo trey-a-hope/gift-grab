@@ -238,7 +238,6 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(
         title: group.name ?? 'Unknown Name',
-        goBack: () => context.goNamed(Globals.routes.groups),
         child: SafeArea(
           child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
             listenWhen: (previous, current) => context.listenWhen(group.id),

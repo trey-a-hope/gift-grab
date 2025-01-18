@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:go_router/go_router.dart';
 
 class GameOverOverlay extends StatelessWidget {
   final GiftGrabGame game;
@@ -18,7 +17,6 @@ class GameOverOverlay extends StatelessWidget {
 
     return GGScaffoldWidget(
       title: 'Game Over',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

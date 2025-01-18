@@ -3,14 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/friends/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class FriendsScreen extends SmartBloc<FriendsBloc, FriendsState> {
-  const FriendsScreen({
-    super.key,
-  });
+  const FriendsScreen({super.key});
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
@@ -31,7 +27,6 @@ class FriendsScreen extends SmartBloc<FriendsBloc, FriendsState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Friends',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: Center(
           child: BlocProvider(

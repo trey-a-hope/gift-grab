@@ -30,6 +30,9 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as ProfileLoaded;
 
+    debugPrint(
+        '${GoRouter.of(context).routerDelegate.currentConfiguration.matches}');
+
     final theme = Theme.of(context);
     return Center(
       child: Padding(
@@ -104,7 +107,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Profile',
-      goBack: () => context.goNamed(prevRoute),
       child: BlocProvider(
         create: (context) => ProfileBloc(
           uid: uid,

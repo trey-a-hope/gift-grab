@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class NotificationsScreen
     extends SmartBloc<NotificationsBloc, NotificationsState> {
@@ -49,7 +47,6 @@ class NotificationsScreen
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Notifications',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: BlocConsumer<NotificationsBloc, NotificationsState>(
         listener: listener,
         builder: builder,

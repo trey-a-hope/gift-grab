@@ -47,11 +47,8 @@ class SearchUsersScreen extends SmartBloc<SearchUsersBloc, SearchUsersState> {
                   // TODO: Create reusable widget for displaying users...
                   : GestureDetector(
                       onTap: () => context.goNamed(
-                        Globals.routes.profile,
-                        pathParameters: {
-                          'uid': user.id,
-                          'prevRoute': 'search_users',
-                        },
+                        Globals.routes.profileFromSearch,
+                        pathParameters: {'uid': user.id},
                       ),
                       child: ListTile(
                         title: Text(user.username ?? 'No Name'),
@@ -66,7 +63,6 @@ class SearchUsersScreen extends SmartBloc<SearchUsersBloc, SearchUsersState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Search Users',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: SafeArea(
         child: Center(
           child: BlocProvider(

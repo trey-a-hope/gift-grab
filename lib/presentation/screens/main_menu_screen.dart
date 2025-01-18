@@ -43,10 +43,8 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     menuButton: MenuButton.profile,
                     onTap: () => context.goNamed(
                       Globals.routes.profile,
-                      // TODO: Works, but doesn't fallback...
                       pathParameters: {
                         'uid': state.account.user.id,
-                        'prevRoute': 'main',
                       },
                     ),
                   ),
@@ -101,6 +99,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
 
     return GGScaffoldWidget(
       title: 'Gift Grab',
+      canPop: false,
       child: BlocBuilder<AccountBloc, AccountState>(
         builder: builder,
       ),

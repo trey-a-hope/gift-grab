@@ -23,7 +23,6 @@ class GroupsScreen extends SmartBloc<GroupsBloc, GroupsState> {
 
     return GGScaffoldWidget(
       title: 'Groups',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: BlocListener<GroupsBloc, GroupsState>(
         listenWhen: (previous, current) => context.listenWhen('groups'),
         listener: listener,

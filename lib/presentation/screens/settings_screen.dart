@@ -79,7 +79,6 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Settings',
-      goBack: () => context.goNamed(Globals.routes.main),
       child: BlocConsumer<AccountBloc, AccountState>(
         listenWhen: (previous, current) => context.listenWhen(
           'settings',

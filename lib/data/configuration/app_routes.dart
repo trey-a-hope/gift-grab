@@ -43,8 +43,20 @@ class StreamToListenable extends ChangeNotifier {
   void _tt(event) => notifyListeners();
 }
 
+Widget profileScreenbuilder(
+  GoRouterState state,
+  String prevRoute,
+) {
+  final uid = state.pathParameters['uid'];
+  if (uid == null) throw Exception();
+  return ProfileScreen(
+    uid: uid,
+    prevRoute: prevRoute,
+  );
+}
+
 GoRouter appRouter(AuthBloc authBloc) => GoRouter(
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: false,
       initialLocation: '/${Globals.routes.main}',
       routes: [
         GoRoute(
@@ -76,21 +88,24 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               path: Globals.routes.searchUsers,
               name: Globals.routes.searchUsers,
               builder: (context, state) => const SearchUsersScreen(),
+              routes: [
+                GoRoute(
+                  path: 'profile/:uid',
+                  name: Globals.routes.profileFromSearch,
+                  builder: (context, state) => profileScreenbuilder(
+                    state,
+                    Globals.routes.searchUsers,
+                  ),
+                ),
+              ],
             ),
             GoRoute(
-              path: 'profile/:uid/:prevRoute',
+              path: 'profile/:uid',
               name: Globals.routes.profile,
-              builder: (context, state) {
-                final uid = state.pathParameters['uid'];
-                final prevRoute = state.pathParameters['prevRoute'];
-
-                if (uid == null || prevRoute == null) throw Exception();
-
-                return ProfileScreen(
-                  uid: uid,
-                  prevRoute: prevRoute,
-                );
-              },
+              builder: (context, state) => profileScreenbuilder(
+                state,
+                Globals.routes.main,
+              ),
             ),
             GoRoute(
               path: Globals.routes.notifications,

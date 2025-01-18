@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:go_router/go_router.dart';
 
 class GGScaffoldWidget extends StatelessWidget {
   const GGScaffoldWidget({
     super.key,
     required this.child,
     required this.title,
-    this.goBack,
+    this.canPop = true,
   });
 
   final Widget child;
   final String title;
-  final void Function()? goBack;
+  final bool canPop;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: goBack == null
-            ? SizedBox()
-            : IconButton.filledTonal(
-                onPressed: () => goBack!(),
+        leading: canPop
+            ? IconButton.filledTonal(
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.arrow_back),
-              ),
+              )
+            : SizedBox(),
         title: Text(
           title,
           style: theme.textTheme.displayLarge,

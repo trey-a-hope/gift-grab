@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
-
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
   const LinkedAccountsScreen({super.key});
@@ -22,7 +19,6 @@ class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(
         title: 'Linked Accounts',
-        goBack: () => context.goNamed(Globals.routes.settings),
         child: Center(
           child: BlocConsumer<AccountBloc, AccountState>(
             listenWhen: (previous, current) => context.listenWhen(
