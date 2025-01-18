@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<NotificationsBloc>(
           create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),
-          ),
+          )..add(FetchNotifications()),
         ),
       ],
       child: ToastificationWrapper(

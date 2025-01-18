@@ -5,3 +5,5 @@ sealed class FriendsEvent {
 }
 
 class FetchFriends extends FriendsEvent {}
+
+class FetchMoreFriends extends FriendsEvent {}

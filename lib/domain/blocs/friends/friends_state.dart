@@ -1,25 +1,41 @@
 part of 'friends_bloc.dart';
 
-class FriendsState {}
+class FriendsState {
+  final String? cursor;
+  FriendsState({required this.cursor});
+}
 
-class FriendsInitial extends FriendsState {}
+class FriendsInitial extends FriendsState {
+  FriendsInitial({required super.cursor});
+}
 
-class FriendsLoading extends FriendsState {}
+class FriendsLoading extends FriendsState {
+  FriendsLoading({required super.cursor});
+}
 
 class FriendsLoaded extends FriendsState {
-  // final List<LeaderboardEntry> entries;
+  final List<Friend> friends;
 
-  // LeaderboardLoaded({required this.entries});
+  FriendsLoaded({
+    required this.friends,
+    required super.cursor,
+  });
 }
 
 class FriendsActionSuccess extends FriendsState {
   final String message;
 
-  FriendsActionSuccess({required this.message});
+  FriendsActionSuccess({
+    required this.message,
+    required super.cursor,
+  });
 }
 
 class FriendsError extends FriendsState {
   final String message;
 
-  FriendsError({required this.message});
+  FriendsError({
+    required this.message,
+    required super.cursor,
+  });
 }

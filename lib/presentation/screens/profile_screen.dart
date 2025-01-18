@@ -9,15 +9,12 @@ import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   final String uid;
-  final String prevRoute;
 
   const ProfileScreen({
     required this.uid,
-    required this.prevRoute,
     super.key,
   });
 
@@ -30,8 +27,7 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as ProfileLoaded;
 
-    debugPrint(
-        '${GoRouter.of(context).routerDelegate.currentConfiguration.matches}');
+    debugPrint(uid);
 
     final theme = Theme.of(context);
     return Center(
@@ -51,6 +47,14 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
                     : state.user.avatarUrl!,
               ).image,
             ),
+            if (!state.isMyProfile) ...[
+              ElevatedButton(
+                onPressed: () => context.read<ProfileBloc>().add(
+                      AddFriend(uid: state.user.id),
+                    ),
+                child: Text('Add as Friend'),
+              ),
+            ],
             Gap(16),
             Text(
               state.user.username ?? 'Unknown Name',

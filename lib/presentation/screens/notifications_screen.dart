@@ -1,22 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
+import 'package:gift_grab/presentation/widgets/notification_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:nakama/src/models/notification.dart' as n;
 
 class NotificationsScreen
     extends SmartBloc<NotificationsBloc, NotificationsState> {
-  final BuildContext initialContext;
-
-  NotificationsScreen({
-    required this.initialContext,
+  const NotificationsScreen({
     super.key,
-  }) {
-    initialContext.read<NotificationsBloc>().add(
-          FetchNotifications(),
-        );
-  }
+  });
 
   @override
   void onAfterMessage(BuildContext context) =>
@@ -35,9 +32,22 @@ class NotificationsScreen
             ? NoResultsWidget(NoResultsEnum.notifications)
             : ListView.builder(
                 itemCount: state.notifications.length,
-                itemBuilder: (c, i) => ListTile(
-                  title: Text('Notification $i'),
-                ),
+                itemBuilder: (c, i) {
+                  final notification = state.notifications[i] as n.Notification;
+
+                  final map = json.decode(notification.content!);
+
+                  return NotificationWidget(
+                    notification,
+                    action: () {
+                      context.read<NotificationsBloc>().add(
+                            AcceptFriendRequest(
+                              username: map['username'],
+                            ),
+                          );
+                    },
+                  );
+                },
               ),
       ),
     );

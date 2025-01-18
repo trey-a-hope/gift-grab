@@ -21,6 +21,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         super(ProfileInitial()) {
     on<FetchProfile>(_onFetchProfile);
     on<DeleteRecord>(_onDeleteRecord);
+    on<AddFriend>(_onAddFriend);
   }
 
   Future<void> _onFetchProfile(
@@ -56,7 +57,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(
         ProfileLoaded(
-          user: account.user,
+          user: user,
           record: record,
           isMyProfile: isMyProfile,
         ),
@@ -86,6 +87,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(
         ProfileActionSuccess(message: 'Record deleted successfully'),
+      );
+    } on GrpcError catch (e) {
+      emit(ProfileError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
+    } catch (e) {
+      emit(ProfileError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onAddFriend(
+    AddFriend event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(ProfileLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      await getNakamaClient().addFriends(
+        session: session,
+        ids: [event.uid],
+      );
+
+      emit(
+        ProfileActionSuccess(message: 'Request sent successfully'),
       );
     } on GrpcError catch (e) {
       emit(ProfileError(

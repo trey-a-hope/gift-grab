@@ -2,7 +2,6 @@ part of 'notifications_bloc.dart';
 
 class NotificationsState {
   final String? cursor;
-
   NotificationsState({required this.cursor});
 }
 

@@ -11,6 +11,7 @@ part 'all_groups_state.dart';
 class AllGroupsBloc extends Bloc<AllGroupsEvent, AllGroupsState> {
   final AuthBloc authBloc;
 
+  // TODO: Put this on the state...
   String? _cursor;
 
   AllGroupsBloc({required this.authBloc}) : super(AllGroupsInitial()) {
