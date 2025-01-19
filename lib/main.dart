@@ -4,6 +4,7 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
@@ -15,7 +16,7 @@ import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
     as ugb;
 
-final _isDev = false;
+final _isDev = true;
 
 // mason make bloc --name [BLOC NAME] --style basic
 
@@ -77,11 +78,16 @@ class MyApp extends StatelessWidget {
             authBloc: context.read<AuthBloc>(),
           ),
         ),
+        BlocProvider<LeaderboardBloc>(
+          create: (context) => LeaderboardBloc(
+            authBloc: context.read<AuthBloc>(),
+          ),
+        ),
         // Note: Needed to start listening for incoming notifications.
         BlocProvider<NotificationsBloc>(
           create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),
-          )..add(FetchNotifications()),
+          ),
         ),
       ],
       child: ToastificationWrapper(

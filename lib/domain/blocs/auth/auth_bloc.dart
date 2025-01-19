@@ -43,9 +43,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
 
-      debugPrint(
-        'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
-      );
+      debugPrint('Welcome back user ${session.userId}');
+
       await _storage.write(key: _token, value: session.token);
       await _storage.write(key: _refreshToken, value: session.refreshToken);
 
@@ -74,9 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final session =
           await getNakamaClient().authenticateGoogle(token: idToken);
 
-      debugPrint(
-        'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
-      );
+      debugPrint('Welcome back user ${session.userId}');
 
       await _storage.write(key: _token, value: session.token);
       await _storage.write(key: _refreshToken, value: session.refreshToken);
@@ -107,9 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         token: idToken,
       );
 
-      debugPrint(
-        'Session Token: ${session.token}, Refresh Token: ${session.refreshToken}',
-      );
+      debugPrint('Welcome back user ${session.userId}');
 
       await _storage.write(key: _token, value: session.token);
       await _storage.write(key: _refreshToken, value: session.refreshToken);

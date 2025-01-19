@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
@@ -96,6 +97,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget build(BuildContext context) {
     context.read<AccountBloc>().add(FetchAccount());
+    context.read<NotificationsBloc>().add(FetchNotifications());
 
     return GGScaffoldWidget(
       title: 'Gift Grab',

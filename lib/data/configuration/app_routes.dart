@@ -55,7 +55,7 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
         GoRoute(
           path: '/${Globals.routes.main}',
           name: Globals.routes.main,
-          builder: (context, state) => MainMenuScreen(),
+          builder: (context, state) => const MainMenuScreen(),
           routes: [
             GoRoute(
               path: Globals.routes.game,

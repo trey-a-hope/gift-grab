@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/friends/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:gift_grab/presentation/widgets/user_details_widget.dart';
 
@@ -19,26 +20,28 @@ class FriendsScreen extends SmartBloc<FriendsBloc, FriendsState> {
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: friends.length,
-            itemBuilder: (c, i) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(child: UserDetailsWidget(friends[i].user)),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Block'),
+          child: friends.isEmpty
+              ? NoResultsWidget(NoResultsEnum.friends)
+              : ListView.builder(
+                  itemCount: friends.length,
+                  itemBuilder: (c, i) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(child: UserDetailsWidget(friends[i].user)),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Block'),
+                        ),
+                        Gap(8),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Delete'),
+                        ),
+                      ],
+                    ),
                   ),
-                  Gap(8),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Delete'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
         if (state.cursor != null) ...[
           ElevatedButton(

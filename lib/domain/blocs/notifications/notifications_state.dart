@@ -14,7 +14,7 @@ class NotificationsLoading extends NotificationsState {
 }
 
 class NotificationsLoaded extends NotificationsState {
-  final List<Notification> notifications;
+  final List<n.Notification> notifications;
 
   NotificationsLoaded({
     required this.notifications,

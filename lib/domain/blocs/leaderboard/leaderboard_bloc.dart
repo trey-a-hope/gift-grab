@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
@@ -85,6 +87,23 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
       debugPrint('Score: ${event.score}');
 
+      // Check and see if new score is the highest.
+      final leaderboard = await getNakamaClient().listLeaderboardRecords(
+        session: session,
+        leaderboardName: _leaderboardName,
+      );
+
+      if (_isHighest(event.score, leaderboard.records)) {
+        await getNakamaClient().rpc(
+          session: session,
+          id: 'notification_send',
+          payload: json.encode(
+            {"subject": "You just got the highest record, ${event.score}!"},
+          ),
+        );
+      }
+
+      // Write new leaderboard record.
       await getNakamaClient().writeLeaderboardRecord(
         session: session,
         leaderboardName: _leaderboardName,
@@ -98,5 +117,16 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
     } catch (e) {
       emit(LeaderboardError(message: 'Unexpected error: ${e.toString()}'));
     }
+  }
+
+  bool _isHighest(int value, List<LeaderboardRecord>? records) {
+    if (records == null || records.isEmpty) return true;
+
+    for (LeaderboardRecord record in records) {
+      if (record.score == null) continue;
+      final score = int.parse(record.score!);
+      if (score > value) return false;
+    }
+    return true;
   }
 }
