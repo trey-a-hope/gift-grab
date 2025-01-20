@@ -15,10 +15,10 @@ class SearchUsersLoaded extends SearchUsersState {
   SearchUsersLoaded({required this.users, required super.query});
 }
 
-class SearchUsersActionSuccess extends SearchUsersState {
+class SearchUsersSuccess extends SearchUsersState {
   final String message;
 
-  SearchUsersActionSuccess({required this.message, required super.query});
+  SearchUsersSuccess({required this.message, required super.query});
 }
 
 class SearchUsersError extends SearchUsersState {

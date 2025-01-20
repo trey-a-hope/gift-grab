@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
+import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 
 class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
@@ -22,19 +22,12 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Text(
             'Resets every Monday at 12:00am.',
-            style: theme.textTheme.headlineSmall!.copyWith(
-              fontSize: Globals.isTablet
-                  ? theme.textTheme.headlineSmall!.fontSize! * 2
-                  : theme.textTheme.headlineSmall!.fontSize,
-            ),
+            style: theme.textTheme.headlineMedium!,
           ),
         ),
         Expanded(
           child: state.entries.isEmpty
-              ? Center(
-                  child: Text('No records for this week yet...',
-                      style: theme.textTheme.displayLarge),
-                )
+              ? NoResultsWidget(NoResultsEnum.leaderboard)
               : ListView.builder(
                   itemCount: state.entries.length,
                   itemBuilder: ((_, index) => LeaderboardRecordWidget(

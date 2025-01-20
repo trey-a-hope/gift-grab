@@ -40,7 +40,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
       debugPrint(newGroup.toString());
 
-      emit(GroupsActionSuccess('Group created successfully'));
+      emit(GroupsSuccess('Group created successfully'));
     } on GrpcError catch (e) {
       emit(GroupsError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -70,7 +70,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
             .maxCount, // TODO: https://github.com/heroiclabs/nakama-dart/issues/123
       );
 
-      emit(GroupsActionSuccess('Group updated successfully'));
+      emit(GroupsSuccess('Group updated successfully'));
     } on GrpcError catch (e) {
       emit(GroupsError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));

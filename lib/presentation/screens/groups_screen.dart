@@ -10,6 +10,7 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+// TODO: Use one bloc with two different types, (similar to Friends Screen)
 class GroupsScreen extends SmartBloc<GroupsBloc, GroupsState> {
   const GroupsScreen({super.key});
 

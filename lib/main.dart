@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
@@ -16,8 +17,6 @@ import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
     as ugb;
 
-final _isDev = true;
-
 // mason make bloc --name [BLOC NAME] --style basic
 
 void main() async {
@@ -25,11 +24,16 @@ void main() async {
 
   await dotenv.load();
 
+  NakamaProperties.initialize(
+    isDev: false,
+    key: dotenv.env['NAKAMA_SERVER_KEY']!,
+  );
+
   getNakamaClient(
-    host: _isDev ? '127.0.0.1' : '24.144.85.68',
-    ssl: false,
-    serverKey: dotenv.env['NAKAMA_SERVER_KEY']!,
-    httpPort: 7350,
+    host: NakamaProperties.host,
+    ssl: NakamaProperties.ssl,
+    serverKey: NakamaProperties.serverKey,
+    httpPort: NakamaProperties.httpPort,
   );
 
   runApp(MyApp());

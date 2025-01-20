@@ -12,10 +12,10 @@ class LeaderboardLoaded extends LeaderboardState {
   LeaderboardLoaded({required this.entries});
 }
 
-class LeaderboardActionSuccess extends LeaderboardState {
+class LeaderboardSuccess extends LeaderboardState {
   final String message;
 
-  LeaderboardActionSuccess({required this.message});
+  LeaderboardSuccess({required this.message});
 }
 
 class LeaderboardError extends LeaderboardState {

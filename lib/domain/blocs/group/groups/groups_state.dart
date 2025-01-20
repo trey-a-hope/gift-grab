@@ -12,8 +12,8 @@ class GroupsError extends GroupsState {
   GroupsError({required this.message});
 }
 
-class GroupsActionSuccess extends GroupsState {
+class GroupsSuccess extends GroupsState {
   final String message;
 
-  GroupsActionSuccess(this.message);
+  GroupsSuccess(this.message);
 }

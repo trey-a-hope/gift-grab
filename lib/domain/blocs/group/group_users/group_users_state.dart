@@ -22,11 +22,11 @@ class GroupUsersError extends GroupUsersState {
   GroupUsersError({required this.message});
 }
 
-class GroupUsersActionSuccess extends GroupUsersState {
+class GroupUsersSuccess extends GroupUsersState {
   final String message;
   final bool goBack;
 
-  GroupUsersActionSuccess(this.message, this.goBack);
+  GroupUsersSuccess(this.message, this.goBack);
 }
 
 class GroupUsersGoToRoute extends GroupUsersState {

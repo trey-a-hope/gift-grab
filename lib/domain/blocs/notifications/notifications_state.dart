@@ -22,7 +22,6 @@ class NotificationsLoaded extends NotificationsState {
   });
 }
 
-// TODO: Consider the Error and Success states being one Results class with an enum of success, warning, info, error.
 class NotificationsError extends NotificationsState {
   final String message;
 

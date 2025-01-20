@@ -11,7 +11,7 @@ class PaginatedAllGroups extends SmartBloc<AllGroupsBloc, AllGroupsState> {
   @override
   Widget buildLoadedContent(BuildContext context, state) {
     return state.groups.isEmpty
-        ? NoResultsWidget(NoResultsEnum.groups)
+        ? NoResultsWidget(NoResultsEnum.allGroups)
         : Column(
             children: [
               Expanded(

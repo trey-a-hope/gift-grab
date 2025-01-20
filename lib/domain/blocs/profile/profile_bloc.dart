@@ -86,7 +86,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
 
       emit(
-        ProfileActionSuccess(message: 'Record deleted successfully'),
+        ProfileSuccess(message: 'Record deleted successfully'),
       );
     } on GrpcError catch (e) {
       emit(ProfileError(
@@ -112,7 +112,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
 
       emit(
-        ProfileActionSuccess(message: 'Request sent successfully'),
+        ProfileSuccess(message: 'Request sent successfully'),
       );
     } on GrpcError catch (e) {
       emit(ProfileError(

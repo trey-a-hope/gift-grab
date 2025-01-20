@@ -3,9 +3,9 @@ class Globals {
 
   static int paginationLimit = 20;
 
-  static final nakamaConfig = _NakamaConfig();
   static final routes = _Routes();
   static final timeLimits = _TimeLimits();
+  static final rpc = _RPCFunctions();
 
   /// Audio
   static const String freezeSound = 'freeze-sound.wav';
@@ -62,19 +62,7 @@ class _TimeLimits {
   final int cookie = 10;
 }
 
-class _NakamaConfig {
-  static const bool _isLocal = false;
-
-  final String host = _isLocal ? '127.0.0.1' : '24.144.85.68';
-
-  final int httpPort = 7351; // If this doesn't work, use 7351.
-
-  final String serverKey = 'defaultkey';
-
-  final bool ssl = true;
-
-  final String avatarsCollection = 'avatars';
-  final String avatarDoc = 'avatar';
-
-  final String rpcAccountDeleteId = 'account_delete_id';
+class _RPCFunctions {
+  final notificationSend = 'notification_send';
+  final accountDeleteId = 'account_delete_id';
 }

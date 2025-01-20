@@ -32,10 +32,10 @@ class AccountError extends AccountState {
   }) : super(account);
 }
 
-class AccountActionSuccess extends AccountState {
+class AccountSuccess extends AccountState {
   final String message;
 
-  AccountActionSuccess({
+  AccountSuccess({
     required this.message,
     required Account account,
   }) : super(account);

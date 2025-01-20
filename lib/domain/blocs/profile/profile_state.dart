@@ -18,10 +18,10 @@ class ProfileLoaded extends ProfileState {
   });
 }
 
-class ProfileActionSuccess extends ProfileState {
+class ProfileSuccess extends ProfileState {
   final String message;
 
-  ProfileActionSuccess({required this.message});
+  ProfileSuccess({required this.message});
 }
 
 class ProfileError extends ProfileState {

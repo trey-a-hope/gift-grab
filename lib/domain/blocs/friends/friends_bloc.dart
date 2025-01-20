@@ -11,11 +11,18 @@ part 'friends_state.dart';
 class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   final AuthBloc authBloc;
   final NakamaService _nakamaService;
-  FriendsBloc({required this.authBloc})
-      : _nakamaService = NakamaService(),
+  final FriendshipState friendshipState;
+
+  FriendsBloc({
+    required this.authBloc,
+    required this.friendshipState,
+  })  : _nakamaService = NakamaService(),
         super(FriendsInitial(cursor: null)) {
     on<FetchFriends>(_onFetchFriends);
     on<FetchMoreFriends>(_onFetchMoreFriends);
+    on<DeleteFriend>(_onDeleteFriend);
+    on<AddFriend>(_onAddFriend);
+    on<BlockFriend>(_onBlockFriend);
   }
 
   Future<void> _onFetchFriends(
@@ -31,6 +38,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
       final friendsList = await getNakamaClient().listFriends(
         session: session,
         limit: Globals.paginationLimit,
+        friendshipState: friendshipState,
       );
 
       final cursor = friendsList.cursor == '' ? null : friendsList.cursor;
@@ -72,6 +80,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         session: session,
         limit: Globals.paginationLimit,
         cursor: state.cursor,
+        friendshipState: friendshipState,
       );
 
       final cursor = friendsList.cursor == '' ? null : friendsList.cursor;
@@ -80,6 +89,120 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         friends: friendsList.friends ?? [],
         cursor: cursor,
       ));
+    } on GrpcError catch (e) {
+      emit(
+        FriendsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+          cursor: state.cursor,
+        ),
+      );
+    } catch (e) {
+      emit(
+        FriendsError(
+          message: 'Unexpected error: ${e.toString()}',
+          cursor: state.cursor,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onDeleteFriend(
+    DeleteFriend event,
+    Emitter<FriendsState> emit,
+  ) async {
+    emit(FriendsLoading(cursor: state.cursor));
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      await getNakamaClient().deleteFriends(
+        session: session,
+        ids: [event.uid],
+      );
+
+      emit(
+        FriendsSuccess(
+          message: 'Friend deleted successfully',
+          cursor: state.cursor,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(
+        FriendsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+          cursor: state.cursor,
+        ),
+      );
+    } catch (e) {
+      emit(
+        FriendsError(
+          message: 'Unexpected error: ${e.toString()}',
+          cursor: state.cursor,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onAddFriend(
+    AddFriend event,
+    Emitter<FriendsState> emit,
+  ) async {
+    emit(FriendsLoading(cursor: state.cursor));
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      await getNakamaClient().addFriends(
+        session: session,
+        ids: [event.uid],
+      );
+
+      emit(
+        FriendsSuccess(
+          message: 'Friend added successfully',
+          cursor: state.cursor,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(
+        FriendsError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+          cursor: state.cursor,
+        ),
+      );
+    } catch (e) {
+      emit(
+        FriendsError(
+          message: 'Unexpected error: ${e.toString()}',
+          cursor: state.cursor,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onBlockFriend(
+    BlockFriend event,
+    Emitter<FriendsState> emit,
+  ) async {
+    emit(FriendsLoading(cursor: state.cursor));
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      await getNakamaClient().blockFriends(
+        session: session,
+        ids: [event.uid],
+      );
+
+      emit(
+        FriendsSuccess(
+          message: 'Friend blocked successfully',
+          cursor: state.cursor,
+        ),
+      );
     } on GrpcError catch (e) {
       emit(
         FriendsError(

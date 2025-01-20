@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
@@ -96,9 +97,11 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       if (_isHighest(event.score, leaderboard.records)) {
         await getNakamaClient().rpc(
           session: session,
-          id: 'notification_send',
+          id: Globals.rpc.notificationSend,
           payload: json.encode(
-            {"subject": "You just got the highest record, ${event.score}!"},
+            {
+              "subject": "You just got the highest record, ${event.score}!",
+            },
           ),
         );
       }
@@ -110,7 +113,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
         score: event.score,
       );
 
-      emit(LeaderboardActionSuccess(message: 'Score submitted succesfully'));
+      emit(LeaderboardSuccess(message: 'Score submitted succesfully'));
     } on GrpcError catch (e) {
       emit(LeaderboardError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));

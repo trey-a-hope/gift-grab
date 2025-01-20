@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
@@ -34,9 +32,6 @@ class NotificationsScreen
                 itemCount: state.notifications.length,
                 itemBuilder: (c, i) {
                   final notification = state.notifications[i] as n.Notification;
-
-                  final map = json.decode(notification.content!);
-
                   return NotificationWidget(
                     notification,
                     delete: () => context.read<NotificationsBloc>().add(
@@ -44,13 +39,6 @@ class NotificationsScreen
                             id: notification.id,
                           ),
                         ),
-                    // action: () {
-                    //   context.read<NotificationsBloc>().add(
-                    //         AcceptFriendRequest(
-                    //           username: map['username'],
-                    //         ),
-                    //       );
-                    // },
                   );
                 },
               ),

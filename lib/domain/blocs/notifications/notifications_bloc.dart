@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
@@ -37,13 +38,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
     if (session == null) return;
 
-    // TODO: Make dynamic...
-    const host = '127.0.0.1';
-    const ssl = false;
-
     _socket = NakamaWebsocketClient.init(
-      host: host,
-      ssl: ssl,
+      host: NakamaProperties.host,
+      ssl: NakamaProperties.ssl,
       token: session.token,
     );
 

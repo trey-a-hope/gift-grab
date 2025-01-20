@@ -22,10 +22,10 @@ class FriendsLoaded extends FriendsState {
   });
 }
 
-class FriendsActionSuccess extends FriendsState {
+class FriendsSuccess extends FriendsState {
   final String message;
 
-  FriendsActionSuccess({
+  FriendsSuccess({
     required this.message,
     required super.cursor,
   });

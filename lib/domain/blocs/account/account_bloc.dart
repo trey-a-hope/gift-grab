@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
@@ -89,7 +90,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         username: event.username,
       );
 
-      emit(AccountActionSuccess(
+      emit(AccountSuccess(
         message: 'Username updated successfully.',
         account: state.account!,
       ));
@@ -116,7 +117,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
-      await getNakamaClient().rpc(session: session, id: 'account_delete_id');
+      await getNakamaClient().rpc(
+        session: session,
+        id: Globals.rpc.accountDeleteId,
+      );
 
       await _nakamaService.clearTokens();
 
@@ -152,7 +156,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Email account linked successfully.',
           account: state.account!,
         ),
@@ -187,7 +191,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Email account unlinked successfully.',
           account: state.account!,
         ),
@@ -226,7 +230,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Google account linked successfully.',
           account: state.account!,
         ),
@@ -265,7 +269,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Google account unlinked successfully.',
           account: state.account!,
         ),
@@ -304,7 +308,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Apple account linked successfully.',
           account: state.account!,
         ),
@@ -343,7 +347,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
 
       emit(
-        AccountActionSuccess(
+        AccountSuccess(
           message: 'Apple account unlinked successfully.',
           account: state.account!,
         ),
