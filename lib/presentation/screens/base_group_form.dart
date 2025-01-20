@@ -134,14 +134,15 @@ class _BaseGroupFormState extends State<BaseGroupForm> {
             const Gap(16),
             Center(
               child: ElevatedButton(
-                child: Text(widget.submitButtonText),
-                onPressed: () => widget.onSubmit(
-                  _name ?? 'NO NAME GROUP',
-                  _description ?? 'NO DESCRIPTION GROUP',
-                  _groupCount,
-                  _isOpen,
-                ),
-              ),
+                  child: Text(widget.submitButtonText),
+                  onPressed: () {
+                    widget.onSubmit(
+                      _name ?? 'NO NAME GROUP',
+                      _description ?? 'NO DESCRIPTION GROUP',
+                      _groupCount,
+                      _isOpen,
+                    );
+                  }),
             ),
           ],
         ),

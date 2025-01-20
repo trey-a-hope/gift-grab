@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -10,22 +10,24 @@ part 'groups_event.dart';
 part 'groups_state.dart';
 
 class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
-  final AccountBloc accountBloc;
   final AuthBloc authBloc;
+  final bool allGroups;
 
   GroupsBloc({
-    required this.accountBloc,
     required this.authBloc,
-  }) : super(GroupsInitial()) {
+    required this.allGroups,
+  }) : super(GroupsInitial(cursor: null)) {
     on<CreateGroupEvent>(_onCreateGroup);
     on<UpdateGroupEvent>(_onUpdateGroupEvent);
+    on<FetchGroups>(_onFetchGroups);
+    on<FetchMoreGroups>(_onFetchMoreGroups);
   }
 
   Future<void> _onCreateGroup(
     CreateGroupEvent event,
     Emitter<GroupsState> emit,
   ) async {
-    emit(GroupsLoading());
+    emit(GroupsLoading(cursor: state.cursor));
 
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
@@ -40,12 +42,20 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
       debugPrint(newGroup.toString());
 
-      emit(GroupsSuccess('Group created successfully'));
+      emit(GroupsSuccess(
+        message: 'Group created successfully',
+        cursor: state.cursor,
+      ));
     } on GrpcError catch (e) {
       emit(GroupsError(
-          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        cursor: state.cursor,
+      ));
     } catch (e) {
-      emit(GroupsError(message: 'Unexpected error: ${e.toString()}'));
+      emit(GroupsError(
+        message: 'Unexpected error: ${e.toString()}',
+        cursor: state.cursor,
+      ));
     }
   }
 
@@ -53,7 +63,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
     UpdateGroupEvent event,
     Emitter<GroupsState> emit,
   ) async {
-    emit(GroupsLoading());
+    emit(GroupsLoading(cursor: state.cursor));
 
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
@@ -70,12 +80,129 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
             .maxCount, // TODO: https://github.com/heroiclabs/nakama-dart/issues/123
       );
 
-      emit(GroupsSuccess('Group updated successfully'));
+      emit(GroupsSuccess(
+        message: 'Group updated successfully',
+        cursor: state.cursor,
+      ));
     } on GrpcError catch (e) {
       emit(GroupsError(
-          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        cursor: state.cursor,
+      ));
     } catch (e) {
-      emit(GroupsError(message: 'Unexpected error: ${e.toString()}'));
+      emit(GroupsError(
+        message: 'Unexpected error: ${e.toString()}',
+        cursor: state.cursor,
+      ));
     }
   }
+
+  Future<void> _onFetchGroups(
+    FetchGroups event,
+    Emitter<GroupsState> emit,
+  ) async {
+    emit(GroupsLoading(cursor: state.cursor));
+
+    try {
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
+
+      late List<Group> groups;
+      late String? cursor;
+
+      if (allGroups) {
+        final allGroupList = await getNakamaClient().listGroups(
+          session: session!,
+          limit: Globals.paginationLimit,
+        );
+        cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
+        groups = allGroupList.groups ?? [];
+      } else {
+        final uid = (await getNakamaClient().getAccount(session!)).user.id;
+        final myGroupsList = await getNakamaClient().listUserGroups(
+          session: session,
+          limit: Globals.paginationLimit,
+          userId: uid,
+        );
+        cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
+        groups = _userGroupsToGroups(myGroupsList.userGroups ?? []);
+      }
+
+      emit(
+        GroupsLoaded(
+          groups: groups,
+          cursor: cursor,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(GroupsError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        cursor: state.cursor,
+      ));
+    } catch (e) {
+      emit(GroupsError(
+        message: 'Unexpected error: ${e.toString()}',
+        cursor: state.cursor,
+      ));
+    }
+  }
+
+  Future<void> _onFetchMoreGroups(
+    FetchMoreGroups event,
+    Emitter<GroupsState> emit,
+  ) async {
+    try {
+      final session = await NakamaService().getValidSessionOrLogout(authBloc);
+
+      late List<Group> groups;
+      late String? cursor;
+
+      if (allGroups) {
+        final allGroupList = await getNakamaClient().listGroups(
+          session: session!,
+          limit: Globals.paginationLimit,
+          cursor: state.cursor,
+        );
+        cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
+        groups = allGroupList.groups ?? [];
+      } else {
+        final uid = (await getNakamaClient().getAccount(session!)).user.id;
+        final myGroupsList = await getNakamaClient().listUserGroups(
+          session: session,
+          limit: Globals.paginationLimit,
+          userId: uid,
+          cursor: state.cursor,
+        );
+        cursor = myGroupsList.cursor == '' ? null : myGroupsList.cursor;
+        groups = _userGroupsToGroups(myGroupsList.userGroups ?? []);
+      }
+
+      emit(
+        GroupsLoaded(
+          groups: [...event.groups, ...groups],
+          cursor: cursor,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(GroupsError(
+        message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+        cursor: state.cursor,
+      ));
+    } catch (e) {
+      emit(GroupsError(
+        message: 'Unexpected error: ${e.toString()}',
+        cursor: state.cursor,
+      ));
+    }
+  }
+
+  List<Group> _userGroupsToGroups(List<UserGroup> userGroups) =>
+      userGroups.map((u) => u.group).toList();
+}
+
+class AllGroupsBloc extends GroupsBloc {
+  AllGroupsBloc({required super.authBloc}) : super(allGroups: true);
+}
+
+class MyGroupsBloc extends GroupsBloc {
+  MyGroupsBloc({required super.authBloc}) : super(allGroups: false);
 }

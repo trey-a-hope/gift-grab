@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
@@ -102,7 +104,19 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
                 GoRoute(
                   path: Globals.routes.createGroup,
                   name: Globals.routes.createGroup,
-                  builder: (context, state) => const CreateGroupScreen(),
+                  builder: (context, state) {
+                    return BlocListener<AllGroupsBloc, GroupsState>(
+                      listener: (context, state) {
+                        if (state is GroupsSuccess) {
+                          context.pop();
+
+                          context.read<AllGroupsBloc>().add(FetchGroups());
+                          context.read<MyGroupsBloc>().add(FetchGroups());
+                        }
+                      },
+                      child: CreateGroupScreen(),
+                    );
+                  },
                 ),
                 GoRoute(
                   path: ':groupId',
@@ -120,7 +134,20 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
                       name: Globals.routes.editGroup,
                       builder: (context, state) {
                         final group = state.extra as Group;
-                        return EditGroupScreen(group: group);
+
+                        return BlocListener<AllGroupsBloc, GroupsState>(
+                          listener: (context, state) {
+                            if (state is GroupsSuccess) {
+                              // Navigates back to Groups Screen.
+                              context.pop();
+                              context.pop();
+
+                              context.read<AllGroupsBloc>().add(FetchGroups());
+                              context.read<MyGroupsBloc>().add(FetchGroups());
+                            }
+                          },
+                          child: EditGroupScreen(group: group),
+                        );
                       },
                     ),
                   ],

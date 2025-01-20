@@ -2,6 +2,14 @@ part of 'groups_bloc.dart';
 
 abstract class GroupsEvent {}
 
+class FetchGroups extends GroupsEvent {}
+
+class FetchMoreGroups extends GroupsEvent {
+  final List<Group> groups;
+
+  FetchMoreGroups({required this.groups});
+}
+
 class UpdateGroupEvent extends GroupsEvent {
   final String groupId;
   final bool open;

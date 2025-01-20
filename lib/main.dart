@@ -5,17 +5,13 @@ import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
-    as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
-import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
-    as ugb;
 
 // mason make bloc --name [BLOC NAME] --style basic
 
@@ -61,24 +57,18 @@ class MyApp extends StatelessWidget {
           ),
         ),
         // Note: These are needed in multiple different screens.
-        BlocProvider<GroupsBloc>(
-          create: (context) => GroupsBloc(
-            accountBloc: context.read<AccountBloc>(),
+        BlocProvider<AllGroupsBloc>(
+          create: (context) => AllGroupsBloc(
+            authBloc: context.read<AuthBloc>(),
+          ),
+        ),
+        BlocProvider<MyGroupsBloc>(
+          create: (context) => MyGroupsBloc(
             authBloc: context.read<AuthBloc>(),
           ),
         ),
         BlocProvider<GroupUsersBloc>(
           create: (context) => GroupUsersBloc(
-            authBloc: context.read<AuthBloc>(),
-          ),
-        ),
-        BlocProvider<agb.AllGroupsBloc>(
-          create: (context) => agb.AllGroupsBloc(
-            authBloc: context.read<AuthBloc>(),
-          ),
-        ),
-        BlocProvider<ugb.UserGroupsBloc>(
-          create: (context) => ugb.UserGroupsBloc(
             authBloc: context.read<AuthBloc>(),
           ),
         ),

@@ -3,10 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/mixins/group_persmissions.dart';
-import 'package:gift_grab/domain/blocs/group/user_groups/user_groups_bloc.dart'
-    as ugb;
-import 'package:gift_grab/domain/blocs/group/all_groups/all_groups_bloc.dart'
-    as agb;
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
@@ -231,8 +227,8 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
           FetchGroupUsers(groupId: group.id),
         );
 
-    context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
-    context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
+    // context.read<ugb.UserGroupsBloc>().add(ugb.FetchGroups());
+    // context.read<agb.AllGroupsBloc>().add(agb.FetchGroups());
   }
 
   @override
