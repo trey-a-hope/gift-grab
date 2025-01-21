@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/storage_object_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -42,6 +44,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final isMyProfile = account.user.id == user.id;
 
+      final gamesPlayed =
+          await StorageObjectService.getGamesPlayed(session, uid);
+
       // TODO: https://github.com/heroiclabs/nakama-dart/issues/122
       final leaderboard =
           await getNakamaClient().listLeaderboardRecordsAroundOwner(
@@ -60,6 +65,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           user: user,
           record: record,
           isMyProfile: isMyProfile,
+          gamesPlayed: gamesPlayed,
         ),
       );
     } on GrpcError catch (e) {

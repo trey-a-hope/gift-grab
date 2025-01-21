@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
@@ -47,18 +46,14 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LeaderboardBloc>().add(FetchLeaderboard());
     return GGScaffoldWidget(
       title: 'Leaderboard',
       child: SafeArea(
         child: Center(
-          child: BlocProvider(
-            create: (context) => LeaderboardBloc(
-              authBloc: context.read<AuthBloc>(),
-            )..add(FetchLeaderboard()),
-            child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
-              listener: listener,
-              builder: builder,
-            ),
+          child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
+            listener: listener,
+            builder: builder,
           ),
         ),
       ),

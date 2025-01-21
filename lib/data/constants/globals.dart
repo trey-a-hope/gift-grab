@@ -2,10 +2,12 @@ class Globals {
   Globals._();
 
   static int paginationLimit = 20;
+  static const int gameTimeLimit = 10;
 
   static final routes = _Routes();
   static final timeLimits = _TimeLimits();
   static final rpc = _RPCFunctions();
+  static final storageObjects = _StorageObjects();
 
   /// Audio
   static const String freezeSound = 'freeze-sound.wav';
@@ -53,6 +55,12 @@ class _Routes {
   final String notifications = 'notifications';
   final String friends = 'friends';
   final String searchUsers = 'search_users';
+}
+
+class _StorageObjects {
+  final String collection = 'game_info';
+  final String key = 'player_stats';
+  final String value = 'games_played';
 }
 
 class _TimeLimits {

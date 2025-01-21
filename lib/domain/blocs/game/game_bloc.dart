@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 
 part 'game_event.dart';
 part 'game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  static const int initialTime = 30;
+  static const int initialTime = Globals.gameTimeLimit;
   static const int flameImmunityDuration = 10;
   static const double originalSpeed = 500;
   static const int speedBoostDuration = 7;

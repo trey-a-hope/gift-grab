@@ -16,6 +16,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
+    state = state as AccountLoaded;
     final theme = Theme.of(context);
 
     return Center(
@@ -26,7 +27,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
           children: [
             const Gap(16),
             Text(
-              'Welcome Back, ${state.account.user.username ?? 'UNKNOWN'}',
+              'Welcome Back, ${state.account?.user.username ?? 'UNKNOWN'}',
               style: theme.textTheme.displayLarge!
                   .copyWith(fontSize: theme.textTheme.bodyLarge!.fontSize! * 2),
             ),

@@ -36,9 +36,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(state.isMyProfile
-                ? 'This is my profile'
-                : 'Someone elses profile...'),
             CircleAvatar(
               radius: 100,
               backgroundImage: Image.network(
@@ -56,9 +53,18 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               ),
             ],
             Gap(16),
-            Text(
-              state.user.username ?? 'Unknown Name',
-              style: theme.textTheme.headlineLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  state.user.username ?? 'Unknown Name',
+                  style: theme.textTheme.displayLarge,
+                ),
+                Text(
+                  'Games Played: ${state.gamesPlayed}',
+                  style: theme.textTheme.displayLarge,
+                ),
+              ],
             ),
             Gap(16),
             if (state.record != null) ...[

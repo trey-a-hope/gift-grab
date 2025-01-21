@@ -15,7 +15,7 @@ class GameState extends Equatable {
 
   const GameState({
     this.score = 0,
-    this.remainingTime = 30,
+    this.remainingTime = Globals.gameTimeLimit,
     this.flameRemainingTime = 10,
     this.isGameOver = false,
     this.isSantaFlamed = false,

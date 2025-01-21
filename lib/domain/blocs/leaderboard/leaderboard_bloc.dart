@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/storage_object_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:grpc/grpc.dart';
@@ -86,8 +87,6 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
-      debugPrint('Score: ${event.score}');
-
       // Check and see if new score is the highest.
       final leaderboard = await getNakamaClient().listLeaderboardRecords(
         session: session,
@@ -112,6 +111,11 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
         leaderboardName: _leaderboardName,
         score: event.score,
       );
+
+      // Update games played count.
+      await StorageObjectService.updateGamesPlayed(session);
+
+      debugPrint('_onSubmitScore: ${event.score}');
 
       emit(LeaderboardSuccess(message: 'Score submitted succesfully'));
     } on GrpcError catch (e) {
