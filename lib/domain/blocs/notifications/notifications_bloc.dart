@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -17,44 +17,43 @@ part 'notifications_state.dart';
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final AuthBloc authBloc;
   final NakamaService _nakamaService;
+  final WebSocketService _webSocketService;
 
-  NakamaWebsocketClient? _socket;
   StreamSubscription? _notificationSubscription;
 
   NotificationsBloc({
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
+        _webSocketService = WebSocketService(),
         super(NotificationsInitial(cursor: null)) {
     on<FetchNotifications>(_onFetchNotifications);
     on<FetchMoreNotifications>(_onFetchMoreNotifications);
     on<DeleteNotification>(_onDeleteNotification);
 
     _initializeWebSocket();
-
-    debugPrint('NotificationsBloc created.');
   }
 
   Future<void> _initializeWebSocket() async {
     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
     if (session == null) return;
 
-    _socket = NakamaWebsocketClient.init(
-      host: NakamaProperties.host,
-      ssl: NakamaProperties.ssl,
-      token: session.token,
-    );
+    if (!_webSocketService.isConnected) {
+      await _webSocketService.initialize(session.token);
+    }
 
-    _notificationSubscription = _socket?.onNotifications.listen((data) {
-      ModalService.showSuccess(title: data.subject ?? 'New Message');
-      add(FetchNotifications());
-      debugPrint(data.toString());
-    });
+    _notificationSubscription =
+        _webSocketService.socket?.onNotifications.listen(
+      (data) {
+        ModalService.showSuccess(title: data.subject ?? 'New Message');
+        add(FetchNotifications());
+        debugPrint(data.toString());
+      },
+    );
   }
 
   @override
   Future<void> close() {
     _notificationSubscription?.cancel();
-    _socket?.close();
     return super.close();
   }
 
