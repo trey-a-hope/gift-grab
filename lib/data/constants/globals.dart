@@ -1,9 +1,16 @@
+import 'package:cloudinary/cloudinary.dart';
+
 class Globals {
   Globals._();
 
   static int paginationLimit = 20;
-  static const int gameTimeLimit = 3;
+  static const int gameTimeLimit = 10;
 
+  static final cloudinaryConfig = Cloudinary.signedConfig(
+    apiKey: '122467624349353',
+    apiSecret: 'EDmkapThOKoGGKKjKN4CYWPcPg8',
+    cloudName: 'dp6gsfu5c',
+  );
   static final routes = _Routes();
   static final timeLimits = _TimeLimits();
   static final rpc = _RPCFunctions();

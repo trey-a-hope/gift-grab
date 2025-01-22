@@ -36,13 +36,18 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 100,
-              backgroundImage: Image.network(
-                state.user.avatarUrl?.isEmpty ?? true
-                    ? Globals.emptyProfile
-                    : state.user.avatarUrl!,
-              ).image,
+            GestureDetector(
+              onTap: () => context.read<ProfileBloc>().add(
+                    UploadPhoto(),
+                  ),
+              child: CircleAvatar(
+                radius: 100,
+                backgroundImage: Image.network(
+                  state.user.avatarUrl?.isEmpty ?? true
+                      ? Globals.emptyProfile
+                      : state.user.avatarUrl!,
+                ).image,
+              ),
             ),
             if (!state.isMyProfile) ...[
               ElevatedButton(

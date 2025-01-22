@@ -4,7 +4,10 @@ abstract class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
 
-class ProfileLoading extends ProfileState {}
+class ProfileLoading extends ProfileState {
+  final double? progress;
+  ProfileLoading({this.progress});
+}
 
 class ProfileLoaded extends ProfileState {
   final User user;

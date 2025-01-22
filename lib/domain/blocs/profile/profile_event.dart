@@ -11,3 +11,5 @@ class AddFriend extends ProfileEvent {
 }
 
 class DeleteRecord extends ProfileEvent {}
+
+class UploadPhoto extends ProfileEvent {}
