@@ -1,34 +1,37 @@
 import 'dart:convert';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:nakama/nakama.dart';
 
 class StorageObjectService {
-  static Future<int> getGamesPlayed(Session session, String? uid) async {
+  static const _collection = 'game_info';
+  static const _key = 'player_stats';
+  static const _value = 'games_played';
+
+  static Future<int> getGamesPlayed(
+    Session session,
+    String? uid,
+  ) async {
     try {
       final storageObjectList = await getNakamaClient().listStorageObjects(
         session: session,
-        collection: Globals.storageObjects.collection,
+        collection: _collection,
         limit: 1,
         userId: uid,
       );
 
-      late int gamesPlayed;
-
       if (storageObjectList.objects.isEmpty) {
-        gamesPlayed = 0;
+        return 0;
       } else {
         final storageObject = storageObjectList.objects.first;
-        gamesPlayed =
-            json.decode(storageObject.value)[Globals.storageObjects.value];
+        return json.decode(storageObject.value)[_value];
       }
-
-      return gamesPlayed;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  static Future<void> updateGamesPlayed(Session session) async {
+  static Future<void> updateGamesPlayed(
+    Session session,
+  ) async {
     final gamesPlayed = await getGamesPlayed(session, null);
 
     await getNakamaClient().writeStorageObjects(
@@ -36,11 +39,9 @@ class StorageObjectService {
       objects: [
         StorageObjectWrite(
           permissionRead: StorageReadPermission.publicRead,
-          collection: Globals.storageObjects.collection,
-          key: Globals.storageObjects.key,
-          value: json.encode(
-            {Globals.storageObjects.value: gamesPlayed + 1},
-          ),
+          collection: _collection,
+          key: _key,
+          value: json.encode({_value: gamesPlayed + 1}),
         )
       ],
     );
