@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/data/configuration/nakama_properties.dart';
+import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
@@ -19,6 +20,8 @@ import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final webSocketService = WebSocketService();
+
   await dotenv.load();
 
   NakamaProperties.initialize(
@@ -33,13 +36,31 @@ void main() async {
     httpPort: NakamaProperties.httpPort,
   );
 
-  runApp(MyApp());
+  runApp(MyApp(
+    webSocketService: webSocketService,
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final WebSocketService webSocketService;
+
+  const MyApp({
+    super.key,
+    required this.webSocketService,
+  });
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final AuthBloc authBloc = AuthBloc()..add(CheckAuthStatus());
 
-  MyApp({super.key});
+  @override
+  void dispose() {
+    widget.webSocketService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
