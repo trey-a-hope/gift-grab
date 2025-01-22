@@ -8,7 +8,7 @@ class StorageObjectService {
 
   static Future<int> getGamesPlayed(
     Session session,
-    String? uid,
+    String uid,
   ) async {
     try {
       final storageObjectList = await getNakamaClient().listStorageObjects(
@@ -31,8 +31,9 @@ class StorageObjectService {
 
   static Future<void> updateGamesPlayed(
     Session session,
+    String uid,
   ) async {
-    final gamesPlayed = await getGamesPlayed(session, null);
+    final gamesPlayed = await getGamesPlayed(session, uid);
 
     await getNakamaClient().writeStorageObjects(
       session: session,

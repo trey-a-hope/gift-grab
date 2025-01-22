@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
@@ -13,27 +14,7 @@ import 'package:gift_grab/presentation/components/santa_component.dart';
 import 'package:gift_grab/presentation/components/background_component.dart';
 import 'package:gift_grab/presentation/inputs/joystick.dart';
 
-class GameStateHandler extends Component
-    with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
-  @override
-  void onNewState(GameState state) {
-    if (state.isGameOver) {
-      bloc.stopTimer();
-
-      gameRef.leaderboardBloc.add(SubmitScore(score: state.score));
-      // Flame -> Flutter Bloc conversion.
-      gameRef.score = state.score;
-      gameRef.resetGame = () {
-        gameRef.resumeEngine();
-        gameRef.overlays.remove('gameOver');
-        bloc.add(ResetGameEvent());
-      };
-      // Normal gameRef variables.
-      gameRef.pauseEngine();
-      gameRef.overlays.add('gameOver');
-    }
-  }
-}
+part 'game_state_handler.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
   // Store state variables on the widget since Flame overlays are part of

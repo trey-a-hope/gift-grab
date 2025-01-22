@@ -48,7 +48,9 @@ class LeaderboardRecordWidget extends StatelessWidget {
       trailing: CircleAvatar(
         radius: _avatarRadius,
         backgroundImage: NetworkImage(
-          entry.user.avatarUrl ?? Globals.emptyProfile,
+          entry.user.avatarUrl == null || entry.user.avatarUrl!.isEmpty
+              ? Globals.emptyProfile
+              : entry.user.avatarUrl!,
         ),
       ),
     );

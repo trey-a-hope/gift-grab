@@ -2,7 +2,7 @@ class Globals {
   Globals._();
 
   static int paginationLimit = 20;
-  static const int gameTimeLimit = 10;
+  static const int gameTimeLimit = 3;
 
   static final routes = _Routes();
   static final timeLimits = _TimeLimits();

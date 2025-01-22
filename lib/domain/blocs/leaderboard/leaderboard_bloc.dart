@@ -87,6 +87,8 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
+      final uid = (await getNakamaClient().getAccount(session)).user.id;
+
       // Check and see if new score is the highest.
       final leaderboard = await getNakamaClient().listLeaderboardRecords(
         session: session,
@@ -113,7 +115,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       );
 
       // Update games played count.
-      await StorageObjectService.updateGamesPlayed(session);
+      await StorageObjectService.updateGamesPlayed(session, uid);
 
       debugPrint('_onSubmitScore: ${event.score}');
 
