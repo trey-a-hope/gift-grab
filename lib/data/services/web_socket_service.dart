@@ -38,20 +38,25 @@ class WebSocketService with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.detached:
+        socket?.updateStatus('detached');
         _socket?.close();
         debugPrint('WebSocket: App detached');
         break;
       case AppLifecycleState.inactive:
+        socket?.updateStatus('inactive');
         debugPrint('WebSocket: App inactive');
         break;
       case AppLifecycleState.paused:
+        socket?.updateStatus('paused');
         debugPrint('WebSocket: App paused');
         break;
       case AppLifecycleState.resumed:
-        _reconnectIfNeeded();
+        socket?.updateStatus('resumed');
         debugPrint('WebSocket: App resumed');
+        _reconnectIfNeeded();
         break;
       case AppLifecycleState.hidden:
+        socket?.updateStatus('resumed');
         debugPrint('WebSocket: App hidden');
         break;
     }

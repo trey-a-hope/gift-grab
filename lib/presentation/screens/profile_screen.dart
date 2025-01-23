@@ -27,8 +27,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as ProfileLoaded;
 
-    debugPrint(uid);
-
     final theme = Theme.of(context);
     return Center(
       child: Padding(

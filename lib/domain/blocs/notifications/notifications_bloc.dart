@@ -20,6 +20,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final WebSocketService _webSocketService;
 
   StreamSubscription? _notificationSubscription;
+  StreamSubscription? _statusSubscription;
 
   NotificationsBloc({
     required this.authBloc,
@@ -41,12 +42,52 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await _webSocketService.initialize(session.token);
     }
 
+    // Listen for notifications.
     _notificationSubscription =
         _webSocketService.socket?.onNotifications.listen(
-      (data) {
-        ModalService.showSuccess(title: data.subject ?? 'New Message');
+      (notification) {
+        ModalService.showSuccess(title: notification.subject ?? 'New Message');
         add(FetchNotifications());
-        debugPrint(data.toString());
+        debugPrint(notification.toString());
+      },
+    );
+
+    // Follow all friends.
+    final friendsList = await getNakamaClient().listFriends(
+      session: session,
+    );
+    final uidsOfFriends =
+        friendsList.friends?.map((friend) => friend.user.id).toList();
+    if (uidsOfFriends != null) {
+      var statuses = await _webSocketService.socket?.followUsers(
+        userIds: uidsOfFriends,
+      );
+
+      if (statuses != null) {
+        for (var status in statuses) {
+          final alert =
+              'User ID: ${status.userId} Username: ${status.username} Status: ${status.status}';
+          debugPrint(alert);
+        }
+      }
+    }
+
+    // Listen for status presence.
+    _statusSubscription = _webSocketService.socket?.onStatusPresence.listen(
+      (presence) {
+        debugPrint('[onStatusPresence]');
+        for (final join in presence.joins) {
+          final alert =
+              'User ID: ${join.userId} Username: ${join.username} Status: ${join.status}';
+          ModalService.showSuccess(title: alert);
+          debugPrint('join - $alert');
+        }
+        for (final leave in presence.leaves) {
+          final alert =
+              'User ID: ${leave.userId} Username: ${leave.username} Status: ${leave.status}';
+          ModalService.showSuccess(title: alert);
+          debugPrint('leave - $alert');
+        }
       },
     );
   }
@@ -54,6 +95,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   @override
   Future<void> close() {
     _notificationSubscription?.cancel();
+    _statusSubscription?.cancel();
     return super.close();
   }
 
@@ -164,36 +206,4 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       );
     }
   }
-
-  // Future<void> _onAcceptFriendRequest(
-  //   AcceptFriendRequest event,
-  //   Emitter<NotificationsState> emit,
-  // ) async {
-  //   emit(NotificationsLoading(cursor: state.cursor));
-
-  //   try {
-  //     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-  //     if (session == null) return;
-
-  //     await getNakamaClient().addFriends(
-  //       session: session,
-  //       ids: [],
-  //       usernames: [event.username],
-  //     );
-
-  //     emit(
-  //       NotificationsSuccess(
-  //         message: 'Friend request accepted',
-  //         cursor: state.cursor,
-  //       ),
-  //     );
-  //   } on GrpcError catch (e) {
-  //     emit(NotificationsError(
-  //         cursor: state.cursor,
-  //         message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
-  //   } catch (e) {
-  //     emit(NotificationsError(
-  //         cursor: state.cursor, message: 'Unexpected error: ${e.toString()}'));
-  //   }
-  // }
 }
