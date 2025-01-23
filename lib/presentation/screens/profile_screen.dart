@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
-import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/presentation/widgets/leaderboard_record_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
@@ -35,9 +32,11 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () => context.read<ProfileBloc>().add(
-                    UploadPhoto(),
-                  ),
+              onTap: () => state.isMyProfile
+                  ? context.read<ProfileBloc>().add(
+                        UploadPhoto(),
+                      )
+                  : null,
               child: CircleAvatar(
                 radius: 100,
                 backgroundImage: Image.network(
@@ -70,46 +69,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               ],
             ),
             Gap(16),
-            if (state.record != null) ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: LeaderboardRecordWidget(
-                      entry: LeaderboardEntry(
-                        record: state.record!,
-                        user: state.user,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      final confirm = await ModalService.showConfirmation(
-                        context: context,
-                        title: 'Delete Weekly Record',
-                        message: 'Are you sure?',
-                      );
-
-                      if (confirm == null || confirm == false) {
-                        return;
-                      }
-
-                      if (!context.mounted) return;
-
-                      context.read<ProfileBloc>().add(DeleteRecord());
-                    },
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                  )
-                ],
-              )
-            ] else ...[
-              Text(
-                'No Record for This Week...',
-                style: theme.textTheme.headlineLarge,
-              )
-            ]
           ],
         ),
       ),

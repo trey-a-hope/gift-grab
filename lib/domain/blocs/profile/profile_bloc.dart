@@ -1,5 +1,4 @@
 import 'package:cloudinary/cloudinary.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -52,23 +51,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final gamesPlayed =
           await StorageObjectService.getGamesPlayed(session, uid);
 
-      // TODO: https://github.com/heroiclabs/nakama-dart/issues/122
-      final leaderboard =
-          await getNakamaClient().listLeaderboardRecordsAroundOwner(
-        session: session,
-        leaderboardName: _leaderboardName,
-        ownerId: user.id,
-      );
-
-      LeaderboardRecord? record;
-      if (leaderboard.records != null && leaderboard.records!.isNotEmpty) {
-        record = leaderboard.records!.first;
-      }
-
       emit(
         ProfileLoaded(
           user: user,
-          record: record,
           isMyProfile: isMyProfile,
           gamesPlayed: gamesPlayed,
         ),
@@ -159,10 +144,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         resourceType: CloudinaryResourceType.image,
         folder: 'gift_grab/avatars',
         fileName: uid,
-        progressCallback: (count, total) {
-          final progress = ((count / total) * 100).toStringAsFixed(4);
-          debugPrint('progressCallback Progress: $progress' '%');
-        },
       );
 
       if (!response.isSuccessful) {

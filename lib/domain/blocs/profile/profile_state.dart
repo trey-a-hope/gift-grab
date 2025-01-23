@@ -11,13 +11,11 @@ class ProfileLoading extends ProfileState {
 
 class ProfileLoaded extends ProfileState {
   final User user;
-  final LeaderboardRecord? record;
   final bool isMyProfile;
   final int gamesPlayed;
 
   ProfileLoaded({
     required this.user,
-    required this.record,
     required this.isMyProfile,
     required this.gamesPlayed,
   });
