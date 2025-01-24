@@ -5,7 +5,9 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab/presentation/widgets/online_label.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   final String uid;
@@ -46,14 +48,21 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
                 ).image,
               ),
             ),
-            if (!state.isMyProfile) ...[
-              ElevatedButton(
-                onPressed: () => context.read<ProfileBloc>().add(
-                      AddFriend(uid: state.user.id),
-                    ),
-                child: Text('Add as Friend'),
-              ),
-            ],
+            Gap(16),
+            Row(
+              children: [
+                if (!state.isMyProfile) ...[
+                  ElevatedButton(
+                    onPressed: () => context.read<ProfileBloc>().add(
+                          AddFriend(uid: state.user.id),
+                        ),
+                    child: Text('Add as Friend'),
+                  ),
+                ],
+                Gap(8),
+                OnlineLabel(state.user.online),
+              ],
+            ),
             Gap(16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

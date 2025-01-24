@@ -20,8 +20,6 @@ import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final webSocketService = WebSocketService();
-
   await dotenv.load();
 
   NakamaProperties.initialize(
@@ -36,18 +34,11 @@ void main() async {
     httpPort: NakamaProperties.httpPort,
   );
 
-  runApp(MyApp(
-    webSocketService: webSocketService,
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final WebSocketService webSocketService;
-
-  const MyApp({
-    super.key,
-    required this.webSocketService,
-  });
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -58,7 +49,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    widget.webSocketService.dispose();
+    WebSocketService().dispose();
     super.dispose();
   }
 

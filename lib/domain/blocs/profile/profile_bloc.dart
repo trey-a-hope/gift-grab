@@ -48,8 +48,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final isMyProfile = account.user.id == user.id;
 
-      final gamesPlayed =
-          await StorageObjectService.getGamesPlayed(session, uid);
+      // TODO: See if user is my friend already.
+
+      final gamesPlayed = await StorageObjectService.getGamesPlayed(
+        session,
+        uid,
+      );
 
       emit(
         ProfileLoaded(

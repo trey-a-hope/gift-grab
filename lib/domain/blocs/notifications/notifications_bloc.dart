@@ -38,10 +38,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
     if (session == null) return;
 
-    if (!_webSocketService.isConnected) {
-      await _webSocketService.initialize(session.token);
-    }
-
     // Listen for notifications.
     _notificationSubscription =
         _webSocketService.socket?.onNotifications.listen(
@@ -49,6 +45,23 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         ModalService.showSuccess(title: notification.subject ?? 'New Message');
         add(FetchNotifications());
         debugPrint(notification.toString());
+      },
+    );
+
+    // Listen for statuses.
+    _statusSubscription = _webSocketService.socket?.onStatusPresence.listen(
+      (presence) {
+        debugPrint('[onStatusPresence]');
+        for (final join in presence.joins) {
+          final alert = 'Join: ${join.username} is ${join.status}';
+          ModalService.showSuccess(title: alert);
+          debugPrint('join - $alert');
+        }
+        for (final leave in presence.leaves) {
+          final alert = 'Leave: ${leave.username} is ${leave.status}';
+          ModalService.showError(title: alert);
+          debugPrint('leave - $alert');
+        }
       },
     );
 
@@ -71,23 +84,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         }
       }
     }
-
-    // Listen for status presence.
-    _statusSubscription = _webSocketService.socket?.onStatusPresence.listen(
-      (presence) {
-        debugPrint('[onStatusPresence]');
-        for (final join in presence.joins) {
-          final alert = 'Join: ${join.username} is ${join.status}';
-          ModalService.showSuccess(title: alert);
-          debugPrint('join - $alert');
-        }
-        for (final leave in presence.leaves) {
-          final alert = 'Leave: ${leave.username} is ${leave.status}';
-          ModalService.showSuccess(title: alert);
-          debugPrint('leave - $alert');
-        }
-      },
-    );
   }
 
   @override

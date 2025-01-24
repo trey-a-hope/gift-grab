@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
+import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
@@ -12,6 +13,8 @@ import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
+  final _storage = const FlutterSecureStorage();
+
   const MainMenuScreen({super.key});
 
   @override
@@ -98,12 +101,23 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget build(BuildContext context) {
     context.read<AccountBloc>().add(FetchAccount());
-    context.read<NotificationsBloc>().add(FetchNotifications());
 
     return GGScaffoldWidget(
       title: 'Gift Grab',
       canPop: false,
-      child: BlocBuilder<AccountBloc, AccountState>(
+      child: BlocConsumer<AccountBloc, AccountState>(
+        listener: (context, state) {
+          // TODO: Make sure account reflects changes from Edit Profile.
+          if (state is AccountLoaded) {
+            _storage.read(key: 'token').then(
+              (token) {
+                if (token != null) {
+                  WebSocketService().initialize(token);
+                }
+              },
+            );
+          }
+        },
         builder: builder,
       ),
     );

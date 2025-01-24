@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:nakama/nakama.dart';
 
+enum OnlineStatus {
+  online('online'),
+  offline('');
+
+  final String status;
+
+  const OnlineStatus(this.status);
+}
+
 class WebSocketService with WidgetsBindingObserver {
-  final _storage = const FlutterSecureStorage();
-
   static WebSocketService? _instance;
-  NakamaWebsocketClient? _socket;
 
+  NakamaWebsocketClient? _socket;
   NakamaWebsocketClient? get socket => _socket;
 
   factory WebSocketService() {
@@ -32,6 +38,9 @@ class WebSocketService with WidgetsBindingObserver {
       },
       onDone: () => debugPrint('NakamaWebsocketClient.init done.'),
     );
+
+    // User is online after socket connects.
+    socket?.updateStatus(OnlineStatus.online.status);
   }
 
   @override
@@ -39,8 +48,7 @@ class WebSocketService with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         debugPrint('WebSocket: App resumed');
-        socket?.updateStatus('online');
-        _reconnectIfNeeded();
+        socket?.updateStatus(OnlineStatus.online.status);
         break;
       case AppLifecycleState.inactive:
         debugPrint('WebSocket: App inactive');
@@ -50,22 +58,15 @@ class WebSocketService with WidgetsBindingObserver {
         debugPrint('WebSocket: App hidden');
       case AppLifecycleState.detached:
         debugPrint('WebSocket: App detached');
-        socket?.updateStatus('offline');
+        socket?.updateStatus(OnlineStatus.offline.status);
         break;
-    }
-  }
-
-  Future<void> _reconnectIfNeeded() async {
-    if (_socket == null || !isConnected) {
-      final token = await _storage.read(key: 'token');
-      if (token != null) {
-        initialize(token);
-      }
     }
   }
 
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    // TODO: I think this is necessary?
+    socket?.updateStatus(OnlineStatus.offline.status);
     _socket?.close();
     _socket = null;
   }
