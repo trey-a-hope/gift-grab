@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
@@ -34,7 +35,13 @@ void main() async {
     httpPort: NakamaProperties.httpPort,
   );
 
-  runApp(MyApp());
+  runApp(
+    AppInfo(
+      // Retrieve an AppInfoData instance pre-populated with package, platform, and target data
+      data: await AppInfoData.get(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -45,7 +52,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AuthBloc authBloc = AuthBloc()..add(CheckAuthStatus());
+  final _authBloc = AuthBloc();
 
   @override
   void dispose() {
@@ -55,18 +62,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final router = appRouter(authBloc);
+    final router = appRouter(
+      _authBloc..add(CheckAuthStatus()),
+    );
 
     return MultiBlocProvider(
       providers: [
         // Auth
         BlocProvider<AuthBloc>(
-          create: (context) => authBloc,
+          create: (context) => _authBloc,
         ),
         // Account
         BlocProvider<AccountBloc>(
           create: (context) => AccountBloc(
-            authBloc: authBloc,
+            authBloc: context.read<AuthBloc>(),
           ),
         ),
         // Note: These are needed in multiple different screens.

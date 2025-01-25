@@ -53,11 +53,21 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       (presence) {
         debugPrint('[onStatusPresence]');
         for (final join in presence.joins) {
+          if (session.userId == join.userId) {
+            ModalService.showSuccess(title: 'Join: FROM YOU!');
+            return;
+          }
+
           final alert = 'Join: ${join.username} is ${join.status}';
           ModalService.showSuccess(title: alert);
           debugPrint('join - $alert');
         }
         for (final leave in presence.leaves) {
+          if (session.userId == leave.userId) {
+            ModalService.showSuccess(title: 'Leave: FROM YOU!');
+            return;
+          }
+
           final alert = 'Leave: ${leave.username} is ${leave.status}';
           ModalService.showError(title: alert);
           debugPrint('leave - $alert');

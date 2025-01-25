@@ -56,7 +56,6 @@ class _Routes {
   final String groupDetails = 'group_details';
   final String editGroup = 'edit_group';
   final String profile = 'profile';
-  final String profileFromSearch = 'profile_from_search';
   final String linkedAccounts = 'linked_accounts';
   final String notifications = 'notifications';
   final String friends = 'friends';

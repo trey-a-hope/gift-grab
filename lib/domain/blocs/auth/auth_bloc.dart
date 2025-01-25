@@ -184,6 +184,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final session = await NakamaService().getValidSessionOrLogout(this);
+
       session == null ? emit(Unauthenticated()) : emit(Authenticated());
     } catch (e) {
       emit(Unauthenticated());

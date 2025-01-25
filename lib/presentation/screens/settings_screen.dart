@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
@@ -16,64 +17,74 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
   const SettingsScreen({super.key});
 
   @override
-  Widget buildLoadedContent(BuildContext context, state) => Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: FlexGridviewWidget(
-            children: [
-              MenuButtonWidget(
-                menuButton: MenuButton.editProfile,
-                onTap: () => context.goNamed(
-                  Globals.routes.editProfile,
-                ),
+  Widget buildLoadedContent(BuildContext context, state) {
+    final theme = Theme.of(context);
+    final appInfo = AppInfo.of(context);
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32),
+        child: Column(
+          children: [
+            Expanded(
+              child: FlexGridviewWidget(
+                children: [
+                  MenuButtonWidget(
+                    menuButton: MenuButton.linkedAccounts,
+                    onTap: () => context.goNamed(
+                      Globals.routes.linkedAccounts,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.signOut,
+                    onTap: () async {
+                      final confirm = await ModalService.showConfirmation(
+                        context: context,
+                        title: 'Sign Out?',
+                        message: 'Are you sure?',
+                      );
+
+                      if (confirm == null || confirm == false) {
+                        return;
+                      }
+
+                      if (!context.mounted) return;
+
+                      context.read<AuthBloc>().add(Logout());
+                    },
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.deleteAccount,
+                    onTap: () async {
+                      final confirm =
+                          await ModalService.showInputMatchConfirmation(
+                        context: context,
+                        title: 'Delete Account?',
+                        hintText: 'Enter your email to confirm.',
+                        match: state.account.email!,
+                      );
+
+                      if (confirm == null || confirm == false) {
+                        return;
+                      }
+
+                      if (!context.mounted) return;
+
+                      context.read<AccountBloc>().add(DeleteAccount());
+                    },
+                  ),
+                ],
               ),
-              MenuButtonWidget(
-                menuButton: MenuButton.linkedAccounts,
-                onTap: () => context.goNamed(
-                  Globals.routes.linkedAccounts,
-                ),
-              ),
-              MenuButtonWidget(
-                menuButton: MenuButton.signOut,
-                onTap: () async {
-                  final confirm = await ModalService.showConfirmation(
-                    context: context,
-                    title: 'Sign Out?',
-                    message: 'Are you sure?',
-                  );
-
-                  if (confirm == null || confirm == false) {
-                    return;
-                  }
-
-                  if (!context.mounted) return;
-
-                  context.read<AuthBloc>().add(Logout());
-                },
-              ),
-              MenuButtonWidget(
-                menuButton: MenuButton.deleteAccount,
-                onTap: () async {
-                  final confirm = await ModalService.showInputMatchConfirmation(
-                    context: context,
-                    title: 'Delete Account?',
-                    hintText: 'Enter your email to confirm.',
-                    match: state.account.email!,
-                  );
-
-                  if (confirm == null || confirm == false) {
-                    return;
-                  }
-
-                  if (!context.mounted) return;
-
-                  context.read<AccountBloc>().add(DeleteAccount());
-                },
-              ),
-            ],
-          ),
+            ),
+            Text(
+              'v${appInfo.package.version}',
+              style: theme.textTheme.displaySmall,
+            )
+          ],
         ),
-      );
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

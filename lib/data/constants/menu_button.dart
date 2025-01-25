@@ -4,11 +4,6 @@ enum MenuButton {
     null,
     'https://lottie.host/8b913c18-85c5-463b-b10c-fac2b6929560/GVjMdNNavH.json',
   ),
-  editProfile(
-    'Edit Profile',
-    'edit_profile',
-    'https://lottie.host/cf6238c1-ebcc-4741-a1c2-15098c620b83/xQETyKlA5A.json',
-  ),
   friends(
     'Friends',
     'friends',

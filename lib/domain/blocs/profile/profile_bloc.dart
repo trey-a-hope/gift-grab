@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:cloudinary/cloudinary.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/storage_object_service.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,15 +23,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final _leaderboardName = 'weekly_leaderboard';
   final NakamaService _nakamaService;
 
+  StreamSubscription? _accountSubscription;
+
   ProfileBloc({
     required this.uid,
     required this.authBloc,
+    required AccountBloc accountBloc,
   })  : _nakamaService = NakamaService(),
         super(ProfileInitial()) {
     on<FetchProfile>(_onFetchProfile);
     on<DeleteRecord>(_onDeleteRecord);
     on<AddFriend>(_onAddFriend);
     on<UploadPhoto>(_onUploadPhoto);
+
+    _accountSubscription = accountBloc.stream.listen((state) {
+      // TODO: Same thing line 55: edit_profile_screen.dart
+      if (state is AccountSuccess) {
+        debugPrint('Profile bloc listen for account updates...');
+      }
+    });
   }
 
   Future<void> _onFetchProfile(
@@ -172,5 +186,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } catch (e) {
       emit(ProfileError(message: 'Unexpected error: ${e.toString()}'));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _accountSubscription?.cancel();
+    return super.close();
   }
 }

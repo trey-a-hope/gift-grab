@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/presentation/widgets/clickable_avatar.dart';
 import 'package:nakama/nakama.dart';
 
 class GroupMemberDetailsWidget extends StatelessWidget {
   final GroupUser groupUser;
-  final bool isMe;
   final void Function()? kickUserAction;
   final void Function()? banUserAction;
   final void Function()? promoteUserAction;
@@ -14,7 +13,6 @@ class GroupMemberDetailsWidget extends StatelessWidget {
 
   const GroupMemberDetailsWidget({
     required this.groupUser,
-    required this.isMe,
     this.kickUserAction,
     this.banUserAction,
     this.promoteUserAction,
@@ -34,7 +32,7 @@ class GroupMemberDetailsWidget extends StatelessWidget {
     final username = user.username ?? 'No Display Name';
 
     return ListTile(
-      leading: _buildAvatar(user, isMe),
+      leading: ClickableAvatar(user),
       title: Row(
         children: [
           Text(
@@ -124,25 +122,6 @@ class GroupMemberDetailsWidget extends StatelessWidget {
         }
       },
       icon: Icon(icon),
-    );
-  }
-
-  Widget _buildAvatar(User user, bool isMe) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.purple,
-          width: isMe ? 3.0 : 0.0,
-        ),
-      ),
-      child: CircleAvatar(
-        backgroundImage: Image.network(
-          user.avatarUrl?.isEmpty ?? true
-              ? Globals.emptyProfile
-              : user.avatarUrl!,
-        ).image,
-      ),
     );
   }
 }

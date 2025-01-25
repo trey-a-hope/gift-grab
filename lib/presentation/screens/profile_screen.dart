@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/online_label.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   final String uid;
@@ -31,7 +32,7 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: () => state.isMyProfile
@@ -50,6 +51,7 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
             ),
             Gap(16),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (!state.isMyProfile) ...[
                   ElevatedButton(
@@ -58,19 +60,15 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
                         ),
                     child: Text('Add as Friend'),
                   ),
+                  Gap(8),
                 ],
-                Gap(8),
                 OnlineLabel(state.user.online),
               ],
             ),
             Gap(16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  state.user.username ?? 'Unknown Name',
-                  style: theme.textTheme.displayLarge,
-                ),
                 Text(
                   'Games Played: ${state.gamesPlayed}',
                   style: theme.textTheme.displayLarge,
@@ -86,18 +84,40 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
 
   @override
   Widget build(BuildContext context) {
-    return GGScaffoldWidget(
-      title: 'Profile',
-      child: BlocProvider(
-        create: (context) => ProfileBloc(
-          uid: uid,
-          authBloc: context.read<AuthBloc>(),
-        )..add(FetchProfile()),
-        child: BlocConsumer<ProfileBloc, ProfileState>(
+    return BlocProvider(
+      create: (context) => ProfileBloc(
+        uid: uid,
+        authBloc: context.read<AuthBloc>(),
+        accountBloc: context.read<AccountBloc>(),
+      )..add(FetchProfile()),
+      child: Builder(builder: (context) {
+        return BlocConsumer<ProfileBloc, ProfileState>(
           listener: listener,
-          builder: builder,
-        ),
-      ),
+          builder: (context, state) {
+            bool canEdit = false;
+            String? username;
+
+            if (state is ProfileLoaded) {
+              canEdit = state.isMyProfile;
+              username = state.user.username;
+            }
+
+            return GGScaffoldWidget(
+              title: username ?? '',
+              actions: [
+                if (canEdit) ...[
+                  IconButton.filledTonal(
+                    onPressed: () =>
+                        context.pushNamed(Globals.routes.editProfile),
+                    icon: Icon(Icons.edit),
+                  ),
+                ]
+              ],
+              child: builder(context, state),
+            );
+          },
+        );
+      }),
     );
   }
 }

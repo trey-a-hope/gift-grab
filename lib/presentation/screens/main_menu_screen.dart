@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
+import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
@@ -20,6 +23,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
     state = state as AccountLoaded;
+
     final theme = Theme.of(context);
 
     return Center(
@@ -28,7 +32,6 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Gap(16),
             Text(
               'Welcome Back, ${state.account?.user.username ?? 'UNKNOWN'}',
               style: theme.textTheme.displayLarge!
@@ -46,7 +49,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.profile,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.profile,
                       pathParameters: {
                         'uid': state.account.user.id,
@@ -67,7 +70,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.leaderboard,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.leaderboard,
                     ),
                   ),
@@ -91,7 +94,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   )
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -101,14 +104,21 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget build(BuildContext context) {
     context.read<AccountBloc>().add(FetchAccount());
+    context.read<NotificationsBloc>().add(FetchNotifications());
 
     return GGScaffoldWidget(
       title: 'Gift Grab',
       canPop: false,
       child: BlocConsumer<AccountBloc, AccountState>(
         listener: (context, state) {
-          // TODO: Make sure account reflects changes from Edit Profile.
           if (state is AccountLoaded) {
+            final appInfo = AppInfo.of(context);
+            if (!appInfo.target.isTablet) {
+              ModalService.showError(
+                title: 'Device not best suited for this game.',
+              );
+            }
+
             _storage.read(key: 'token').then(
               (token) {
                 if (token != null) {

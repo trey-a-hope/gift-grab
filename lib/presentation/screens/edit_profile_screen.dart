@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
-import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -47,8 +46,15 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   }
 
   @override
-  void onAfterMessage(BuildContext context) =>
-      context.read<AccountBloc>().add(FetchAccount());
+  void onAfterMessage(BuildContext context) {
+    context.read<AccountBloc>().add(FetchAccount());
+  }
+
+  @override
+  void listener(BuildContext context, AccountState state) {
+    if (state is AccountLoaded) {}
+  }
+  // TODO: Same thing line 41: profile_bloc.dart
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +62,6 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
       title: 'Edit Profile',
       child: Center(
         child: BlocConsumer<AccountBloc, AccountState>(
-          listenWhen: (previous, current) => context.listenWhen(
-            'editProfile',
-          ),
           listener: listener,
           builder: builder,
         ),

@@ -8,17 +8,20 @@ class GGScaffoldWidget extends StatelessWidget {
     required this.child,
     required this.title,
     this.canPop = true,
+    this.actions,
   });
 
   final Widget child;
   final String title;
   final bool canPop;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        actions: actions,
         leading: canPop
             ? IconButton.filledTonal(
                 onPressed: () => context.pop(),

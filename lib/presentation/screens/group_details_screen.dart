@@ -49,7 +49,6 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
                     itemCount: state.users.length,
                     itemBuilder: (c, i) => GroupMemberDetailsWidget(
                       groupUser: state.users[i],
-                      isMe: state.users[i].user.id == state.uid,
                       banUserAction: canBan(
                         state.users,
                         state.uid,

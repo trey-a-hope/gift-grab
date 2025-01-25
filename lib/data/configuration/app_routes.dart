@@ -50,6 +50,20 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
       initialLocation: '/${Globals.routes.main}',
       routes: [
         GoRoute(
+          path: '/${Globals.routes.profile}/:uid',
+          name: Globals.routes.profile,
+          builder: (context, state) {
+            final uid = state.pathParameters['uid'];
+            if (uid == null) throw Exception();
+            return ProfileScreen(uid: uid);
+          },
+        ),
+        GoRoute(
+          path: '/edit',
+          name: Globals.routes.editProfile,
+          builder: (context, state) => EditProfileScreen(),
+        ),
+        GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,
           builder: (_, __) => LoginScreen(),
@@ -78,18 +92,6 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               path: Globals.routes.searchUsers,
               name: Globals.routes.searchUsers,
               builder: (context, state) => const SearchUsersScreen(),
-              routes: [
-                GoRoute(
-                  path: 'profile/:uid',
-                  name: Globals.routes.profileFromSearch,
-                  builder: _profileScreenbuilder,
-                ),
-              ],
-            ),
-            GoRoute(
-              path: 'profile/:uid',
-              name: Globals.routes.profile,
-              builder: _profileScreenbuilder,
             ),
             GoRoute(
               path: Globals.routes.notifications,
@@ -160,11 +162,6 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const SettingsScreen(),
               routes: [
                 GoRoute(
-                  path: '/editProfile',
-                  name: Globals.routes.editProfile,
-                  builder: (context, state) => const EditProfileScreen(),
-                ),
-                GoRoute(
                   path: '/linkedAccounts',
                   name: Globals.routes.linkedAccounts,
                   builder: (context, state) => const LinkedAccountsScreen(),
@@ -188,9 +185,3 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
         return null;
       },
     );
-
-Widget _profileScreenbuilder(BuildContext context, GoRouterState state) {
-  final uid = state.pathParameters['uid'];
-  if (uid == null) throw Exception();
-  return ProfileScreen(uid: uid);
-}

@@ -47,22 +47,6 @@ class GameOverOverlay extends StatelessWidget {
                 ),
               ),
             ),
-            // const Gap(20),
-            // SizedBox(
-            //   width: Globals.isTablet ? 400 : 200,
-            //   height: Globals.isTablet ? 100 : 50,
-            //   child: ElevatedButton(
-            //     onPressed: () {
-            //       context.goNamed(Globals.routes.main);
-            //     },
-            //     child: Text(
-            //       'Main Menu',
-            //       style: TextStyle(
-            //         fontSize: Globals.isTablet ? 50 : 25,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

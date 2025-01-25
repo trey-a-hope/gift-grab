@@ -7,7 +7,7 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:gift_grab/presentation/widgets/user_details_widget.dart';
+import 'package:gift_grab/presentation/widgets/searched_user_list_tile.dart';
 import 'package:go_router/go_router.dart';
 
 class SearchUsersScreen extends SmartBloc<SearchUsersBloc, SearchUsersState> {
@@ -46,11 +46,11 @@ class SearchUsersScreen extends SmartBloc<SearchUsersBloc, SearchUsersState> {
               : user == null
                   ? NoResultsWidget(NoResultsEnum.users)
                   : GestureDetector(
-                      onTap: () => context.goNamed(
-                        Globals.routes.profileFromSearch,
+                      onTap: () => context.pushNamed(
+                        Globals.routes.profile,
                         pathParameters: {'uid': user.id},
                       ),
-                      child: UserDetailsWidget(user),
+                      child: SearchedUserListTile(user),
                     ),
         ),
       ],

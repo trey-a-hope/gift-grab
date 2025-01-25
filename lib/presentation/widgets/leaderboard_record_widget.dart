@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
+import 'package:gift_grab/presentation/widgets/clickable_avatar.dart';
 
 class LeaderboardRecordWidget extends StatelessWidget {
   final LeaderboardEntry entry;
@@ -45,14 +46,7 @@ class LeaderboardRecordWidget extends StatelessWidget {
           ),
         ),
       ),
-      trailing: CircleAvatar(
-        radius: _avatarRadius,
-        backgroundImage: NetworkImage(
-          entry.user.avatarUrl == null || entry.user.avatarUrl!.isEmpty
-              ? Globals.emptyProfile
-              : entry.user.avatarUrl!,
-        ),
-      ),
+      trailing: ClickableAvatar(entry.user),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/widgets/clickable_avatar.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendListTile extends StatelessWidget {
@@ -15,13 +15,7 @@ class FriendListTile extends StatelessWidget {
     final user = friend.user;
 
     return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: Image.network(
-          user.avatarUrl?.isEmpty ?? true
-              ? Globals.emptyProfile
-              : user.avatarUrl!,
-        ).image,
-      ),
+      leading: ClickableAvatar(user),
       title: Text(
         user.username ?? 'No Name',
       ),
