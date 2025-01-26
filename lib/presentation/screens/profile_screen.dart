@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
@@ -88,7 +87,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
       create: (context) => ProfileBloc(
         uid: uid,
         authBloc: context.read<AuthBloc>(),
-        accountBloc: context.read<AccountBloc>(),
       )..add(FetchProfile()),
       child: Builder(builder: (context) {
         return BlocConsumer<ProfileBloc, ProfileState>(
@@ -107,8 +105,16 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               actions: [
                 if (canEdit) ...[
                   IconButton.filledTonal(
-                    onPressed: () =>
-                        context.pushNamed(Globals.routes.editProfile),
+                    onPressed: () async {
+                      final success = await context
+                          .pushNamed<bool>(Globals.routes.editProfile);
+
+                      if (!context.mounted) return;
+
+                      if (success != null && success) {
+                        context.read<ProfileBloc>().add(FetchProfile());
+                      }
+                    },
                     icon: Icon(Icons.edit),
                   ),
                 ]

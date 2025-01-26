@@ -40,12 +40,6 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         groupId: event.groupId,
       );
 
-      // If no users, that means the group was deleted; navigate back.
-      if (groupUserList.groupUsers.isEmpty) {
-        emit(GroupUsersGoToRoute('groups'));
-        return;
-      }
-
       emit(
         GroupUsersLoaded(
           uid: uid,
@@ -76,8 +70,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
 
       emit(
         GroupUsersSuccess(
-            '${event.isJoinRequest ? 'Request sent' : 'Group joined'} successfully',
-            false),
+            '${event.isJoinRequest ? 'Request sent' : 'Group joined'} successfully'),
       );
     } on GrpcError catch (e) {
       emit(GroupUsersError(
@@ -103,8 +96,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
 
       emit(
         GroupUsersSuccess(
-            '${event.isJoinRequest ? 'Request deleted' : 'Left group'} successfully',
-            false),
+            '${event.isJoinRequest ? 'Request deleted' : 'Left group'} successfully'),
       );
     } on GrpcError catch (e) {
       emit(GroupUsersError(
@@ -128,7 +120,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         groupId: event.groupId,
       );
 
-      emit(GroupUsersSuccess('Group deleted successfully', true));
+      emit(GroupUsersSuccess('Group deleted successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -152,7 +144,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         userIds: [event.uid],
       );
 
-      emit(GroupUsersSuccess('User kicked successfully', false));
+      emit(GroupUsersSuccess('User kicked successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -176,7 +168,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         userIds: [event.uid],
       );
 
-      emit(GroupUsersSuccess('User banned successfully', false));
+      emit(GroupUsersSuccess('User banned successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -200,7 +192,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         userIds: [event.uid],
       );
 
-      emit(GroupUsersSuccess('User promoted successfully', false));
+      emit(GroupUsersSuccess('User promoted successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -224,7 +216,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         userIds: [event.uid],
       );
 
-      emit(GroupUsersSuccess('User demoted successfully', false));
+      emit(GroupUsersSuccess('User demoted successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
@@ -248,7 +240,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
         userIds: [event.uid],
       );
 
-      emit(GroupUsersSuccess('User added successfully', false));
+      emit(GroupUsersSuccess('User added successfully'));
     } on GrpcError catch (e) {
       emit(GroupUsersError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));

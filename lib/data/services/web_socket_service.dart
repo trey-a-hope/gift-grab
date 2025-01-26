@@ -40,7 +40,7 @@ class WebSocketService with WidgetsBindingObserver {
     );
 
     // User is online after socket connects.
-    socket?.updateStatus(OnlineStatus.online.status);
+    _socket?.updateStatus(OnlineStatus.online.status);
   }
 
   @override
@@ -48,7 +48,7 @@ class WebSocketService with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         debugPrint('WebSocket: App resumed');
-        socket?.updateStatus(OnlineStatus.online.status);
+        _socket?.updateStatus(OnlineStatus.online.status);
         break;
       case AppLifecycleState.inactive:
         debugPrint('WebSocket: App inactive');
@@ -58,7 +58,7 @@ class WebSocketService with WidgetsBindingObserver {
         debugPrint('WebSocket: App hidden');
       case AppLifecycleState.detached:
         debugPrint('WebSocket: App detached');
-        socket?.updateStatus(OnlineStatus.offline.status);
+        _socket?.updateStatus(OnlineStatus.offline.status);
         break;
     }
   }

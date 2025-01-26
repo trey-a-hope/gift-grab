@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
-import 'package:go_router/go_router.dart';
 
 abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   static const _error = 'Error';
@@ -9,7 +8,6 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   static const _loaded = 'Loaded';
   static const _success = 'Success';
   static const _unknown = 'Unknown';
-  static const _goToRoute = 'GoToRoute';
 
   const SmartBloc({super.key});
   Widget buildLoadingContent() =>
@@ -31,16 +29,7 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   bool shouldShowMessage(S state) =>
       state.toString().contains(_error) || state.toString().contains(_success);
 
-  bool shouldGoToRoute(S state) => state.toString().contains(_goToRoute);
-
   void listener(BuildContext context, S state) {
-    if (shouldGoToRoute(state)) {
-      final route = (state as dynamic).route as String?;
-      if (route == null) return;
-      context.goNamed(route);
-      return;
-    }
-
     if (shouldShowMessage(state)) {
       final message = (state as dynamic).message as String?;
       if (message != null) {
@@ -57,5 +46,6 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
     }
   }
 
+  // TODO: Could remove this method and instead use super.listener, then add any action after.
   void onAfterMessage(BuildContext context) {}
 }

@@ -18,7 +18,7 @@ class GroupDetailsWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      onTap: () => context.goNamed(
+      onTap: () => context.pushNamed(
         Globals.routes.groupDetails,
         pathParameters: {'groupId': group.id},
         extra: group,

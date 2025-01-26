@@ -49,7 +49,7 @@ class GroupsScreen extends StatelessWidget {
               const Gap(16),
               ElevatedButton(
                 child: Text('Create Group'),
-                onPressed: () => context.goNamed(
+                onPressed: () => context.pushNamed(
                   Globals.routes.createGroup,
                 ),
               ),

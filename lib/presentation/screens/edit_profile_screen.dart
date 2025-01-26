@@ -6,6 +6,7 @@ import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   const EditProfileScreen({super.key});
@@ -52,9 +53,11 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
 
   @override
   void listener(BuildContext context, AccountState state) {
-    if (state is AccountLoaded) {}
+    super.listener(context, state);
+    if (state is AccountSuccess) {
+      context.pop(true);
+    }
   }
-  // TODO: Same thing line 41: profile_bloc.dart
 
   @override
   Widget build(BuildContext context) {

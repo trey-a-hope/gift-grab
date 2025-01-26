@@ -76,7 +76,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.groups,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.groups,
                     ),
                   ),

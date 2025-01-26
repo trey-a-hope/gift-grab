@@ -24,13 +24,6 @@ class GroupUsersError extends GroupUsersState {
 
 class GroupUsersSuccess extends GroupUsersState {
   final String message;
-  final bool goBack;
 
-  GroupUsersSuccess(this.message, this.goBack);
-}
-
-class GroupUsersGoToRoute extends GroupUsersState {
-  final String route;
-
-  GroupUsersGoToRoute(this.route);
+  GroupUsersSuccess(this.message);
 }

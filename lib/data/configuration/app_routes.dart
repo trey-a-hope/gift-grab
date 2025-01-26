@@ -45,24 +45,75 @@ class StreamToListenable extends ChangeNotifier {
   void _tt(event) => notifyListeners();
 }
 
+// Profile
+final profileRoutes = [
+  GoRoute(
+    path: '/${Globals.routes.profile}/:uid',
+    name: Globals.routes.profile,
+    builder: (context, state) {
+      final uid = state.pathParameters['uid'];
+      if (uid == null) throw Exception();
+      return ProfileScreen(uid: uid);
+    },
+  ),
+  GoRoute(
+    path: '/edit',
+    name: Globals.routes.editProfile,
+    builder: (context, state) => EditProfileScreen(),
+  ),
+];
+
+// Groups
+final groupRoutes = [
+  GoRoute(
+    path: '/${Globals.routes.groups}',
+    name: Globals.routes.groups,
+    builder: (context, state) => const GroupsScreen(),
+  ),
+  GoRoute(
+    path: '/${Globals.routes.groupDetails}/:groupId',
+    name: Globals.routes.groupDetails,
+    builder: (context, state) {
+      final group = state.extra as Group;
+      return GroupDetailsScreen(
+        group: group,
+        initialContext: context,
+      );
+    },
+  ),
+  GoRoute(
+    path: '/${Globals.routes.createGroup}',
+    name: Globals.routes.createGroup,
+    builder: (context, state) {
+      return BlocListener<AllGroupsBloc, GroupsState>(
+        listener: (context, state) {
+          if (state is GroupsSuccess) {
+            context.pop();
+
+            context.read<AllGroupsBloc>().add(FetchGroups());
+            context.read<MyGroupsBloc>().add(FetchGroups());
+          }
+        },
+        child: CreateGroupScreen(),
+      );
+    },
+  ),
+  GoRoute(
+    path: '/${Globals.routes.editGroup}/:groupId',
+    name: Globals.routes.editGroup,
+    builder: (context, state) {
+      final group = state.extra as Group;
+      return EditGroupScreen(group: group);
+    },
+  ),
+];
+
 GoRouter appRouter(AuthBloc authBloc) => GoRouter(
       debugLogDiagnostics: false,
       initialLocation: '/${Globals.routes.main}',
       routes: [
-        GoRoute(
-          path: '/${Globals.routes.profile}/:uid',
-          name: Globals.routes.profile,
-          builder: (context, state) {
-            final uid = state.pathParameters['uid'];
-            if (uid == null) throw Exception();
-            return ProfileScreen(uid: uid);
-          },
-        ),
-        GoRoute(
-          path: '/edit',
-          name: Globals.routes.editProfile,
-          builder: (context, state) => EditProfileScreen(),
-        ),
+        ...profileRoutes,
+        ...groupRoutes,
         GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,
@@ -97,64 +148,6 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               path: Globals.routes.notifications,
               name: Globals.routes.notifications,
               builder: (context, state) => const NotificationsScreen(),
-            ),
-            GoRoute(
-              path: Globals.routes.groups,
-              name: Globals.routes.groups,
-              builder: (context, state) => const GroupsScreen(),
-              routes: [
-                GoRoute(
-                  path: Globals.routes.createGroup,
-                  name: Globals.routes.createGroup,
-                  builder: (context, state) {
-                    return BlocListener<AllGroupsBloc, GroupsState>(
-                      listener: (context, state) {
-                        if (state is GroupsSuccess) {
-                          context.pop();
-
-                          context.read<AllGroupsBloc>().add(FetchGroups());
-                          context.read<MyGroupsBloc>().add(FetchGroups());
-                        }
-                      },
-                      child: CreateGroupScreen(),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: ':groupId',
-                  name: Globals.routes.groupDetails,
-                  builder: (context, state) {
-                    final group = state.extra as Group;
-                    return GroupDetailsScreen(
-                      group: group,
-                      initialContext: context,
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      path: 'edit',
-                      name: Globals.routes.editGroup,
-                      builder: (context, state) {
-                        final group = state.extra as Group;
-
-                        return BlocListener<AllGroupsBloc, GroupsState>(
-                          listener: (context, state) {
-                            if (state is GroupsSuccess) {
-                              // Navigates back to Groups Screen.
-                              context.pop();
-                              context.pop();
-
-                              context.read<AllGroupsBloc>().add(FetchGroups());
-                              context.read<MyGroupsBloc>().add(FetchGroups());
-                            }
-                          },
-                          child: EditGroupScreen(group: group),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
             ),
             GoRoute(
               path: Globals.routes.settings,
