@@ -65,7 +65,6 @@ class WebSocketService with WidgetsBindingObserver {
 
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    // socket?.updateStatus(OnlineStatus.offline.status);
     _socket?.close();
     _socket = null;
   }

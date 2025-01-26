@@ -13,8 +13,13 @@ class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
       _buildAccountContent(context, state as AccountLoaded);
 
   @override
-  void onAfterMessage(BuildContext context) =>
+  void listener(BuildContext context, AccountState state) {
+    super.listener(context, state);
+
+    if (state is AccountSuccess) {
       context.read<AccountBloc>().add(FetchAccount());
+    }
+  }
 
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(

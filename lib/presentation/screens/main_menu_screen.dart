@@ -43,7 +43,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                 children: [
                   MenuButtonWidget(
                     menuButton: MenuButton.play,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.game,
                     ),
                   ),
@@ -58,13 +58,13 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.notifications,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.notifications,
                     ),
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.friends,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.friends,
                     ),
                   ),
@@ -82,13 +82,13 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.searchUsers,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.searchUsers,
                     ),
                   ),
                   MenuButtonWidget(
                     menuButton: MenuButton.settings,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.settings,
                     ),
                   )
@@ -104,7 +104,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
   @override
   Widget build(BuildContext context) {
     context.read<AccountBloc>().add(FetchAccount());
-    context.read<NotificationsBloc>().add(FetchNotifications());
+    // context.read<NotificationsBloc>().add(FetchNotifications());
 
     return GGScaffoldWidget(
       title: 'Gift Grab',

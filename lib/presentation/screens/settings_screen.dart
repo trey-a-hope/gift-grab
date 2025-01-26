@@ -31,7 +31,7 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
                 children: [
                   MenuButtonWidget(
                     menuButton: MenuButton.linkedAccounts,
-                    onTap: () => context.goNamed(
+                    onTap: () => context.pushNamed(
                       Globals.routes.linkedAccounts,
                     ),
                   ),
@@ -77,7 +77,7 @@ class SettingsScreen extends SmartBloc<AccountBloc, AccountState> {
               ),
             ),
             Text(
-              'v${appInfo.package.version}',
+              '${appInfo.package.appName} - v${appInfo.package.version}',
               style: theme.textTheme.displaySmall,
             )
           ],

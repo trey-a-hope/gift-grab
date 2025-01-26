@@ -47,15 +47,15 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
   }
 
   @override
-  void onAfterMessage(BuildContext context) {
-    context.read<AccountBloc>().add(FetchAccount());
-  }
-
-  @override
   void listener(BuildContext context, AccountState state) {
     super.listener(context, state);
+
     if (state is AccountSuccess) {
       context.pop(true);
+    }
+
+    if (state is AccountError) {
+      context.read<AccountBloc>().add(FetchAccount());
     }
   }
 

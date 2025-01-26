@@ -18,9 +18,63 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   });
 
   @override
-  void onAfterMessage(BuildContext context) => context.read<ProfileBloc>().add(
-        FetchProfile(),
-      );
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ProfileBloc(
+        uid: uid,
+        authBloc: context.read<AuthBloc>(),
+      )..add(FetchProfile()),
+      child: Builder(
+        builder: (context) {
+          return BlocConsumer<ProfileBloc, ProfileState>(
+            listener: listener,
+            builder: (context, state) {
+              bool canEdit = false;
+              String? username;
+
+              if (state is ProfileLoaded) {
+                canEdit = state.isMyProfile;
+                username = state.user.username;
+              }
+
+              return GGScaffoldWidget(
+                title: username ?? '',
+                actions: [
+                  if (canEdit) ...[
+                    IconButton.filledTonal(
+                      onPressed: () async {
+                        final success = await context
+                            .pushNamed<bool>(Globals.routes.editProfile);
+
+                        if (!context.mounted) return;
+
+                        if (success != null && success) {
+                          context.read<ProfileBloc>().add(FetchProfile());
+                        }
+                      },
+                      icon: Icon(Icons.edit),
+                    ),
+                  ]
+                ],
+                child: builder(context, state),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void listener(BuildContext context, ProfileState state) {
+    super.listener(context, state);
+
+    if (state is ProfileSuccess) {
+      context.read<ProfileBloc>().add(
+            FetchProfile(),
+          );
+    }
+  }
 
   @override
   Widget buildLoadedContent(BuildContext context, state) {
@@ -78,52 +132,6 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(
-        uid: uid,
-        authBloc: context.read<AuthBloc>(),
-      )..add(FetchProfile()),
-      child: Builder(builder: (context) {
-        return BlocConsumer<ProfileBloc, ProfileState>(
-          listener: listener,
-          builder: (context, state) {
-            bool canEdit = false;
-            String? username;
-
-            if (state is ProfileLoaded) {
-              canEdit = state.isMyProfile;
-              username = state.user.username;
-            }
-
-            return GGScaffoldWidget(
-              title: username ?? '',
-              actions: [
-                if (canEdit) ...[
-                  IconButton.filledTonal(
-                    onPressed: () async {
-                      final success = await context
-                          .pushNamed<bool>(Globals.routes.editProfile);
-
-                      if (!context.mounted) return;
-
-                      if (success != null && success) {
-                        context.read<ProfileBloc>().add(FetchProfile());
-                      }
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                ]
-              ],
-              child: builder(context, state),
-            );
-          },
-        );
-      }),
     );
   }
 }

@@ -18,9 +18,6 @@ class MenuButtonWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      // onTap: () => menuButton.route == null
-      //     ? action!()
-      //     : context.goNamed(menuButton.route!),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(

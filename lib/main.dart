@@ -17,7 +17,6 @@ import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 
 // mason make bloc --name [BLOC NAME] --style basic
 // https://pub.dev/packages/cloudinary_public for image storage
-// TODO: Replace all context.goNamed -> context.pushNamed.
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,7 +103,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<NotificationsBloc>(
           create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),
-          ),
+          )..add(FetchNotifications()),
         ),
       ],
       child: ToastificationWrapper(

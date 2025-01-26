@@ -39,10 +39,15 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
   }
 
   @override
-  void onAfterMessage(BuildContext context) =>
+  void listener(BuildContext context, LeaderboardState state) {
+    super.listener(context, state);
+
+    if (state is LeaderboardSuccess) {
       context.read<LeaderboardBloc>().add(
             FetchLeaderboard(),
           );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

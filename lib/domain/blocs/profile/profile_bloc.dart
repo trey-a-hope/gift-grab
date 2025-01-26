@@ -138,7 +138,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
 
       if (image == null) {
-        // TODO: Add values to state instead of fetching profile again.
         add(FetchProfile());
         return;
       }

@@ -41,11 +41,11 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
           ModalService.showSuccess(title: message);
         }
 
-        onAfterMessage(context);
+        // onAfterMessage(context);
       }
     }
   }
 
   // TODO: Could remove this method and instead use super.listener, then add any action after.
-  void onAfterMessage(BuildContext context) {}
+  // void onAfterMessage(BuildContext context) {}
 }

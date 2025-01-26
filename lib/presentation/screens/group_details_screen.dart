@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
+// TODO: Currently no api for fetching a single group, so group details on this screen cannot be updated after a successful edit.
 class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
     with GroupPermissions {
   final Group group;
@@ -201,24 +202,24 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
             if (canEdit(state.users, state.uid)) ...[
               ElevatedButton(
                 child: Text('Edit'),
-                onPressed: () => context.pushNamed(
-                  Globals.routes.editGroup,
-                  pathParameters: {'groupId': group.id},
-                  extra: group,
-                ),
+                onPressed: () async {
+                  await context.pushNamed(
+                    Globals.routes.editGroup,
+                    pathParameters: {'groupId': group.id},
+                    extra: group,
+                  );
+                  if (!context.mounted) return;
+
+                  context.read<GroupUsersBloc>().add(
+                        FetchGroupUsers(groupId: group.id),
+                      );
+                },
               ),
             ],
           ],
         )
       ],
     );
-  }
-
-  @override
-  void onAfterMessage(BuildContext context) {
-    context.read<GroupUsersBloc>().add(
-          FetchGroupUsers(groupId: group.id),
-        );
   }
 
   @override
@@ -233,14 +234,19 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
         context.pop(true);
       }
     }
+
+    if (state is GroupUsersSuccess) {
+      context.read<GroupUsersBloc>().add(
+            FetchGroupUsers(groupId: group.id),
+          );
+    }
   }
 
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(
-        title: group.name ?? 'Unknown Name',
+        title: 'Group',
         child: SafeArea(
           child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
-            // listenWhen: (previous, current) => context.listenWhen(group.id),
             listener: listener,
             builder: builder,
           ),

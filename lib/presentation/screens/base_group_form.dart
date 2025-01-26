@@ -18,13 +18,11 @@ class BaseGroupForm extends StatefulWidget {
     int groupCount,
     bool isOpen,
   ) onSubmit;
-  final void Function()? goBack;
 
   const BaseGroupForm({
     super.key,
     required this.submitButtonText,
     required this.onSubmit,
-    this.goBack,
     required this.title,
     this.initialName,
     this.initialDescription,

@@ -209,9 +209,15 @@ class _FriendsTab extends SmartBloc<FriendsBloc, FriendsState> {
   }
 
   @override
-  void onAfterMessage(BuildContext context) => context.read<FriendsBloc>().add(
-        FetchFriends(),
-      );
+  void listener(BuildContext context, FriendsState state) {
+    super.listener(context, state);
+
+    if (state is FriendsSuccess) {
+      context.read<FriendsBloc>().add(
+            FetchFriends(),
+          );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
