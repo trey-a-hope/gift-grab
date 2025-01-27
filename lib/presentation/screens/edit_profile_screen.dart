@@ -52,6 +52,7 @@ class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {
 
     if (state is AccountSuccess) {
       context.pop(true);
+      context.read<AccountBloc>().add(FetchAccount());
     }
 
     if (state is AccountError) {

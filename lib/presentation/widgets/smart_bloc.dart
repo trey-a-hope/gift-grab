@@ -10,11 +10,12 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
   static const _unknown = 'Unknown';
 
   const SmartBloc({super.key});
+
   Widget buildLoadingContent() =>
       const Center(child: CircularProgressIndicator());
+  Widget buildLoadedContent(BuildContext context, dynamic state);
   Widget buildErrorContent(String message) => Text('$_error: $message');
   Widget buildUnknownContent() => const Text('$_unknown state');
-  Widget buildLoadedContent(BuildContext context, dynamic state);
 
   Widget builder<T>(BuildContext context, T state) => switch (state) {
         final state when state.toString().contains(_loading) =>
@@ -26,26 +27,20 @@ abstract class SmartBloc<B extends Bloc, S> extends StatelessWidget {
         _ => buildUnknownContent(),
       };
 
-  bool shouldShowMessage(S state) =>
-      state.toString().contains(_error) || state.toString().contains(_success);
+  bool _hasError(S state) => state.toString().contains(_error);
+
+  bool _hasSuccess(S state) => state.toString().contains(_success);
 
   void listener(BuildContext context, S state) {
-    if (shouldShowMessage(state)) {
-      final message = (state as dynamic).message as String?;
-      if (message != null) {
-        if (state.toString().contains(_error)) {
-          ModalService.showError(title: message);
-        }
+    if (_hasError(state) || _hasSuccess(state)) {
+      final message = (state as dynamic).message as String;
 
-        if (state.toString().contains(_success)) {
-          ModalService.showSuccess(title: message);
-        }
-
-        // onAfterMessage(context);
+      if (_hasError(state)) {
+        ModalService.showError(title: message);
+      }
+      if (_hasSuccess(state)) {
+        ModalService.showSuccess(title: message);
       }
     }
   }
-
-  // TODO: Could remove this method and instead use super.listener, then add any action after.
-  // void onAfterMessage(BuildContext context) {}
 }
