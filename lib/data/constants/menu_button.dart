@@ -24,11 +24,6 @@ enum MenuButton {
     'linked_accounts',
     'https://lottie.host/c949d875-6223-4e7e-8eb0-dec46cca9f2b/JN9abpQohW.json',
   ),
-  notifications(
-    'Notifications',
-    'notifications',
-    'https://lottie.host/24b01879-03f1-44b2-bbef-427321e5a4f8/WY0iLNz97c.json',
-  ),
   play(
     'Play',
     'game',
@@ -39,21 +34,13 @@ enum MenuButton {
     'profile',
     'https://lottie.host/ac2d1c3e-cd3d-4463-955a-f71f08033540/49dcqrxHYZ.json',
   ),
-  settings(
-    'Settings',
-    'settings',
-    'https://lottie.host/53e7c57a-d551-4e51-ba85-9d19aff299d9/Z776NgU1PR.json',
-  ),
+
   signOut(
     'Sign Out',
     null,
     'https://lottie.host/f88e459d-6b62-4d0f-a98c-c496fb0c325e/2gJWApc9pg.json',
   ),
-  searchUsers(
-    'Search Users',
-    'search_users',
-    'https://lottie.host/e149d804-8452-4699-ad4f-32f48809a614/I8NzWu6KKY.json',
-  );
+  ;
 
   final String name;
   final String? route;

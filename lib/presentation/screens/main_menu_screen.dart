@@ -56,21 +56,9 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     ),
                   ),
                   MenuButtonWidget(
-                    menuButton: MenuButton.notifications,
-                    onTap: () => context.pushNamed(
-                      Globals.routes.notifications,
-                    ),
-                  ),
-                  MenuButtonWidget(
                     menuButton: MenuButton.friends,
                     onTap: () => context.pushNamed(
                       Globals.routes.friends,
-                    ),
-                  ),
-                  MenuButtonWidget(
-                    menuButton: MenuButton.leaderboard,
-                    onTap: () => context.pushNamed(
-                      Globals.routes.leaderboard,
                     ),
                   ),
                   MenuButtonWidget(
@@ -80,17 +68,11 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     ),
                   ),
                   MenuButtonWidget(
-                    menuButton: MenuButton.searchUsers,
+                    menuButton: MenuButton.leaderboard,
                     onTap: () => context.pushNamed(
-                      Globals.routes.searchUsers,
+                      Globals.routes.leaderboard,
                     ),
                   ),
-                  MenuButtonWidget(
-                    menuButton: MenuButton.settings,
-                    onTap: () => context.pushNamed(
-                      Globals.routes.settings,
-                    ),
-                  )
                 ],
               ),
             ),
@@ -106,6 +88,26 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
 
     return GGScaffoldWidget(
       title: 'Gift Grab',
+      actions: [
+        IconButton.filledTonal(
+          onPressed: () => context.pushNamed(
+            Globals.routes.notifications,
+          ),
+          icon: Icon(Icons.notifications),
+        ),
+        IconButton.filledTonal(
+          onPressed: () => context.pushNamed(
+            Globals.routes.searchUsers,
+          ),
+          icon: Icon(Icons.search),
+        ),
+        IconButton.filledTonal(
+          onPressed: () => context.pushNamed(
+            Globals.routes.settings,
+          ),
+          icon: Icon(Icons.settings),
+        ),
+      ],
       canPop: false,
       child: BlocConsumer<AccountBloc, AccountState>(
         listener: (context, state) {
