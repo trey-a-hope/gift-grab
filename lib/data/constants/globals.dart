@@ -60,6 +60,7 @@ class _Routes {
   final String notifications = 'notifications';
   final String friends = 'friends';
   final String searchUsers = 'search_users';
+  final String chatRooms = 'chat_rooms';
 }
 
 class _TimeLimits {

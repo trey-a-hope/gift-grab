@@ -21,6 +21,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   StreamSubscription? _notificationSubscription;
   StreamSubscription? _statusSubscription;
+  StreamSubscription? _channelMessageSubscription;
+  StreamSubscription? _channelPresenceSubscription;
 
   NotificationsBloc({
     required this.authBloc,
@@ -45,6 +47,25 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         ModalService.showSuccess(title: notification.subject ?? 'New Message');
         add(FetchNotifications());
         debugPrint(notification.toString());
+      },
+    );
+
+    final List<UserPresence> roomUsers = [];
+    _channelPresenceSubscription =
+        _webSocketService.socket?.onChannelPresence.listen((event) {
+      // TODO: Remove all users who left.
+      // roomUsers.removeWhere((user) => event.leaves.contains(user));
+      // TODO: Add all users who joined.
+      // roomUsers.addAll(event.joins);
+      debugPrint('Room users: $roomUsers');
+    });
+
+    _channelMessageSubscription =
+        _webSocketService.socket?.onChannelMessage.listen(
+      (message) {
+        // TODO:
+        debugPrint('Received a message on channel: ${message.channelId}');
+        debugPrint('Message content: ${message.content}');
       },
     );
 
@@ -100,6 +121,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   Future<void> close() {
     _notificationSubscription?.cancel();
     _statusSubscription?.cancel();
+    _channelMessageSubscription?.cancel();
+    _channelPresenceSubscription?.cancel();
     return super.close();
   }
 

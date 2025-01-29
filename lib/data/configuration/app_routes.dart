@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
+import 'package:gift_grab/presentation/screens/chat_rooms_screen.dart';
 import 'package:gift_grab/presentation/screens/create_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_group_screen.dart';
 import 'package:gift_grab/presentation/screens/edit_profile_screen.dart';
@@ -133,6 +134,11 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               path: Globals.routes.leaderboard,
               name: Globals.routes.leaderboard,
               builder: (context, state) => const LeaderboardScreen(),
+            ),
+            GoRoute(
+              path: Globals.routes.chatRooms,
+              name: Globals.routes.chatRooms,
+              builder: (context, state) => const ChatRoomsScreen(),
             ),
             GoRoute(
               path: Globals.routes.friends,

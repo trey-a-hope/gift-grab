@@ -11,6 +11,8 @@ const usersLottie =
     'https://lottie.host/e149d804-8452-4699-ad4f-32f48809a614/I8NzWu6KKY.json';
 
 enum NoResultsEnum {
+  chatRooms('No chat rooms', friendsLottie),
+
   // Friends
   blocks('No blocks', friendsLottie),
   friends('No friends', friendsLottie),
