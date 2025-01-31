@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/data/services/storage_object_service.dart';
+import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:grpc/grpc.dart';
@@ -18,10 +18,12 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
   final _leaderboardName = 'weekly_leaderboard';
   final NakamaService _nakamaService;
+  final GamesPlayedStorage _gamesPlayedStorage;
 
   LeaderboardBloc({
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
+        _gamesPlayedStorage = GamesPlayedStorage(),
         super(LeaderboardInitial()) {
     on<FetchLeaderboard>(_onFetchLeaderboard);
     on<SubmitScore>(_onSubmitScore);
@@ -115,7 +117,8 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       );
 
       // Update games played count.
-      await StorageObjectService.updateGamesPlayed(session, uid);
+      final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
+      await _gamesPlayedStorage.updateValue(session, gamesPlayed + 1);
 
       debugPrint('_onSubmitScore: ${event.score}');
 

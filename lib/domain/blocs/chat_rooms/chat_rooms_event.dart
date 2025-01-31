@@ -5,3 +5,17 @@ sealed class ChatRoomsEvent {
 }
 
 class FetchChatRooms extends ChatRoomsEvent {}
+
+class ChatRoomNameChange extends ChatRoomsEvent {
+  final String name;
+
+  ChatRoomNameChange({
+    required this.name,
+  });
+}
+
+class SaveChatRoom extends ChatRoomsEvent {
+  final String name;
+
+  SaveChatRoom({required this.name});
+}

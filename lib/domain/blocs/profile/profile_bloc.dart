@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/data/services/storage_object_service.dart';
+import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,12 +18,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final String uid;
 
   final _leaderboardName = 'weekly_leaderboard';
+
   final NakamaService _nakamaService;
+  final GamesPlayedStorage _gamesPlayedStorage;
 
   ProfileBloc({
     required this.uid,
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
+        _gamesPlayedStorage = GamesPlayedStorage(),
         super(ProfileInitial()) {
     on<FetchProfile>(_onFetchProfile);
     on<DeleteRecord>(_onDeleteRecord);
@@ -51,10 +54,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       // TODO: See if user is my friend already.
 
-      final gamesPlayed = await StorageObjectService.getGamesPlayed(
-        session,
-        uid,
-      );
+      final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
 
       emit(
         ProfileLoaded(

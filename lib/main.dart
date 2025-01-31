@@ -7,6 +7,7 @@ import 'package:gift_grab/data/configuration/nakama_properties.dart';
 import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/chat_rooms/chat_rooms_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
@@ -79,6 +80,11 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         // Note: These are needed in multiple different screens.
+        BlocProvider<ChatRoomsBloc>(
+          create: (context) => ChatRoomsBloc(
+            authBloc: context.read<AuthBloc>(),
+          )..add(FetchChatRooms()),
+        ),
         BlocProvider<AllGroupsBloc>(
           create: (context) => AllGroupsBloc(
             authBloc: context.read<AuthBloc>(),
