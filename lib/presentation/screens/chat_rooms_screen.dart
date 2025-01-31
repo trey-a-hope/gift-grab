@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_rooms/chat_rooms_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   const ChatRoomsScreen({
@@ -66,6 +68,14 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
       )..add(FetchChatRooms()),
       child: GGScaffoldWidget(
         title: 'Chat Rooms',
+        actions: [
+          IconButton.filledTonal(
+            onPressed: () => context.pushNamed(
+              Globals.routes.createChatRoom,
+            ),
+            icon: Icon(Icons.add),
+          ),
+        ],
         child: SafeArea(
           child: Center(
             child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
