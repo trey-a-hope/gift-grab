@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/blocs/chat_rooms/chat_rooms_bloc.dart';
+import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/chat_room/chat_room_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
+import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 
-// TODO: Create ChatRoomBloc that will list all messages for this room.
-class ChatRoomScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
+class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   final String room;
 
   const ChatRoomScreen({
@@ -19,15 +20,50 @@ class ChatRoomScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   Widget buildLoadedContent(BuildContext context, dynamic state) {
     final theme = Theme.of(context);
 
-    state = state as ChatRoomsLoaded;
+    state = state as ChatRoomLoaded;
 
-    final messages = [];
+    final channel = state.channel;
 
-    return Center(
-      child: Text(
-        room,
-        style: theme.textTheme.headlineLarge,
-      ),
+    if (channel == null) {
+      throw Exception('Channel is null');
+    }
+
+    final presences = channel.presences;
+
+    final text = state.text;
+
+    return Column(
+      children: [
+        Text(
+          channel.roomName,
+          style: theme.textTheme.headlineLarge,
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: presences.length,
+            itemBuilder: (c, i) => ListTile(
+              title: Text(
+                presences[i].username,
+                style: theme.textTheme.headlineLarge,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(32),
+          child: GGInputFieldWidget(
+            onChanged: (val) => context.read<ChatRoomBloc>().add(
+                  MessageUpdate(val),
+                ),
+            onSend: () {
+              //TODO: Submit message to channel!
+              debugPrint(text);
+            },
+            initialValue: state.text,
+            hintText: 'Enter message',
+          ),
+        ),
+      ],
     );
   }
 
@@ -37,12 +73,17 @@ class ChatRoomScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
       title: room,
       child: SafeArea(
         child: Center(
-          child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
-            listenWhen: (previous, current) => context.listenWhen(
-              Globals.routes.createChatRoom,
+          child: BlocProvider(
+            create: (context) => ChatRoomBloc(
+              authBloc: context.read<AuthBloc>(),
+            )..add(ConnectToSocket(room)),
+            child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
+              listenWhen: (previous, current) => context.listenWhen(
+                Globals.routes.chatRoom,
+              ),
+              listener: listener,
+              builder: builder,
             ),
-            listener: listener,
-            builder: builder,
           ),
         ),
       ),

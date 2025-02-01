@@ -1,4 +1,4 @@
-import 'package:gift_grab/data/services/storage/base_storage_service.dart';
+part of 'base_storage_service.dart';
 
 class GamesPlayedStorage extends BaseStorageService<int> {
   @override

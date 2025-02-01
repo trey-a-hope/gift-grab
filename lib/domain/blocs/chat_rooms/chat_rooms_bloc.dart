@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
-import 'package:gift_grab/data/services/storage/chat_storage_service.dart';
+import 'package:gift_grab/data/services/storage/base_storage_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 
@@ -34,7 +34,6 @@ class ChatRoomsBloc extends Bloc<ChatRoomsEvent, ChatRoomsState> {
       if (session == null) return;
 
       final rooms = await _chatStorage.getValue(session, null);
-      debugPrint(rooms.toString());
 
       emit(
         ChatRoomsLoaded(

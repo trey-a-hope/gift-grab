@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:nakama/nakama.dart';
 
+part 'chat_storage.dart';
+part 'games_played_storage.dart';
+
 abstract class BaseStorageService<T> {
   String get collection;
   String get key;
@@ -21,7 +24,11 @@ abstract class BaseStorageService<T> {
       if (storageObjectList.objects.isEmpty) {
         return defaultValue;
       }
-      return parseValue(json.decode(storageObjectList.objects.first.value));
+      return parseValue(
+        json.decode(
+          storageObjectList.objects.first.value,
+        ),
+      );
     } catch (e) {
       throw Exception(e);
     }
