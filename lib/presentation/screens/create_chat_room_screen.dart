@@ -33,7 +33,7 @@ class CreateChatRoomScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
               onPressed: () async {
                 final confirm = await ModalService.showConfirmation(
                   context: context,
-                  title: 'Create Chat Room \"${state.newChatRoomName}\"',
+                  title: 'Create Chat Room "${state.newChatRoomName}"',
                   message: 'Are you sure?',
                 );
 

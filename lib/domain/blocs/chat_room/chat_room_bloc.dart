@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
@@ -5,11 +7,14 @@ import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 part 'chat_room_event.dart';
 part 'chat_room_state.dart';
 
-// TODO: Impliment flutter_chat_ui: ^1.6.15
+//TODO: If send a message, then signout/sign with different account,
+// then post message, it displays the correct bubble. However, if I
+// leave the page and come back, the message I just posted is on the wrong side.
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   final AuthBloc authBloc;
 
@@ -19,10 +24,13 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
         _webSocketService = WebSocketService(),
-        super(ChatRoomState(null, [], '')) {
+        super(ChatRoomState(
+          null,
+          null,
+          [],
+        )) {
     on<ConnectToSocket>(_onConnectToSocket);
     on<FetchMessages>(_onFetchMessages);
-    on<MessageUpdate>(_onMessageUpdate);
     on<SendMessage>(_onSendMessage);
   }
 
@@ -31,9 +39,9 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     Emitter<ChatRoomState> emit,
   ) async {
     emit(ChatRoomLoading(
+      null,
       state.channel,
       state.messages,
-      state.text,
     ));
 
     try {
@@ -51,28 +59,38 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         throw Exception('Channel is null.');
       }
 
-      add(
-        FetchMessages(
+      final account = await getNakamaClient().getAccount(session);
+
+      emit(
+        ChatRoomLoading(
+          types.User(
+            id: session.userId,
+            firstName: account.user.username,
+            lastName: 'Last Name',
+          ),
           channel,
-          false,
+          [],
         ),
       );
+
+      add(FetchMessages());
+      debugPrint('_onConnectToSocket');
     } on GrpcError catch (e) {
       emit(
         ChatRoomError(
+          user: state.user!,
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     } catch (e) {
       emit(
         ChatRoomError(
+          user: state.user!,
           message: 'Unexpected error: ${e.toString()}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     }
@@ -82,14 +100,6 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     FetchMessages event,
     Emitter<ChatRoomState> emit,
   ) async {
-    emit(
-      ChatRoomLoading(
-        event.channel,
-        state.messages,
-        event.clearInput ? '' : state.text,
-      ),
-    );
-
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
@@ -105,43 +115,31 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
       emit(
         ChatRoomLoaded(
+          state.user,
           state.channel,
           messages ?? [],
-          state.text,
         ),
       );
     } on GrpcError catch (e) {
       emit(
         ChatRoomError(
+          user: state.user,
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     } catch (e) {
       emit(
         ChatRoomError(
+          user: state.user,
           message: 'Unexpected error: ${e.toString()}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     }
   }
-
-  Future<void> _onMessageUpdate(
-    MessageUpdate event,
-    Emitter<ChatRoomState> emit,
-  ) async =>
-      emit(
-        ChatRoomLoaded(
-          state.channel,
-          state.messages,
-          event.text,
-        ),
-      );
 
   @override
   Future<void> close() async {
@@ -157,46 +155,67 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     SendMessage event,
     Emitter<ChatRoomState> emit,
   ) async {
-    emit(ChatRoomLoading(
-      state.channel,
-      state.messages,
-      state.text,
-    ));
-
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
       final channelId = state.channel!.id;
 
-      final channelMessageAck = await _webSocketService.socket
-          ?.sendMessage(channelId: channelId, content: {
-        'name': state.text,
-      });
-      debugPrint(channelMessageAck.toString());
+      final content = {
+        'name': event.text,
+      };
 
-      add(
-        FetchMessages(
-          state.channel!,
-          true,
+      final channelMessageAck = await _webSocketService.socket?.sendMessage(
+        channelId: channelId,
+        content: content,
+      );
+      if (channelMessageAck == null) {
+        throw Exception('channelMessageAck is null');
+      }
+
+      debugPrint(channelMessageAck.toString());
+      debugPrint('Message sent from uid: ${session.userId}');
+
+      emit(
+        ChatRoomLoaded(
+          state.user,
+          state.channel,
+          [
+            ChannelMessage(
+              channelId: channelId,
+              messageId: channelMessageAck.messageId,
+              code: channelMessageAck.code,
+              senderId: session.userId,
+              username: channelMessageAck.username,
+              content: jsonEncode(content),
+              createTime: channelMessageAck.created,
+              updateTime: channelMessageAck.updated,
+              persistent: channelMessageAck.persistent,
+              roomName: channelMessageAck.roomName,
+              groupId: channelMessageAck.groupId,
+              userIdOne: channelMessageAck.userIdOne,
+              userIdTwo: channelMessageAck.userIdTwo,
+            ),
+            ...state.messages,
+          ],
         ),
       );
     } on GrpcError catch (e) {
       emit(
         ChatRoomError(
+          user: state.user,
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     } catch (e) {
       emit(
         ChatRoomError(
+          user: state.user,
           message: 'Unexpected error: ${e.toString()}',
           channel: state.channel,
           messages: state.messages,
-          text: state.text,
         ),
       );
     }

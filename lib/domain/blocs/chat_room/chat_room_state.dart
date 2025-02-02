@@ -1,38 +1,38 @@
 part of 'chat_room_bloc.dart';
 
 class ChatRoomState {
+  final types.User? user;
   final Channel? channel;
   final List<ChannelMessage> messages;
-  final String text;
 
   const ChatRoomState(
+    this.user,
     this.channel,
     this.messages,
-    this.text,
   );
 }
 
 class ChatRoomInitial extends ChatRoomState {
   ChatRoomInitial(
+    super.user,
     super.channel,
     super.messages,
-    super.text,
   );
 }
 
 class ChatRoomLoading extends ChatRoomState {
   ChatRoomLoading(
+    super.user,
     super.channel,
     super.messages,
-    super.text,
   );
 }
 
 class ChatRoomLoaded extends ChatRoomState {
   ChatRoomLoaded(
+    super.user,
     super.channel,
     super.messages,
-    super.text,
   );
 }
 
@@ -42,12 +42,12 @@ class ChatRoomSuccess extends ChatRoomState {
   ChatRoomSuccess({
     required Channel? channel,
     required List<ChannelMessage> messages,
-    required String text,
     required this.message,
+    required types.User user,
   }) : super(
+          user,
           channel,
           messages,
-          text,
         );
 }
 
@@ -57,11 +57,11 @@ class ChatRoomError extends ChatRoomState {
   ChatRoomError({
     required Channel? channel,
     required List<ChannelMessage> messages,
-    required String text,
     required this.message,
+    required types.User? user,
   }) : super(
+          user,
           channel,
           messages,
-          text,
         );
 }

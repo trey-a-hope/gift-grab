@@ -16,8 +16,6 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
 
   @override
   Widget buildLoadedContent(BuildContext context, dynamic state) {
-    final theme = Theme.of(context);
-
     state = state as ChatRoomsLoaded;
 
     final rooms = state.rooms;

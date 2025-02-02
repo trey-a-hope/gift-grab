@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_room/chat_room_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
-import 'package:gift_grab/presentation/widgets/channel_message_list_tile.dart';
-import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   final String room;
@@ -24,16 +26,26 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
     state = state as ChatRoomLoaded;
 
     final channel = state.channel;
+    final user = state.user;
 
-    if (channel == null) {
-      throw Exception('Channel is null');
+    if (channel == null || user == null) {
+      throw Exception('Channel or user is null');
     }
 
-    final presences = channel.presences;
-
-    final text = state.text;
+    // TODO: Display presences as simple card widgets with users that uses a future listener.
+    // final presences = channel.presences;
 
     final messages = state.messages;
+
+    final convertedMessages = messages
+        .map(
+          (m) => types.TextMessage(
+            author: types.User(id: m.senderId),
+            id: m.messageId,
+            text: _getMessageContent(m.content),
+          ),
+        )
+        .toList();
 
     return Column(
       children: [
@@ -42,24 +54,20 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
           style: theme.textTheme.headlineLarge,
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (c, i) => ChannelMessageListTile(
-              message: messages[i],
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(32),
-          child: GGInputFieldWidget(
-            onChanged: (val) => context.read<ChatRoomBloc>().add(
-                  MessageUpdate(val),
-                ),
-            onSend: () => context.read<ChatRoomBloc>().add(
-                  SendMessage(),
-                ),
-            initialValue: state.text,
-            hintText: 'Enter message',
+          child: Chat(
+            messages: convertedMessages,
+            onAttachmentPressed: null,
+            onMessageTap: null,
+            onPreviewDataFetched: null,
+            onSendPressed: (val) {
+              debugPrint('uid: ${user.id}');
+              context.read<ChatRoomBloc>().add(
+                    SendMessage(val.text),
+                  );
+            },
+            showUserAvatars: true,
+            showUserNames: true,
+            user: user,
           ),
         ),
       ],
@@ -88,4 +96,6 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
       ),
     );
   }
+
+  String _getMessageContent(val) => jsonDecode(val)['name'];
 }

@@ -11,13 +11,7 @@ class ConnectToSocket extends ChatRoomEvent {
 }
 
 class FetchMessages extends ChatRoomEvent {
-  final Channel channel;
-  final bool clearInput;
-
-  FetchMessages(
-    this.channel,
-    this.clearInput,
-  );
+  FetchMessages();
 }
 
 class MessageUpdate extends ChatRoomEvent {
@@ -26,4 +20,7 @@ class MessageUpdate extends ChatRoomEvent {
   MessageUpdate(this.text);
 }
 
-class SendMessage extends ChatRoomEvent {}
+class SendMessage extends ChatRoomEvent {
+  final String text;
+  SendMessage(this.text);
+}
