@@ -9,6 +9,7 @@ import 'package:nakama/nakama.dart';
 part 'chat_room_event.dart';
 part 'chat_room_state.dart';
 
+// TODO: Impliment flutter_chat_ui: ^1.6.15
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   final AuthBloc authBloc;
 
@@ -18,9 +19,11 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
         _webSocketService = WebSocketService(),
-        super(ChatRoomState(null, '')) {
+        super(ChatRoomState(null, [], '')) {
     on<ConnectToSocket>(_onConnectToSocket);
+    on<FetchMessages>(_onFetchMessages);
     on<MessageUpdate>(_onMessageUpdate);
+    on<SendMessage>(_onSendMessage);
   }
 
   Future<void> _onConnectToSocket(
@@ -29,6 +32,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   ) async {
     emit(ChatRoomLoading(
       state.channel,
+      state.messages,
       state.text,
     ));
 
@@ -43,10 +47,14 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         hidden: false,
       );
 
-      emit(
-        ChatRoomLoaded(
+      if (channel == null) {
+        throw Exception('Channel is null.');
+      }
+
+      add(
+        FetchMessages(
           channel,
-          state.text,
+          false,
         ),
       );
     } on GrpcError catch (e) {
@@ -54,6 +62,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         ChatRoomError(
           message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
           channel: state.channel,
+          messages: state.messages,
           text: state.text,
         ),
       );
@@ -62,6 +71,60 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         ChatRoomError(
           message: 'Unexpected error: ${e.toString()}',
           channel: state.channel,
+          messages: state.messages,
+          text: state.text,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onFetchMessages(
+    FetchMessages event,
+    Emitter<ChatRoomState> emit,
+  ) async {
+    emit(
+      ChatRoomLoading(
+        event.channel,
+        state.messages,
+        event.clearInput ? '' : state.text,
+      ),
+    );
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final channelId = state.channel!.id;
+
+      final channelMessageList = await getNakamaClient().listChannelMessages(
+        session: session,
+        channelId: channelId,
+      );
+
+      final messages = channelMessageList.messages;
+
+      emit(
+        ChatRoomLoaded(
+          state.channel,
+          messages ?? [],
+          state.text,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(
+        ChatRoomError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+          channel: state.channel,
+          messages: state.messages,
+          text: state.text,
+        ),
+      );
+    } catch (e) {
+      emit(
+        ChatRoomError(
+          message: 'Unexpected error: ${e.toString()}',
+          channel: state.channel,
+          messages: state.messages,
           text: state.text,
         ),
       );
@@ -73,19 +136,69 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     Emitter<ChatRoomState> emit,
   ) async =>
       emit(
-        ChatRoomLoaded(state.channel, event.text),
+        ChatRoomLoaded(
+          state.channel,
+          state.messages,
+          event.text,
+        ),
       );
 
   @override
   Future<void> close() async {
-    final channelId = state.channel?.id;
-    if (channelId == null) {
-      debugPrint('Could not leaveChannel; id was null.');
-    } else {
-      await _webSocketService.socket?.leaveChannel(channelId: channelId);
-      debugPrint('leaveChannel: $channelId, success.');
-    }
+    final channelId = state.channel!.id;
+
+    await _webSocketService.socket?.leaveChannel(channelId: channelId);
+    debugPrint('leaveChannel: $channelId, success.');
 
     return super.close();
+  }
+
+  Future<void> _onSendMessage(
+    SendMessage event,
+    Emitter<ChatRoomState> emit,
+  ) async {
+    emit(ChatRoomLoading(
+      state.channel,
+      state.messages,
+      state.text,
+    ));
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+      if (session == null) return;
+
+      final channelId = state.channel!.id;
+
+      final channelMessageAck = await _webSocketService.socket
+          ?.sendMessage(channelId: channelId, content: {
+        'name': state.text,
+      });
+      debugPrint(channelMessageAck.toString());
+
+      add(
+        FetchMessages(
+          state.channel!,
+          true,
+        ),
+      );
+    } on GrpcError catch (e) {
+      emit(
+        ChatRoomError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}',
+          channel: state.channel,
+          messages: state.messages,
+          text: state.text,
+        ),
+      );
+    } catch (e) {
+      emit(
+        ChatRoomError(
+          message: 'Unexpected error: ${e.toString()}',
+          channel: state.channel,
+          messages: state.messages,
+          text: state.text,
+        ),
+      );
+    }
   }
 }

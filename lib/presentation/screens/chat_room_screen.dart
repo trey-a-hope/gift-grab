@@ -4,6 +4,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_room/chat_room_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
+import 'package:gift_grab/presentation/widgets/channel_message_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
@@ -32,6 +33,8 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
 
     final text = state.text;
 
+    final messages = state.messages;
+
     return Column(
       children: [
         Text(
@@ -40,12 +43,9 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: presences.length,
-            itemBuilder: (c, i) => ListTile(
-              title: Text(
-                presences[i].username,
-                style: theme.textTheme.headlineLarge,
-              ),
+            itemCount: messages.length,
+            itemBuilder: (c, i) => ChannelMessageListTile(
+              message: messages[i],
             ),
           ),
         ),
@@ -55,10 +55,9 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
             onChanged: (val) => context.read<ChatRoomBloc>().add(
                   MessageUpdate(val),
                 ),
-            onSend: () {
-              //TODO: Submit message to channel!
-              debugPrint(text);
-            },
+            onSend: () => context.read<ChatRoomBloc>().add(
+                  SendMessage(),
+                ),
             initialValue: state.text,
             hintText: 'Enter message',
           ),
