@@ -9,12 +9,17 @@ import 'package:gift_grab/presentation/extensions/channel_message_extensions.dar
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
-  final String room;
+  final String title;
+  final String target;
+  final ChannelType channelType;
 
   const ChatRoomScreen({
-    required this.room,
+    required this.title,
+    required this.target,
+    required this.channelType,
     super.key,
   });
 
@@ -95,12 +100,12 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   @override
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
-      title: room,
+      title: title,
       child: Center(
         child: BlocProvider(
           create: (context) => ChatRoomBloc(
             authBloc: context.read<AuthBloc>(),
-          )..add(ConnectToSocket(room)),
+          )..add(ConnectToSocket(target, channelType)),
           child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
             listenWhen: (previous, current) => context.listenWhen(
               Globals.routes.chatRoom,

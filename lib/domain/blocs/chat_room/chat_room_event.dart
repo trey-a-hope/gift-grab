@@ -5,9 +5,13 @@ sealed class ChatRoomEvent {
 }
 
 class ConnectToSocket extends ChatRoomEvent {
-  final String room;
+  final String target;
+  final ChannelType channelType;
 
-  ConnectToSocket(this.room);
+  ConnectToSocket(
+    this.target,
+    this.channelType,
+  );
 }
 
 class FetchMessages extends ChatRoomEvent {

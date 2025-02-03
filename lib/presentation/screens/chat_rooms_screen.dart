@@ -8,6 +8,7 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   const ChatRoomsScreen({
@@ -25,7 +26,8 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
         : ListView.builder(
             itemCount: rooms.length,
             itemBuilder: (c, i) => ChatRoomListTile(
-              room: rooms[i],
+              target: rooms[i],
+              channelType: ChannelType.room,
             ),
           );
   }
@@ -33,7 +35,7 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   @override
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
-      title: 'Chat Rooms',
+      title: 'Live Chat',
       actions: [
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(

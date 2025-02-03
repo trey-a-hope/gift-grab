@@ -189,4 +189,9 @@ mixin GroupPermissions {
 
     return notInGroup && notFull;
   }
+
+  bool inGroup(List<GroupUser> users, String uid) {
+    final me = findUserInGroup(users, uid);
+    return me != null;
+  }
 }

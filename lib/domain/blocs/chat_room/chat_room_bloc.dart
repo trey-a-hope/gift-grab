@@ -46,12 +46,15 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
       if (session == null) return;
 
-      final channel = await _webSocketService.socket?.joinChannel(
-        target: event.room,
-        type: ChannelType.room,
-        persistence: true,
-        hidden: false,
-      );
+      late Channel channel;
+      switch (event.channelType) {
+        case ChannelType.directMessage:
+          channel = await _joinChannelDirectMessage(userId: event.target);
+        case ChannelType.group:
+          channel = await _joinChannelGroup(groupId: event.target);
+        case ChannelType.room:
+          channel = await _joinChannelRoom(roomName: event.target);
+      }
 
       // TODO: Instead of fetching all messages again, just insert the new one.
       // This requires a bug fix where the ChannelMessage is defined in both
@@ -63,10 +66,6 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
           _webSocketService.socket?.onChannelMessage.listen(
         (channelMessage) => add(FetchMessages()),
       );
-
-      if (channel == null) {
-        throw Exception('Channel is null.');
-      }
 
       final account = await getNakamaClient().getAccount(session);
 
@@ -115,6 +114,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
       final channelId = state.channel!.id;
 
+      if (channelId == '') return;
+
       final channelMessageList = await getNakamaClient().listChannelMessages(
         session: session,
         channelId: channelId,
@@ -152,11 +153,11 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
   @override
   Future<void> close() async {
-    final channelId = state.channel!.id;
-    await _webSocketService.socket?.leaveChannel(channelId: channelId);
+    final channelId = state.channel?.id;
+    if (channelId != null) {
+      await _webSocketService.socket?.leaveChannel(channelId: channelId);
+    }
     _channelMessageSubscription?.cancel();
-    debugPrint('leaveChannel: $channelId, success.');
-
     return super.close();
   }
 
@@ -200,6 +201,63 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
           messages: state.messages,
         ),
       );
+    }
+  }
+
+  Future<Channel> _joinChannelDirectMessage({
+    required String userId,
+  }) async {
+    try {
+      return _joinChannel(
+        target: userId,
+        type: ChannelType.directMessage,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Channel> _joinChannelGroup({
+    required String groupId,
+  }) async {
+    try {
+      return _joinChannel(
+        target: groupId,
+        type: ChannelType.group,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Channel> _joinChannelRoom({
+    required String roomName,
+  }) async {
+    try {
+      return _joinChannel(
+        target: roomName,
+        type: ChannelType.room,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<Channel> _joinChannel({
+    required String target,
+    required ChannelType type,
+  }) async {
+    try {
+      final channel = await _webSocketService.socket?.joinChannel(
+        target: target,
+        type: type,
+        persistence: true,
+        hidden: false,
+      );
+
+      return channel!;
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

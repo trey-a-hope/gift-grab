@@ -143,13 +143,20 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const ChatRoomsScreen(),
             ),
             GoRoute(
-              path: '${Globals.routes.chatRoom}/:room',
+              path: '${Globals.routes.chatRoom}/:target/:title',
               name: Globals.routes.chatRoom,
               builder: (context, state) {
-                final room = state.pathParameters['room'];
-                if (room == null) throw Exception();
+                final target = state.pathParameters['target'];
+                final title = state.pathParameters['title'];
+
+                final channelType = state.extra as ChannelType;
+
+                if (title == null || target == null) throw Exception();
+
                 return ChatRoomScreen(
-                  room: room,
+                  title: title,
+                  target: target,
+                  channelType: channelType,
                 );
               },
             ),

@@ -243,11 +243,35 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
   }
 
   @override
-  Widget build(BuildContext context) => GGScaffoldWidget(
-        title: 'Group',
-        child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
-          listener: listener,
-          builder: builder,
-        ),
+  Widget build(BuildContext context) =>
+      BlocConsumer<GroupUsersBloc, GroupUsersState>(
+        listener: listener,
+        builder: (context, state) {
+          bool canViewMessages = false;
+
+          if (state is GroupUsersLoaded) {
+            canViewMessages = inGroup(state.users, state.uid);
+          }
+
+          return GGScaffoldWidget(
+            title: 'Group',
+            actions: [
+              if (canViewMessages) ...[
+                IconButton.filledTonal(
+                  onPressed: () => context.pushNamed(
+                    Globals.routes.chatRoom,
+                    pathParameters: {
+                      'target': group.id,
+                      'title': group.name ?? 'Unknown Group Name',
+                    },
+                    extra: ChannelType.group,
+                  ),
+                  icon: Icon(Icons.message),
+                ),
+              ]
+            ],
+            child: builder(context, state),
+          );
+        },
       );
 }

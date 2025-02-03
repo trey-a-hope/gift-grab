@@ -8,6 +8,7 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/online_label.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   final String uid;
@@ -80,6 +81,8 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as ProfileLoaded;
 
+    final user = state.user;
+
     final theme = Theme.of(context);
     return Center(
       child: Padding(
@@ -96,9 +99,9 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               child: CircleAvatar(
                 radius: 100,
                 backgroundImage: Image.network(
-                  state.user.avatarUrl?.isEmpty ?? true
+                  user.avatarUrl?.isEmpty ?? true
                       ? Globals.emptyProfile
-                      : state.user.avatarUrl!,
+                      : user.avatarUrl!,
                 ).image,
               ),
             ),
@@ -109,13 +112,25 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
                 if (!state.isMyProfile) ...[
                   ElevatedButton(
                     onPressed: () => context.read<ProfileBloc>().add(
-                          AddFriend(uid: state.user.id),
+                          AddFriend(uid: user.id),
                         ),
                     child: Text('Add as Friend'),
                   ),
                   Gap(8),
+                  ElevatedButton(
+                    onPressed: () => context.pushNamed(
+                      Globals.routes.chatRoom,
+                      pathParameters: {
+                        'target': user.id,
+                        'title': user.username ?? 'Unknown User Name',
+                      },
+                      extra: ChannelType.directMessage,
+                    ),
+                    child: Text('Send Message'),
+                  ),
+                  Gap(8),
                 ],
-                OnlineLabel(state.user.online),
+                OnlineLabel(user.online),
               ],
             ),
             Gap(16),

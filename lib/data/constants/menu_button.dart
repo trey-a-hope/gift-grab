@@ -1,6 +1,6 @@
 enum MenuButton {
-  chatRooms(
-    'Chat Rooms',
+  liveChat(
+    'Live Chat',
     'https://lottie.host/d2d2b81d-e378-4842-b525-3f0d1bd72897/0z7ilexIZ9.json',
   ),
   deleteAccount(

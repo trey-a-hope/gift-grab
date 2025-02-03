@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class ChatRoomListTile extends StatelessWidget {
-  final String room;
+  final String target;
+  final ChannelType channelType;
 
   const ChatRoomListTile({
-    required this.room,
+    required this.target,
+    required this.channelType,
     super.key,
   });
 
@@ -17,10 +20,14 @@ class ChatRoomListTile extends StatelessWidget {
     return ListTile(
       onTap: () => context.pushNamed(
         Globals.routes.chatRoom,
-        pathParameters: {'room': room},
+        pathParameters: {
+          'target': target,
+          'title': target,
+        },
+        extra: channelType,
       ),
       title: Text(
-        room,
+        target,
         style: theme.textTheme.displayLarge,
       ),
       trailing: IconButton.filledTonal(

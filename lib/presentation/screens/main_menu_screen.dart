@@ -74,7 +74,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     ),
                   ),
                   MenuButtonWidget(
-                    menuButton: MenuButton.chatRooms,
+                    menuButton: MenuButton.liveChat,
                     onTap: () => context.pushNamed(
                       Globals.routes.chatRooms,
                     ),
