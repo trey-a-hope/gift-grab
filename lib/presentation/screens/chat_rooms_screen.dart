@@ -42,15 +42,13 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
           icon: Icon(Icons.add),
         ),
       ],
-      child: SafeArea(
-        child: Center(
-          child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
-            listenWhen: (previous, current) => context.listenWhen(
-              Globals.routes.createChatRoom,
-            ),
-            listener: listener,
-            builder: builder,
+      child: Center(
+        child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
+          listenWhen: (previous, current) => context.listenWhen(
+            Globals.routes.createChatRoom,
           ),
+          listener: listener,
+          builder: builder,
         ),
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -7,9 +5,10 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_room/chat_room_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
+import 'package:gift_grab/presentation/extensions/channel_message_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:go_router/go_router.dart';
 
 class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   final String room;
@@ -27,35 +26,54 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
 
     final channel = state.channel;
     final user = state.user;
+    final channelMessages = state.messages;
 
     if (channel == null || user == null) {
       throw Exception('Channel or user is null');
     }
 
     // TODO: Display presences as simple card widgets with users that uses a future listener.
-    // final presences = channel.presences;
+    final presences = channel.presences;
 
-    final messages = state.messages;
+    debugPrint(presences.toString());
 
-    final convertedMessages = messages
-        .map(
-          (m) => types.TextMessage(
-            author: types.User(id: m.senderId),
-            id: m.messageId,
-            text: _getMessageContent(m.content),
-          ),
-        )
+    final textMessages = channelMessages
+        .map((channelMessage) => channelMessage.toTextMessage())
         .toList();
 
     return Column(
       children: [
-        Text(
-          channel.roomName,
-          style: theme.textTheme.headlineLarge,
+        Row(
+          children: [
+            for (int i = 0; i < presences.length; i++) ...[
+              Text(
+                presences[i].username,
+                style: theme.textTheme.headlineLarge,
+              ),
+            ]
+          ],
         ),
         Expanded(
           child: Chat(
-            messages: convertedMessages,
+            customDateHeaderText: (date) => date.toIso8601String(),
+            dateHeaderBuilder: (d) => Text(d.text),
+            theme: DarkChatTheme(
+              backgroundColor: Colors.transparent,
+            ),
+            avatarBuilder: (user) => CircleAvatar(
+              backgroundImage: Image.network(
+                user.imageUrl?.isEmpty ?? true
+                    ? Globals.emptyProfile
+                    : user.imageUrl!,
+              ).image,
+            ),
+            onAvatarTap: (user) {
+              context.pushNamed(
+                Globals.routes.profile,
+                pathParameters: {'uid': user.id},
+              );
+            },
+            messages: textMessages,
             onAttachmentPressed: null,
             onMessageTap: null,
             onPreviewDataFetched: null,
@@ -78,24 +96,20 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: room,
-      child: SafeArea(
-        child: Center(
-          child: BlocProvider(
-            create: (context) => ChatRoomBloc(
-              authBloc: context.read<AuthBloc>(),
-            )..add(ConnectToSocket(room)),
-            child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
-              listenWhen: (previous, current) => context.listenWhen(
-                Globals.routes.chatRoom,
-              ),
-              listener: listener,
-              builder: builder,
+      child: Center(
+        child: BlocProvider(
+          create: (context) => ChatRoomBloc(
+            authBloc: context.read<AuthBloc>(),
+          )..add(ConnectToSocket(room)),
+          child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
+            listenWhen: (previous, current) => context.listenWhen(
+              Globals.routes.chatRoom,
             ),
+            listener: listener,
+            builder: builder,
           ),
         ),
       ),
     );
   }
-
-  String _getMessageContent(val) => jsonDecode(val)['name'];
 }

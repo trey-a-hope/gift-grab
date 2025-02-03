@@ -77,8 +77,6 @@ class _GGInputFieldWidgetState extends State<GGInputFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     const defaultTextStyle = TextStyle(color: Colors.white);
 
     return TextFormField(

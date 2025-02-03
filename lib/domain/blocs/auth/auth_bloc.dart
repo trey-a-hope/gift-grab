@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
+import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
 
@@ -15,12 +16,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static const _refreshToken = 'refreshToken';
 
   final SocialAuthService _socialAuthService;
+  final WebSocketService _webSocketService;
   final NakamaService _nakamaService;
 
   final inOneHour = DateTime.now().add(Duration(hours: 1));
 
   AuthBloc()
       : _socialAuthService = SocialAuthService(),
+        _webSocketService = WebSocketService(),
         _nakamaService = NakamaService(),
         super(AuthInitial()) {
     on<LoginEmail>(_onLoginEmail);
@@ -164,6 +167,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       await _storage.delete(key: _token);
       await _storage.delete(key: _refreshToken);
+
+      _webSocketService.dispose();
 
       emit(Unauthenticated());
     } on GrpcError catch (e) {

@@ -1,25 +1,23 @@
-import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
-import 'package:nakama/nakama.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-
+import 'package:nakama/nakama.dart';
 part 'chat_room_event.dart';
 part 'chat_room_state.dart';
 
-//TODO: If send a message, then signout/sign with different account,
-// then post message, it displays the correct bubble. However, if I
-// leave the page and come back, the message I just posted is on the wrong side.
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   final AuthBloc authBloc;
 
   final NakamaService _nakamaService;
   final WebSocketService _webSocketService;
+
+  StreamSubscription? _channelMessageSubscription;
+
   ChatRoomBloc({
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
@@ -53,6 +51,17 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         type: ChannelType.room,
         persistence: true,
         hidden: false,
+      );
+
+      // TODO: Instead of fetching all messages again, just insert the new one.
+      // This requires a bug fix where the ChannelMessage is defined in both
+      // package:nakama/src/models/channel_message.dart
+      // and
+      // package:nakama/src/api/proto/api/api.pb.dart';
+      // Currently, I have to refetch all messages again...
+      _channelMessageSubscription =
+          _webSocketService.socket?.onChannelMessage.listen(
+        (channelMessage) => add(FetchMessages()),
       );
 
       if (channel == null) {
@@ -144,8 +153,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   @override
   Future<void> close() async {
     final channelId = state.channel!.id;
-
     await _webSocketService.socket?.leaveChannel(channelId: channelId);
+    _channelMessageSubscription?.cancel();
     debugPrint('leaveChannel: $channelId, success.');
 
     return super.close();
@@ -169,37 +178,10 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
         channelId: channelId,
         content: content,
       );
+
       if (channelMessageAck == null) {
         throw Exception('channelMessageAck is null');
       }
-
-      debugPrint(channelMessageAck.toString());
-      debugPrint('Message sent from uid: ${session.userId}');
-
-      emit(
-        ChatRoomLoaded(
-          state.user,
-          state.channel,
-          [
-            ChannelMessage(
-              channelId: channelId,
-              messageId: channelMessageAck.messageId,
-              code: channelMessageAck.code,
-              senderId: session.userId,
-              username: channelMessageAck.username,
-              content: jsonEncode(content),
-              createTime: channelMessageAck.created,
-              updateTime: channelMessageAck.updated,
-              persistent: channelMessageAck.persistent,
-              roomName: channelMessageAck.roomName,
-              groupId: channelMessageAck.groupId,
-              userIdOne: channelMessageAck.userIdOne,
-              userIdTwo: channelMessageAck.userIdTwo,
-            ),
-            ...state.messages,
-          ],
-        ),
-      );
     } on GrpcError catch (e) {
       emit(
         ChatRoomError(

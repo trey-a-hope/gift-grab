@@ -54,12 +54,10 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
     context.read<LeaderboardBloc>().add(FetchLeaderboard());
     return GGScaffoldWidget(
       title: 'Leaderboard',
-      child: SafeArea(
-        child: Center(
-          child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
-            listener: listener,
-            builder: builder,
-          ),
+      child: Center(
+        child: BlocConsumer<LeaderboardBloc, LeaderboardState>(
+          listener: listener,
+          builder: builder,
         ),
       ),
     );

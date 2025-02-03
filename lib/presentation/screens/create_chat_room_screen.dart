@@ -71,14 +71,12 @@ class CreateChatRoomScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Create Chat Room',
-      child: SafeArea(
-        child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
-          listenWhen: (previous, current) => context.listenWhen(
-            Globals.routes.createChatRoom,
-          ),
-          builder: builder,
-          listener: listener,
+      child: BlocConsumer<ChatRoomsBloc, ChatRoomsState>(
+        listenWhen: (previous, current) => context.listenWhen(
+          Globals.routes.createChatRoom,
         ),
+        builder: builder,
+        listener: listener,
       ),
     );
   }

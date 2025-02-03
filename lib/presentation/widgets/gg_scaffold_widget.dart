@@ -36,12 +36,12 @@ class GGScaffoldWidget extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            opacity: 0.70,
+            opacity: 0.50,
             image: AssetImage("assets/images/${Globals.backgroundSprite}"),
             fit: BoxFit.cover,
           ),
         ),
-        child: SafeArea(child: child),
+        child: child,
       ),
     );
   }

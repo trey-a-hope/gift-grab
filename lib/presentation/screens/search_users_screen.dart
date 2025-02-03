@@ -61,16 +61,14 @@ class SearchUsersScreen extends SmartBloc<SearchUsersBloc, SearchUsersState> {
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: 'Search Users',
-      child: SafeArea(
-        child: Center(
-          child: BlocProvider(
-            create: (context) => SearchUsersBloc(
-              authBloc: context.read<AuthBloc>(),
-            ),
-            child: BlocConsumer<SearchUsersBloc, SearchUsersState>(
-              listener: listener,
-              builder: builder,
-            ),
+      child: Center(
+        child: BlocProvider(
+          create: (context) => SearchUsersBloc(
+            authBloc: context.read<AuthBloc>(),
+          ),
+          child: BlocConsumer<SearchUsersBloc, SearchUsersState>(
+            listener: listener,
+            builder: builder,
           ),
         ),
       ),

@@ -18,38 +18,34 @@ class FriendsScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return GGScaffoldWidget(
       title: 'Friends',
-      child: SafeArea(
-        child: DefaultTabController(
-          length: 4,
-          child: Column(
-            children: [
-              TabBar(
-                padding: EdgeInsets.all(8),
-                labelColor: Colors.white,
-                labelStyle: theme.textTheme.displaySmall,
-                indicatorColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
-                tabs: [
-                  Tab(text: 'Friends'),
-                  Tab(text: 'Invites'),
-                  Tab(text: 'Requests'),
-                  Tab(text: 'Blocked'),
+      child: DefaultTabController(
+        length: 4,
+        child: Column(
+          children: [
+            TabBar(
+              padding: EdgeInsets.all(8),
+              labelColor: Colors.white,
+              labelStyle: theme.textTheme.displaySmall,
+              indicatorColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Tab(text: 'Friends'),
+                Tab(text: 'Invites'),
+                Tab(text: 'Requests'),
+                Tab(text: 'Blocked'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _FriendsTab(friendshipState: FriendshipState.mutual),
+                  _FriendsTab(friendshipState: FriendshipState.incomingRequest),
+                  _FriendsTab(friendshipState: FriendshipState.outgoingRequest),
+                  _FriendsTab(friendshipState: FriendshipState.blocked),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    _FriendsTab(friendshipState: FriendshipState.mutual),
-                    _FriendsTab(
-                        friendshipState: FriendshipState.incomingRequest),
-                    _FriendsTab(
-                        friendshipState: FriendshipState.outgoingRequest),
-                    _FriendsTab(friendshipState: FriendshipState.blocked),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

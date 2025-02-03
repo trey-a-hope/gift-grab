@@ -21,7 +21,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   StreamSubscription? _notificationSubscription;
   StreamSubscription? _statusSubscription;
-  StreamSubscription? _channelMessageSubscription;
   StreamSubscription? _channelPresenceSubscription;
 
   NotificationsBloc({
@@ -59,15 +58,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       // roomUsers.addAll(event.joins);
       debugPrint('Room users: $roomUsers');
     });
-
-    _channelMessageSubscription =
-        _webSocketService.socket?.onChannelMessage.listen(
-      (message) {
-        // TODO:
-        debugPrint('Received a message on channel: ${message.channelId}');
-        debugPrint('Message content: ${message.content}');
-      },
-    );
 
     // Listen for statuses.
     _statusSubscription = _webSocketService.socket?.onStatusPresence.listen(
@@ -121,7 +111,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   Future<void> close() {
     _notificationSubscription?.cancel();
     _statusSubscription?.cancel();
-    _channelMessageSubscription?.cancel();
     _channelPresenceSubscription?.cancel();
     return super.close();
   }

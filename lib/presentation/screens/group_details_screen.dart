@@ -245,11 +245,9 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
   @override
   Widget build(BuildContext context) => GGScaffoldWidget(
         title: 'Group',
-        child: SafeArea(
-          child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
-            listener: listener,
-            builder: builder,
-          ),
+        child: BlocConsumer<GroupUsersBloc, GroupUsersState>(
+          listener: listener,
+          builder: builder,
         ),
       );
 }
