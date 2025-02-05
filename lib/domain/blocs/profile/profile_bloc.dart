@@ -42,7 +42,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final account = await getNakamaClient().getAccount(session);
 
@@ -79,7 +78,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().deleteLeaderboardRecord(
         session: session,
@@ -105,7 +103,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().addFriends(
         session: session,
@@ -131,7 +128,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final XFile? image = await ImagePicker().pickImage(
         source: ImageSource.gallery,

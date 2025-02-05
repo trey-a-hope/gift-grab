@@ -30,7 +30,6 @@ class ChatRoomsBloc extends Bloc<ChatRoomsEvent, ChatRoomsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final rooms = await _chatStorage.getValue(session, null);
 
@@ -94,7 +93,6 @@ class ChatRoomsBloc extends Bloc<ChatRoomsEvent, ChatRoomsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final rooms = state.rooms;
       await _chatStorage.updateValue(

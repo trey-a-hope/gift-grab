@@ -40,7 +40,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       await _profanityService.check(event.description);
 
       final newGroup = await getNakamaClient().createGroup(
-        session: session!,
+        session: session,
         name: event.name,
         description: event.description,
         maxCount: event.maxCount,
@@ -79,7 +79,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       await _profanityService.check(event.description ?? '');
 
       await getNakamaClient().updateGroup(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         open: event.open,
         name: event.name,
@@ -121,13 +121,13 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
       if (allGroups) {
         final allGroupList = await getNakamaClient().listGroups(
-          session: session!,
+          session: session,
           limit: Globals.paginationLimit,
         );
         cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
         groups = allGroupList.groups ?? [];
       } else {
-        final uid = (await getNakamaClient().getAccount(session!)).user.id;
+        final uid = (await getNakamaClient().getAccount(session)).user.id;
         final myGroupsList = await getNakamaClient().listUserGroups(
           session: session,
           limit: Globals.paginationLimit,
@@ -168,14 +168,14 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
       if (allGroups) {
         final allGroupList = await getNakamaClient().listGroups(
-          session: session!,
+          session: session,
           limit: Globals.paginationLimit,
           cursor: state.cursor,
         );
         cursor = allGroupList.cursor == '' ? null : allGroupList.cursor;
         groups = allGroupList.groups ?? [];
       } else {
-        final uid = (await getNakamaClient().getAccount(session!)).user.id;
+        final uid = (await getNakamaClient().getAccount(session)).user.id;
         final myGroupsList = await getNakamaClient().listUserGroups(
           session: session,
           limit: Globals.paginationLimit,

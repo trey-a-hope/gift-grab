@@ -37,7 +37,6 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final leaderboard = await getNakamaClient().listLeaderboardRecords(
         session: session,
@@ -87,7 +86,6 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final uid = (await getNakamaClient().getAccount(session)).user.id;
 

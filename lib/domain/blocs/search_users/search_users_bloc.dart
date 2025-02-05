@@ -38,7 +38,6 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   ) async {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final users = await getNakamaClient().getUsers(
         session: session,

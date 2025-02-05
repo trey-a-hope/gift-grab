@@ -37,7 +37,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   Future<void> _initializeWebSocket() async {
     final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-    if (session == null) return;
 
     // Listen for notifications.
     _notificationSubscription =
@@ -123,7 +122,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final notificationList = await getNakamaClient().listNotifications(
         session: session,
@@ -157,7 +155,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final notificationList = await getNakamaClient().listNotifications(
         session: session,
@@ -196,7 +193,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().deleteNotifications(
         session: session,

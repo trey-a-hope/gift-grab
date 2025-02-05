@@ -33,7 +33,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
-      final uid = (await getNakamaClient().getAccount(session!)).user.id;
+      final uid = (await getNakamaClient().getAccount(session)).user.id;
 
       final groupUserList = await getNakamaClient().listGroupUsers(
         session: session,
@@ -64,7 +64,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().joinGroup(
-        session: session!,
+        session: session,
         groupId: event.groupId,
       );
 
@@ -90,7 +90,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().leaveGroup(
-        session: session!,
+        session: session,
         groupId: event.groupId,
       );
 
@@ -116,7 +116,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().deleteGroup(
-        session: session!,
+        session: session,
         groupId: event.groupId,
       );
 
@@ -139,7 +139,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().kickGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         userIds: [event.uid],
       );
@@ -163,7 +163,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().banGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         userIds: [event.uid],
       );
@@ -187,7 +187,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().promoteGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         userIds: [event.uid],
       );
@@ -211,7 +211,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().demoteGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         userIds: [event.uid],
       );
@@ -235,7 +235,7 @@ class GroupUsersBloc extends Bloc<GroupUsersEvent, GroupUsersState> {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
 
       await getNakamaClient().addGroupUsers(
-        session: session!,
+        session: session,
         groupId: event.groupId,
         userIds: [event.uid],
       );

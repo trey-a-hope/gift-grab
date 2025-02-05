@@ -33,7 +33,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final friendsList = await getNakamaClient().listFriends(
         session: session,
@@ -74,7 +73,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final friendsList = await getNakamaClient().listFriends(
         session: session,
@@ -114,7 +112,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().deleteFriends(
         session: session,
@@ -152,7 +149,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().addFriends(
         session: session,
@@ -190,7 +186,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().blockFriends(
         session: session,
