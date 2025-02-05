@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/profanity_service.dart';
 import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
@@ -15,6 +16,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
   final NakamaService _nakamaService;
   final WebSocketService _webSocketService;
+  final ProfanityService _profanityService;
 
   StreamSubscription? _channelMessageSubscription;
 
@@ -22,15 +24,27 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     required this.authBloc,
   })  : _nakamaService = NakamaService(),
         _webSocketService = WebSocketService(),
+        _profanityService = ProfanityService(),
         super(ChatRoomState(
           null,
           null,
           [],
         )) {
+    on<RebuildScreen>(_onRebuildScreen);
     on<ConnectToSocket>(_onConnectToSocket);
     on<FetchMessages>(_onFetchMessages);
     on<SendMessage>(_onSendMessage);
   }
+
+  Future<void> _onRebuildScreen(
+    RebuildScreen event,
+    Emitter<ChatRoomState> emit,
+  ) async =>
+      emit(ChatRoomLoaded(
+        state.user,
+        state.channel,
+        state.messages,
+      ));
 
   Future<void> _onConnectToSocket(
     ConnectToSocket event,
@@ -44,7 +58,6 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       late Channel channel;
       switch (event.channelType) {
@@ -110,7 +123,6 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   ) async {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final channelId = state.channel!.id;
 
@@ -166,18 +178,15 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     Emitter<ChatRoomState> emit,
   ) async {
     try {
-      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
+      await _nakamaService.getValidSessionOrLogout(authBloc);
 
       final channelId = state.channel!.id;
 
-      final content = {
-        'name': event.text,
-      };
+      await _profanityService.check(event.text);
 
       final channelMessageAck = await _webSocketService.socket?.sendMessage(
         channelId: channelId,
-        content: content,
+        content: {'name': event.text},
       );
 
       if (channelMessageAck == null) {
@@ -196,7 +205,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       emit(
         ChatRoomError(
           user: state.user,
-          message: 'Unexpected error: ${e.toString()}',
+          message: e.toString(),
           channel: state.channel,
           messages: state.messages,
         ),

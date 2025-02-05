@@ -14,12 +14,12 @@ class NakamaService {
     }
   }
 
-  Future<Session?> getValidSessionOrLogout(AuthBloc authBloc) async {
+  Future<Session> getValidSessionOrLogout(AuthBloc authBloc) async {
     final session = await getValidSession();
     if (session == null) {
       authBloc.add(Logout());
     }
-    return session;
+    return session!;
   }
 
   Future<Session?> getValidSession() async {

@@ -270,7 +270,9 @@ class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
                 ),
               ]
             ],
-            child: builder(context, state),
+            child: SafeArea(
+              child: builder(context, state),
+            ),
           );
         },
       );

@@ -98,6 +98,15 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   }
 
   @override
+  void listener(BuildContext context, ChatRoomState state) {
+    super.listener(context, state);
+
+    if (state is ChatRoomError) {
+      context.read<ChatRoomBloc>().add(RebuildScreen());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
       title: title,
@@ -107,9 +116,9 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
             authBloc: context.read<AuthBloc>(),
           )..add(ConnectToSocket(target, channelType)),
           child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
-            listenWhen: (previous, current) => context.listenWhen(
-              Globals.routes.chatRoom,
-            ),
+            // listenWhen: (previous, current) => context.listenWhen(
+            //   Globals.routes.chatRoom,
+            // ),
             listener: listener,
             builder: builder,
           ),

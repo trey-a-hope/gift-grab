@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/profanity_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
@@ -13,10 +14,13 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
   final AuthBloc authBloc;
   final bool allGroups;
 
+  final ProfanityService _profanityService;
+
   GroupsBloc({
     required this.authBloc,
     required this.allGroups,
-  }) : super(GroupsInitial(cursor: null)) {
+  })  : _profanityService = ProfanityService(),
+        super(GroupsInitial(cursor: null)) {
     on<CreateGroupEvent>(_onCreateGroup);
     on<UpdateGroupEvent>(_onUpdateGroupEvent);
     on<FetchGroups>(_onFetchGroups);
@@ -31,6 +35,9 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
+
+      await _profanityService.check(event.name);
+      await _profanityService.check(event.description);
 
       final newGroup = await getNakamaClient().createGroup(
         session: session!,
@@ -53,7 +60,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       ));
     } catch (e) {
       emit(GroupsError(
-        message: 'Unexpected error: ${e.toString()}',
+        message: e.toString(),
         cursor: state.cursor,
       ));
     }
@@ -67,6 +74,9 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
 
     try {
       final session = await NakamaService().getValidSessionOrLogout(authBloc);
+
+      await _profanityService.check(event.name ?? '');
+      await _profanityService.check(event.description ?? '');
 
       await getNakamaClient().updateGroup(
         session: session!,
@@ -91,7 +101,7 @@ class GroupsBloc extends Bloc<GroupsEvent, GroupsState> {
       ));
     } catch (e) {
       emit(GroupsError(
-        message: 'Unexpected error: ${e.toString()}',
+        message: e.toString(),
         cursor: state.cursor,
       ));
     }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
+import 'package:gift_grab/data/services/profanity_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
@@ -14,11 +15,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AuthBloc authBloc;
   final SocialAuthService _socialAuthService;
   final NakamaService _nakamaService;
+  final ProfanityService _profanityService;
 
   AccountBloc({
     required this.authBloc,
   })  : _socialAuthService = SocialAuthService(),
         _nakamaService = NakamaService(),
+        _profanityService = ProfanityService(),
         super(AccountInitial(null)) {
     on<FetchAccount>(_onFetchAccount);
     on<SaveAccount>(_onSaveAccount);
@@ -52,7 +55,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final account = await getNakamaClient().getAccount(session);
 
@@ -83,7 +85,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
+
+      if (event.username == state.account?.user.username) {
+        throw Exception('New name required');
+      }
+
+      await _profanityService.check(event.username);
 
       await getNakamaClient().updateAccount(
         session: session,
@@ -101,7 +108,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       ));
     } catch (e) {
       emit(AccountError(
-        message: 'Unexpected error: ${e.toString()}',
+        message: e.toString(),
         account: state.account!,
       ));
     }
@@ -115,7 +122,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().rpc(
         session: session,
@@ -146,7 +152,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       // TODO: Remove hard-coded values
       await getNakamaClient().linkEmail(
@@ -182,7 +187,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       await getNakamaClient().unlinkEmail(
         session: session,
@@ -217,7 +221,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final idToken = await _socialAuthService.getGoogleToken();
       if (idToken == null) {
@@ -256,7 +259,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final idToken = await _socialAuthService.getGoogleToken();
       if (idToken == null) {
@@ -295,7 +297,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final idToken = await _socialAuthService.getAppleToken();
       if (idToken == null) {
@@ -334,7 +335,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
-      if (session == null) return;
 
       final idToken = await _socialAuthService.getAppleToken();
       if (idToken == null) {

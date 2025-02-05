@@ -21,38 +21,40 @@ class GroupsScreen extends StatelessWidget {
 
     return GGScaffoldWidget(
       title: 'Groups',
-      child: DefaultTabController(
-        length: 2,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TabBar(
-              padding: EdgeInsets.all(8),
-              labelColor: Colors.white,
-              labelStyle: theme.textTheme.displaySmall,
-              indicatorColor: Colors.white,
-              unselectedLabelColor: Colors.grey,
-              tabs: const [
-                Tab(text: 'All Groups'),
-                Tab(text: 'My Groups'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _AllGroupsTab(),
-                  _MyGroupsTab(),
+      child: SafeArea(
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TabBar(
+                padding: EdgeInsets.all(8),
+                labelColor: Colors.white,
+                labelStyle: theme.textTheme.displaySmall,
+                indicatorColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: 'All Groups'),
+                  Tab(text: 'My Groups'),
                 ],
               ),
-            ),
-            const Gap(16),
-            ElevatedButton(
-              child: Text('Create Group'),
-              onPressed: () => context.pushNamed(
-                Globals.routes.createGroup,
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _AllGroupsTab(),
+                    _MyGroupsTab(),
+                  ],
+                ),
               ),
-            ),
-          ],
+              const Gap(16),
+              ElevatedButton(
+                child: Text('Create Group'),
+                onPressed: () => context.pushNamed(
+                  Globals.routes.createGroup,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -91,6 +93,15 @@ class _AllGroupsTab extends SmartBloc<AllGroupsBloc, GroupsState> {
         ]
       ],
     );
+  }
+
+  @override
+  void listener(BuildContext context, GroupsState state) {
+    super.listener(context, state);
+
+    if (state is GroupsError) {
+      context.read<AllGroupsBloc>().add(FetchGroups());
+    }
   }
 
   @override

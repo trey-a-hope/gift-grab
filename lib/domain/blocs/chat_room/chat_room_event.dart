@@ -28,3 +28,5 @@ class SendMessage extends ChatRoomEvent {
   final String text;
   SendMessage(this.text);
 }
+
+class RebuildScreen extends ChatRoomEvent {}
