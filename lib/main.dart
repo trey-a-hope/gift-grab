@@ -26,7 +26,7 @@ void main() async {
   await dotenv.load();
 
   NakamaProperties.initialize(
-    isDev: true,
+    isDev: false,
     key: dotenv.env['NAKAMA_SERVER_KEY']!,
   );
 

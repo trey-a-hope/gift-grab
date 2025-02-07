@@ -14,9 +14,11 @@ part 'leaderboard_event.dart';
 part 'leaderboard_state.dart';
 
 class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
+  static const _leaderboardId = 'monthly_leaderboard';
+  static const _tournamentId = 'daily_tournament';
+
   final AuthBloc authBloc;
 
-  final _leaderboardName = 'weekly_leaderboard';
   final NakamaService _nakamaService;
   final GamesPlayedStorage _gamesPlayedStorage;
 
@@ -38,15 +40,16 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
 
-      final leaderboard = await getNakamaClient().listLeaderboardRecords(
+      final leaderboardRecordList =
+          await getNakamaClient().listLeaderboardRecords(
         session: session,
-        leaderboardName: _leaderboardName,
+        leaderboardName: _leaderboardId,
       );
 
-      if (leaderboard.records == null) {
+      if (leaderboardRecordList.records == null) {
         emit(LeaderboardLoaded(entries: []));
       } else {
-        final records = leaderboard.records!;
+        final records = leaderboardRecordList.records!;
 
         final ownerIds = records
             .where((record) => record.ownerId != null)
@@ -90,12 +93,13 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       final uid = (await getNakamaClient().getAccount(session)).user.id;
 
       // Check and see if new score is the highest.
-      final leaderboard = await getNakamaClient().listLeaderboardRecords(
+      final leaderboardRecordList =
+          await getNakamaClient().listLeaderboardRecords(
         session: session,
-        leaderboardName: _leaderboardName,
+        leaderboardName: _leaderboardId,
       );
 
-      if (_isHighest(event.score, leaderboard.records)) {
+      if (_isHighest(event.score, leaderboardRecordList.records)) {
         await getNakamaClient().rpc(
           session: session,
           id: Globals.rpc.notificationSend,
@@ -110,11 +114,20 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       // Write new leaderboard record.
       await getNakamaClient().writeLeaderboardRecord(
         session: session,
-        leaderboardName: _leaderboardName,
+        leaderboardName: _leaderboardId,
         score: event.score,
       );
 
-      // Update games played count.
+      // Write tournament record.
+      // TODO: This currently throws an error if the tournament is not active;
+      // but since the game bloc doesn't have a listener for errors, it's not shown on the front end.
+      await getNakamaClient().writeTournamentRecord(
+        session: session,
+        tournamentId: _tournamentId,
+        score: event.score,
+      );
+
+      // TODO: Tournaments won will be the new value, and will be updated on the server.
       final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
       await _gamesPlayedStorage.updateValue(session, gamesPlayed + 1);
 
