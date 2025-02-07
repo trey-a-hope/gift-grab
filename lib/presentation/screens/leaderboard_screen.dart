@@ -20,7 +20,7 @@ class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
         Padding(
           padding: EdgeInsets.symmetric(vertical: 32),
           child: Text(
-            'Resets every Monday at 12:00am.',
+            'Resets every first of the month at 12:00am.',
             style: theme.textTheme.headlineMedium!,
           ),
         ),

@@ -65,6 +65,7 @@ class _Routes {
   final String createChatRoom = 'create_chat_room';
   final String matches = 'matches';
   final String tournaments = 'tournaments';
+  final String tournamentDetails = 'tournament_details';
 }
 
 class _TimeLimits {

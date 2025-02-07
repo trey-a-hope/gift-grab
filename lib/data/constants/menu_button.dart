@@ -42,7 +42,7 @@ enum MenuButton {
   ),
   tournaments(
     'Tournaments',
-    'https://lottie.host/2cfbbe8e-e22f-4564-a9c5-7b21c72ca1fb/EOLcfvGKwx.json',
+    'https://lottie.host/e530bc24-55b7-4718-a153-0e7085a94b50/DKrp8UNP49.json',
   ),
   ;
 

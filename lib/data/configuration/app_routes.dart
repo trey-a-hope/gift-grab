@@ -18,6 +18,7 @@ import 'package:gift_grab/presentation/screens/linked_accounts_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/screens/tournaments/tournament_details_screen.dart';
 import 'package:gift_grab/presentation/screens/tournaments_screen.dart';
 import 'package:gift_grab/presentation/screens/notifications_screen.dart';
 import 'package:gift_grab/presentation/screens/profile_screen.dart';
@@ -112,17 +113,30 @@ final groupRoutes = [
   ),
 ];
 
+// Tournaments
+final tournamentRoutes = [
+  GoRoute(
+    path: '/${Globals.routes.tournaments}',
+    name: Globals.routes.tournaments,
+    builder: (context, state) => const TournamentsScreen(),
+  ),
+  GoRoute(
+    path: '/${Globals.routes.tournamentDetails}/:tournamentId',
+    name: Globals.routes.tournamentDetails,
+    builder: (context, state) {
+      final tournament = state.extra as Tournament;
+      return TournamentDetailsScreen(tournament: tournament);
+    },
+  ),
+];
+
 GoRouter appRouter(AuthBloc authBloc) => GoRouter(
       debugLogDiagnostics: false,
       initialLocation: '/${Globals.routes.main}',
       routes: [
         ...profileRoutes,
         ...groupRoutes,
-        GoRoute(
-          path: '/${Globals.routes.tournaments}',
-          name: Globals.routes.tournaments,
-          builder: (_, __) => TournamentsScreen(),
-        ),
+        ...tournamentRoutes,
         GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,

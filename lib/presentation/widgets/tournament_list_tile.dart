@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gift_grab/data/constants/globals.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nakama/nakama.dart';
 
 class TournamentListTile extends StatelessWidget {
@@ -14,25 +17,17 @@ class TournamentListTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      // onTap: () => context.pushNamed(
-      //   Globals.routes.groupDetails,
-      //   pathParameters: {'groupId': group.id},
-      //   extra: group,
-      // ),
-      leading: CircleAvatar(
-        child: Text(
-          '${tournament.size}/${tournament.maxSize} players...',
-        ),
+      onTap: () => context.pushNamed(
+        Globals.routes.tournamentDetails,
+        pathParameters: {'tournamentId': tournament.id},
+        extra: tournament,
       ),
       title: Text(
         tournament.title ?? 'Unknown Title',
         style: theme.textTheme.displayMedium,
       ),
-      subtitle: Text(
-        'Lasts ${tournament.duration ?? 0} seconds...',
-        style: theme.textTheme.bodyLarge!.copyWith(
-          color: Colors.white,
-        ),
+      trailing: Icon(
+        tournament.canEnter == true ? MdiIcons.check : MdiIcons.cancel,
       ),
     );
   }
