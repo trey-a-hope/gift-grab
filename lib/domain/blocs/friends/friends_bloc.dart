@@ -42,9 +42,11 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
       final cursor = friendsList.cursor == '' ? null : friendsList.cursor;
 
+      final friends = friendsList.friends ?? [];
+
       emit(
         FriendsLoaded(
-          friends: friendsList.friends ?? [],
+          friends: friends,
           cursor: cursor,
         ),
       );
@@ -83,8 +85,10 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
       final cursor = friendsList.cursor == '' ? null : friendsList.cursor;
 
+      final friends = friendsList.friends ?? [];
+
       emit(FriendsLoaded(
-        friends: friendsList.friends ?? [],
+        friends: [...event.friends, ...friends],
         cursor: cursor,
       ));
     } on GrpcError catch (e) {

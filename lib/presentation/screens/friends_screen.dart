@@ -86,7 +86,7 @@ class _FriendsTab extends SmartBloc<FriendsBloc, FriendsState> {
           ElevatedButton(
             child: const Text('Fetch More Friends'),
             onPressed: () => context.read<FriendsBloc>().add(
-                  FetchMoreFriends(),
+                  FetchMoreFriends(friends: state.friends),
                 ),
           )
         ]

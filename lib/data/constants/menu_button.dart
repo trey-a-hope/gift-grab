@@ -23,6 +23,10 @@ enum MenuButton {
     'Linked Accounts',
     'https://lottie.host/c949d875-6223-4e7e-8eb0-dec46cca9f2b/JN9abpQohW.json',
   ),
+  matches(
+    'Matches',
+    'https://lottie.host/2cfbbe8e-e22f-4564-a9c5-7b21c72ca1fb/EOLcfvGKwx.json',
+  ),
   play(
     'Play',
     'https://lottie.host/afa5e507-7b25-40e2-8cf9-07c7c63bace0/07iIcuc1gh.json',
@@ -35,6 +39,10 @@ enum MenuButton {
   signOut(
     'Sign Out',
     'https://lottie.host/f88e459d-6b62-4d0f-a98c-c496fb0c325e/2gJWApc9pg.json',
+  ),
+  tournaments(
+    'Tournaments',
+    'https://lottie.host/2cfbbe8e-e22f-4564-a9c5-7b21c72ca1fb/EOLcfvGKwx.json',
   ),
   ;
 

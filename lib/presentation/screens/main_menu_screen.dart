@@ -79,6 +79,12 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                       Globals.routes.chatRooms,
                     ),
                   ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.tournaments,
+                    onTap: () => context.pushNamed(
+                      Globals.routes.tournaments,
+                    ),
+                  ),
                 ],
               ),
             ),

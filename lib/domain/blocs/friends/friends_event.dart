@@ -6,7 +6,11 @@ sealed class FriendsEvent {
 
 class FetchFriends extends FriendsEvent {}
 
-class FetchMoreFriends extends FriendsEvent {}
+class FetchMoreFriends extends FriendsEvent {
+  final List<Friend> friends;
+
+  FetchMoreFriends({required this.friends});
+}
 
 class DeleteFriend extends FriendsEvent {
   final String uid;

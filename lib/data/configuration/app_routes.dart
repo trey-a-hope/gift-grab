@@ -18,6 +18,7 @@ import 'package:gift_grab/presentation/screens/linked_accounts_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/screens/tournaments_screen.dart';
 import 'package:gift_grab/presentation/screens/notifications_screen.dart';
 import 'package:gift_grab/presentation/screens/profile_screen.dart';
 import 'package:gift_grab/presentation/screens/search_users_screen.dart';
@@ -117,6 +118,11 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
       routes: [
         ...profileRoutes,
         ...groupRoutes,
+        GoRoute(
+          path: '/${Globals.routes.tournaments}',
+          name: Globals.routes.tournaments,
+          builder: (_, __) => TournamentsScreen(),
+        ),
         GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,

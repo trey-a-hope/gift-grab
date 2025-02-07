@@ -7,9 +7,12 @@ const groupsLottie =
     'https://lottie.host/d05dca70-e470-4284-ad79-4cc78ae8c6fa/2TJKChtOeY.json';
 const notificationsLottie =
     'https://lottie.host/24b01879-03f1-44b2-bbef-427321e5a4f8/WY0iLNz97c.json';
+const matchesLottie =
+    'https://lottie.host/2cfbbe8e-e22f-4564-a9c5-7b21c72ca1fb/EOLcfvGKwx.json';
 const usersLottie =
     'https://lottie.host/e149d804-8452-4699-ad4f-32f48809a614/I8NzWu6KKY.json';
 
+// TODO: Join with values set in menu_button.dart.
 enum NoResultsEnum {
   chatRooms('No chat rooms', friendsLottie),
 
@@ -21,6 +24,11 @@ enum NoResultsEnum {
   // Groups
   allGroups('No groups', groupsLottie),
   myGroups('No groups you belong to', groupsLottie),
+  // Matches
+  matches('No matches', friendsLottie),
+  // Tournament
+  tournaments('No tournaments', friendsLottie),
+
   // Notifications
   notifications('No notifications', notificationsLottie),
   // Leaderboard

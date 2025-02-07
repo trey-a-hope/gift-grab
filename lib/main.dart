@@ -10,6 +10,7 @@ import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_rooms/chat_rooms_bloc.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
+import 'package:gift_grab/domain/blocs/tournaments/tournaments_bloc.dart';
 import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
@@ -25,7 +26,7 @@ void main() async {
   await dotenv.load();
 
   NakamaProperties.initialize(
-    isDev: false,
+    isDev: true,
     key: dotenv.env['NAKAMA_SERVER_KEY']!,
   );
 
@@ -110,6 +111,11 @@ class _MyAppState extends State<MyApp> {
           create: (context) => NotificationsBloc(
             authBloc: context.read<AuthBloc>(),
           )..add(FetchNotifications()),
+        ),
+        BlocProvider<TournamentsBloc>(
+          create: (context) => TournamentsBloc(
+            authBloc: context.read<AuthBloc>(),
+          )..add(FetchTournaments()),
         ),
       ],
       child: ToastificationWrapper(
