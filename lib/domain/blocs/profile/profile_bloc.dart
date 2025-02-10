@@ -6,6 +6,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_service.dart';
 import 'package:gift_grab/data/services/storage/base_storage_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:grpc/grpc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nakama/nakama.dart';
@@ -55,11 +56,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
 
+      final tournamentRecordList =
+          await getNakamaClient().listTournamentRecordsAroundOwner(
+        session: session,
+        tournamentId: 'daily_tournament',
+        ownerId: user.id,
+      );
+
+      final entries = tournamentRecordList.records
+          .map((record) => LeaderboardEntry(record: record, user: user))
+          .toList();
+
       emit(
         ProfileLoaded(
           user: user,
           isMyProfile: isMyProfile,
           gamesPlayed: gamesPlayed,
+          tournamentEntries: entries,
         ),
       );
     } on GrpcError catch (e) {

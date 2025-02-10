@@ -13,11 +13,13 @@ class ProfileLoaded extends ProfileState {
   final User user;
   final bool isMyProfile;
   final int gamesPlayed;
+  final List<LeaderboardEntry> tournamentEntries;
 
   ProfileLoaded({
     required this.user,
     required this.isMyProfile,
     required this.gamesPlayed,
+    required this.tournamentEntries,
   });
 }
 

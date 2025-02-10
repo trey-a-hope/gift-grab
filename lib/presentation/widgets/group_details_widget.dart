@@ -3,11 +3,11 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 
-class GroupDetailsWidget extends StatelessWidget {
+class GroupDetailsListTile extends StatelessWidget {
   final Group group;
   final bool isOwner;
 
-  const GroupDetailsWidget({
+  const GroupDetailsListTile({
     required this.group,
     required this.isOwner,
     super.key,

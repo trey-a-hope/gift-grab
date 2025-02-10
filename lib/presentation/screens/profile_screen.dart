@@ -5,6 +5,8 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/profile/profile_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab/presentation/widgets/leaderboard_records_list_view.dart';
+import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/online_label.dart';
 import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -144,6 +146,13 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               ],
             ),
             Gap(16),
+            Expanded(
+              child: LeaderboardRecordsListView(
+                entries: state.tournamentEntries,
+                title: 'Tournament records for Daily Dash',
+                noResults: NoResultsEnum.tournament,
+              ),
+            ),
           ],
         ),
       ),

@@ -77,7 +77,7 @@ class _AllGroupsTab extends SmartBloc<AllGroupsBloc, GroupsState> {
               : ListView.builder(
                   itemCount: groups.length,
                   itemBuilder: (BuildContext context, int index) =>
-                      GroupDetailsWidget(
+                      GroupDetailsListTile(
                     group: groups[index],
                     isOwner: false,
                   ),
@@ -129,7 +129,7 @@ class _MyGroupsTab extends SmartBloc<MyGroupsBloc, GroupsState> {
               : ListView.builder(
                   itemCount: groups.length,
                   itemBuilder: (BuildContext context, int index) =>
-                      GroupDetailsWidget(
+                      GroupDetailsListTile(
                     group: groups[index],
                     isOwner: false,
                   ),

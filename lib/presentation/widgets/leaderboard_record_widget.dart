@@ -3,12 +3,12 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/widgets/clickable_avatar.dart';
 
-class LeaderboardRecordWidget extends StatelessWidget {
+class LeaderboardRecordListTile extends StatelessWidget {
   final LeaderboardEntry entry;
 
   final double _avatarRadius = 30;
 
-  const LeaderboardRecordWidget({
+  const LeaderboardRecordListTile({
     required this.entry,
     super.key,
   });

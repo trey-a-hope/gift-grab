@@ -12,6 +12,9 @@ const matchesLottie =
 const usersLottie =
     'https://lottie.host/e149d804-8452-4699-ad4f-32f48809a614/I8NzWu6KKY.json';
 
+const tournamentLottie =
+    'https://lottie.host/e530bc24-55b7-4718-a153-0e7085a94b50/DKrp8UNP49.json';
+
 // TODO: Join with values set in menu_button.dart.
 enum NoResultsEnum {
   chatRooms('No chat rooms', friendsLottie),
@@ -28,6 +31,7 @@ enum NoResultsEnum {
   matches('No matches', friendsLottie),
   // Tournament
   tournaments('No tournaments', friendsLottie),
+  tournament('No records', tournamentLottie),
 
   // Notifications
   notifications('No notifications', notificationsLottie),

@@ -30,7 +30,7 @@ class GroupDetailsListWidget extends StatelessWidget {
           )
         : ListView.builder(
             itemCount: groups.length,
-            itemBuilder: (c, i) => GroupDetailsWidget(
+            itemBuilder: (c, i) => GroupDetailsListTile(
               group: groups[i],
               isOwner: groups[i].creatorId == currentUid,
             ),

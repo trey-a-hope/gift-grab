@@ -18,7 +18,7 @@ import 'package:gift_grab/presentation/screens/linked_accounts_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/screens/tournaments/tournament_details_screen.dart';
+import 'package:gift_grab/presentation/screens/tournament_screen.dart';
 import 'package:gift_grab/presentation/screens/tournaments_screen.dart';
 import 'package:gift_grab/presentation/screens/notifications_screen.dart';
 import 'package:gift_grab/presentation/screens/profile_screen.dart';
@@ -121,11 +121,11 @@ final tournamentRoutes = [
     builder: (context, state) => const TournamentsScreen(),
   ),
   GoRoute(
-    path: '/${Globals.routes.tournamentDetails}/:tournamentId',
-    name: Globals.routes.tournamentDetails,
+    path: '/${Globals.routes.tournament}/:tournamentId',
+    name: Globals.routes.tournament,
     builder: (context, state) {
       final tournament = state.extra as Tournament;
-      return TournamentDetailsScreen(tournament: tournament);
+      return TournamentScreen(tournament: tournament);
     },
   ),
 ];

@@ -18,7 +18,7 @@ class TournamentListTile extends StatelessWidget {
 
     return ListTile(
       onTap: () => context.pushNamed(
-        Globals.routes.tournamentDetails,
+        Globals.routes.tournament,
         pathParameters: {'tournamentId': tournament.id},
         extra: tournament,
       ),
