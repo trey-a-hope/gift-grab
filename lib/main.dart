@@ -17,7 +17,7 @@ import 'package:toastification/toastification.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 
-// mason make bloc --name [BLOC NAME] --style basic
+// mason make smart_bloc
 // https://pub.dev/packages/cloudinary_public for image storage
 
 void main() async {
@@ -26,7 +26,7 @@ void main() async {
   await dotenv.load();
 
   NakamaProperties.initialize(
-    isDev: true,
+    isDev: false,
     key: dotenv.env['NAKAMA_SERVER_KEY']!,
   );
 
