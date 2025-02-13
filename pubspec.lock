@@ -1327,8 +1327,8 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: bcd657297fabd5cca295b2188ce6a477a33564ab
-      url: "git@github.com:trey-a-hope/smart-bloc.git"
+      resolved-ref: "15107251cdc8d1b48e0fa461335fe6214425f801"
+      url: "https://github.com/trey-a-hope/smart-bloc.git"
     source: git
     version: "0.0.1"
   source_span:

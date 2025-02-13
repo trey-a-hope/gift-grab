@@ -1,7 +1,7 @@
 name: gift_grab
 description: Game made using Flame where users grab presents to increase their scores.
 publish_to: "none"
-version: 1.7.1+42
+version: 1.7.1+43
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -44,7 +44,7 @@ dependencies:
   sign_in_with_apple: ^6.1.4
   smart_bloc:
     git:
-      url: git@github.com:trey-a-hope/smart-bloc.git
+      url: https://github.com/trey-a-hope/smart-bloc.git
       ref: main
   stream_transform: ^2.0.0
   timeago: ^3.2.2
