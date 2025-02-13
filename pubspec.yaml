@@ -26,7 +26,7 @@ dependencies:
   flutter_chat_ui: ^1.6.15
   flutter_chat_types: ^3.6.2
   flutter_dotenv: ^5.2.1
-  flutter_libphonenumber: ^2.5.0
+  flutter_libphonenumber: ^2.5.1
   flutter_login: ^5.0.0
   flutter_secure_storage: ^9.2.4
   font_awesome_flutter: ^10.8.0
