@@ -4,7 +4,7 @@ import 'package:gift_grab/domain/blocs/leaderboard/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_records_list_view.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 
 class LeaderboardScreen extends SmartBloc<LeaderboardBloc, LeaderboardState> {
   const LeaderboardScreen({

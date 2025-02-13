@@ -4,7 +4,7 @@ import 'package:gift_grab/domain/blocs/notifications/notifications_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/notification_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 import 'package:nakama/src/models/notification.dart' as n;
 
 class NotificationsScreen

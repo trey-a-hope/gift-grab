@@ -5,7 +5,7 @@ import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class EditProfileScreen extends SmartBloc<AccountBloc, AccountState> {

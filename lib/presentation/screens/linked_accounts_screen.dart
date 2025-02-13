@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 
 class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
   const LinkedAccountsScreen({super.key});

@@ -8,7 +8,7 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_records_list_view.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/online_label.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 

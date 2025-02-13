@@ -6,9 +6,9 @@ import 'package:gift_grab/presentation/extensions/build_context_extensions.dart'
 import 'package:gift_grab/presentation/widgets/chat_room_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 
 class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   const ChatRoomsScreen({

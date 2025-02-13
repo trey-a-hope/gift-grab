@@ -6,7 +6,7 @@ import 'package:gift_grab/domain/blocs/search_users/search_users_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 import 'package:gift_grab/presentation/widgets/searched_user_list_tile.dart';
 import 'package:go_router/go_router.dart';
 

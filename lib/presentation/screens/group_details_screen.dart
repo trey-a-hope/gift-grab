@@ -6,7 +6,7 @@ import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/domain/mixins/group_persmissions.dart';
 import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 import 'package:gift_grab/presentation/widgets/group_member_details_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';

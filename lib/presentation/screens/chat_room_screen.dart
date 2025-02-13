@@ -6,9 +6,9 @@ import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/domain/blocs/chat_room/chat_room_bloc.dart';
 import 'package:gift_grab/presentation/extensions/channel_message_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/presentation/widgets/smart_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
+import 'package:smart_bloc/smart_bloc.dart';
 
 class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
   final String title;
