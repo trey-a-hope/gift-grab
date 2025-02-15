@@ -36,7 +36,6 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
       throw Exception('Channel or user is null');
     }
 
-    // TODO: Display presences as simple card widgets with users that uses a future listener.
     final presences = channel.presences;
 
     debugPrint(presences.toString());

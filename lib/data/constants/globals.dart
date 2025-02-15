@@ -34,8 +34,6 @@ class Globals {
   static const String flameSprite = 'flame.png';
   static const String cookieSprite = 'cookie.png';
 
-  static bool isTablet = true; // TODO: Handle this check...
-
   /// One hour from now duration; used for token expiration.
   static final inOneHour = DateTime.now().add(
     const Duration(
@@ -69,9 +67,7 @@ class _Routes {
 }
 
 class _TimeLimits {
-  // final int round = 30;
   final int frozen = 3;
-  // final int flame = 10;
   final int cookie = 10;
 }
 

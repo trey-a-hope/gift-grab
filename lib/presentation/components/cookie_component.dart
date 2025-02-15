@@ -10,9 +10,9 @@ import 'package:gift_grab/data/constants/globals.dart';
 
 class CookieComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
-  final double _spriteHeight = Globals.isTablet ? 160.0 : 80.0;
+  final double _spriteHeight = 160.0;
   late Vector2 _velocity;
-  double speed = Globals.isTablet ? 600 : 300;
+  double speed = 600;
   final double degree = math.pi / 180;
 
   final Vector2 startPosition;

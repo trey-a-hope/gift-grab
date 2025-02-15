@@ -9,6 +9,7 @@ import 'package:gift_grab/data/services/web_socket_service.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:nakama/nakama.dart';
+// ignore: implementation_imports
 import 'package:nakama/src/models/notification.dart' as n;
 
 part 'notifications_event.dart';
@@ -31,7 +32,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     on<FetchNotifications>(_onFetchNotifications);
     on<FetchMoreNotifications>(_onFetchMoreNotifications);
     on<DeleteNotification>(_onDeleteNotification);
-
     _initializeWebSocket();
   }
 
@@ -51,10 +51,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     final List<UserPresence> roomUsers = [];
     _channelPresenceSubscription =
         _webSocketService.socket?.onChannelPresence.listen((event) {
-      // TODO: Remove all users who left.
-      // roomUsers.removeWhere((user) => event.leaves.contains(user));
-      // TODO: Add all users who joined.
-      // roomUsers.addAll(event.joins);
+      roomUsers.removeWhere((user) => event.leaves?.contains(user) ?? false);
+      roomUsers.addAll(event.joins ?? []);
       debugPrint('Room users: $roomUsers');
     });
 

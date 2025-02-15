@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../widgets/gg_scaffold_widget.dart';
 
-// TODO: Currently no api for fetching a single group, so group details on this screen cannot be updated after a successful edit.
+// Note: Currently no api for fetching a single group, so group details on this screen cannot be updated after a successful edit.
 class GroupDetailsScreen extends SmartBloc<GroupUsersBloc, GroupUsersState>
     with GroupPermissions {
   final Group group;

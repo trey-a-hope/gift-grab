@@ -119,7 +119,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
       );
 
       // Write tournament record.
-      // TODO: This currently throws an error if the tournament is not active;
+      // Note: This currently throws an error if the tournament is not active;
       // but since the game bloc doesn't have a listener for errors, it's not shown on the front end.
       await getNakamaClient().writeTournamentRecord(
         session: session,
@@ -127,7 +127,6 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
         score: event.score,
       );
 
-      // TODO: Tournaments won will be the new value, and will be updated on the server.
       final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
       await _gamesPlayedStorage.updateValue(session, gamesPlayed + 1);
 

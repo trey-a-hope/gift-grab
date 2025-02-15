@@ -11,9 +11,7 @@ import 'dart:math' as math;
 class GiftComponent extends SpriteComponent
     with HasGameRef<GiftGrabGame>, CollisionCallbacks {
   static const double _tableHeight = 200.0;
-  static const double _mobileHeight = 100.0;
   static const double _tabletSpeed = 250.0;
-  static const double _mobileSpeed = 125.0;
   static const double sizeRatio = 1.0;
 
   late final Vector2 _velocity;
@@ -25,8 +23,8 @@ class GiftComponent extends SpriteComponent
   GiftComponent({
     required this.startPosition,
     required this.onCollected,
-  })  : _spriteHeight = Globals.isTablet ? _tableHeight : _mobileHeight,
-        speed = Globals.isTablet ? _tabletSpeed : _mobileSpeed;
+  })  : _spriteHeight = _tableHeight,
+        speed = _tabletSpeed;
 
   @override
   Future<void> onLoad() async {

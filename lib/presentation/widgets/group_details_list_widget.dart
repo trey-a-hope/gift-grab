@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/widgets/group_details_widget.dart';
 import 'package:nakama/nakama.dart';
 
@@ -22,9 +21,7 @@ class GroupDetailsListWidget extends StatelessWidget {
             child: Text(
               'No Groups :(',
               style: theme.textTheme.displayLarge!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displayLarge!.fontSize! * 2
-                    : theme.textTheme.displayLarge!.fontSize,
+                fontSize: theme.textTheme.displayLarge!.fontSize! * 2,
               ),
             ),
           )

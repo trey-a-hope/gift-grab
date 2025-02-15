@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+// ignore: implementation_imports
 import 'package:nakama/src/models/notification.dart' as n;
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -41,27 +42,20 @@ class NotificationWidget extends StatelessWidget {
     );
   }
 
-  // TODO: Finish icon assignments...
   Icon _getIconFromCode(int code) {
     switch (code) {
       case 0:
-        return Icon(Icons.mail);
       case -1:
         return Icon(Icons.mail);
       case -2:
-        return Icon(MdiIcons.robotHappy);
       case -3:
-        return Icon(Icons.mail);
       case -4:
-        return Icon(Icons.mail);
       case -5:
-        return Icon(Icons.mail);
       case -6:
-        return Icon(Icons.mail);
+        return Icon(MdiIcons.robotHappy);
       case -7:
-        return Icon(Icons.mail);
       case -8:
-        return Icon(Icons.mail);
+        return Icon(Icons.cancel);
       default:
         return Icon(Icons.mail);
     }

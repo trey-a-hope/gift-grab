@@ -1,7 +1,6 @@
 part of 'base_storage_service.dart';
 
 // TODO: Create DirectChat Storage that will store all users B that user A has. Collection is the same, but key and value are different.
-
 class ChatStorage extends BaseStorageService<List<String>> {
   @override
   String get collection => 'chat';

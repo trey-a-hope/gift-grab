@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/widgets/gg_input_field_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 
-// TODO: Clean this up more, variable names are nasty.
 class BaseGroupForm extends StatefulWidget {
   final String? initialName;
   final String? initialDescription;
@@ -90,9 +88,7 @@ class _BaseGroupFormState extends State<BaseGroupForm> {
             Text(
               'Max Group Count',
               style: theme.textTheme.displaySmall!.copyWith(
-                fontSize: Globals.isTablet
-                    ? theme.textTheme.displaySmall!.fontSize! * 2
-                    : theme.textTheme.displaySmall!.fontSize,
+                fontSize: theme.textTheme.displaySmall!.fontSize! * 2,
               ),
             ),
             const Gap(20),

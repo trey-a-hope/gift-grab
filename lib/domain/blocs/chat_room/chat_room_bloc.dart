@@ -69,7 +69,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
           channel = await _joinChannelRoom(roomName: event.target);
       }
 
-      // TODO: Instead of fetching all messages again, just insert the new one.
+      // Note: Instead of fetching all messages again, just insert the new one.
       // This requires a bug fix where the ChannelMessage is defined in both
       // package:nakama/src/models/channel_message.dart
       // and

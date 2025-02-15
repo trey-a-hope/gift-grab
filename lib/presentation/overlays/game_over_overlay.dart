@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab/data/constants/globals.dart';
 
 class GameOverOverlay extends StatelessWidget {
   final GiftGrabGame game;
@@ -26,15 +25,13 @@ class GameOverOverlay extends StatelessWidget {
               child: Text(
                 'Score: ${game.score}',
                 style: theme.textTheme.displayLarge!.copyWith(
-                  fontSize: Globals.isTablet
-                      ? theme.textTheme.displayLarge!.fontSize! * 3
-                      : theme.textTheme.displayLarge!.fontSize,
+                  fontSize: theme.textTheme.displayLarge!.fontSize! * 3,
                 ),
               ),
             ),
             SizedBox(
-              width: Globals.isTablet ? 400 : 200,
-              height: Globals.isTablet ? 100 : 50,
+              width: 400,
+              height: 100,
               child: ElevatedButton(
                 onPressed: () {
                   game.resetGame!();
@@ -42,7 +39,7 @@ class GameOverOverlay extends StatelessWidget {
                 child: Text(
                   'Play Again?',
                   style: TextStyle(
-                    fontSize: Globals.isTablet ? 50 : 25,
+                    fontSize: 50,
                   ),
                 ),
               ),
