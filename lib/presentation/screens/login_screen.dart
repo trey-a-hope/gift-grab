@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,69 +9,86 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
+class AuthInfo {
+  final String email;
+  final String password;
+
+  const AuthInfo({required this.email, required this.password});
+}
+
 class LoginScreen extends StatelessWidget {
   static const _usernameFormField = 'Username';
+
+  static const _authInfos = <AuthInfo>[
+    AuthInfo(email: 'trey.a.hope@gmail.com', password: 'Peachy4040'),
+  ];
 
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => GGScaffoldWidget(
-        title: 'Login',
-        canPop: false,
-        child: FlutterLogin(
-          title: 'Gift Grab',
-          theme: LoginTheme(
-            primaryColor: Colors.blueAccent,
-            accentColor: Colors.white,
-          ),
-          additionalSignupFields: const [
-            UserFormField(
-              icon: Icon(Icons.face),
-              keyName: _usernameFormField,
-            ),
-          ],
-          onSignup: (data) async {
-            if (data.name == null ||
-                data.password == null ||
-                data.additionalSignupData == null) {
-              return 'Email/Password/Username cannot be null...';
-            }
+  Widget build(BuildContext context) {
+    final authInfo = _authInfos[Random().nextInt(_authInfos.length)];
 
-            return _onSignUpEmail(
-              context: context,
-              email: data.name!,
-              password: data.password!,
-              username: data.additionalSignupData![_usernameFormField]!,
-            );
-          },
-          onRecoverPassword: (email) {
-            return null;
-          },
-          onLogin: (data) async => await _onLoginEmail(
-            context: context,
-            email: data.name,
-            password: data.password,
+    return GGScaffoldWidget(
+      title: 'Login',
+      canPop: false,
+      child: FlutterLogin(
+        title: 'Gift Grab',
+        savedEmail: authInfo.email,
+        savedPassword: authInfo.password,
+        theme: LoginTheme(
+          primaryColor: Colors.blueAccent,
+          accentColor: Colors.white,
+        ),
+        additionalSignupFields: const [
+          UserFormField(
+            icon: Icon(Icons.face),
+            keyName: _usernameFormField,
           ),
-          loginProviders: [
+        ],
+        onSignup: (data) async {
+          if (data.name == null ||
+              data.password == null ||
+              data.additionalSignupData == null) {
+            return 'Email/Password/Username cannot be null...';
+          }
+
+          return _onSignUpEmail(
+            context: context,
+            email: data.name!,
+            password: data.password!,
+            username: data.additionalSignupData![_usernameFormField]!,
+          );
+        },
+        onRecoverPassword: (email) {
+          return null;
+        },
+        onLogin: (data) async => await _onLoginEmail(
+          context: context,
+          email: data.name,
+          password: data.password,
+        ),
+        loginProviders: [
+          LoginProvider(
+            icon: FontAwesomeIcons.google,
+            label: 'Google',
+            callback: () async => await _onLoginGoogle(
+              context: context,
+            ),
+          ),
+          if (Platform.isIOS) ...[
             LoginProvider(
-              icon: FontAwesomeIcons.google,
-              label: 'Google',
-              callback: () async => await _onLoginGoogle(
+              icon: FontAwesomeIcons.apple,
+              label: 'Apple',
+              callback: () async => await _onLoginApple(
                 context: context,
               ),
             ),
-            if (Platform.isIOS) ...[
-              LoginProvider(
-                icon: FontAwesomeIcons.apple,
-                label: 'Apple',
-                callback: () async => await _onLoginApple(
-                  context: context,
-                ),
-              ),
-            ]
-          ],
-        ),
-      );
+          ]
+        ],
+      ),
+    );
+  }
 
   Future<String?> _onSignUpEmail({
     required BuildContext context,
@@ -115,6 +133,9 @@ class LoginScreen extends StatelessWidget {
     required String password,
   }) async {
     final completer = Completer<String?>();
+
+    email = 'trey.a.hope@gmail.com';
+    password = 'Peachy4040';
 
     late final StreamSubscription subscription;
     subscription = context.read<AuthBloc>().stream.listen(
