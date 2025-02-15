@@ -21,6 +21,7 @@ class LoginScreen extends StatelessWidget {
 
   static const _authInfos = <AuthInfo>[
     AuthInfo(email: 'trey.a.hope@gmail.com', password: 'Peachy4040'),
+    AuthInfo(email: 'trey.a.hope2@gmail.com', password: 'Peachy4040'),
   ];
 
   const LoginScreen({super.key});
@@ -133,9 +134,6 @@ class LoginScreen extends StatelessWidget {
     required String password,
   }) async {
     final completer = Completer<String?>();
-
-    email = 'trey.a.hope@gmail.com';
-    password = 'Peachy4040';
 
     late final StreamSubscription subscription;
     subscription = context.read<AuthBloc>().stream.listen(

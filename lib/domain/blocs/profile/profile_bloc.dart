@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloudinary/cloudinary.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
@@ -32,7 +33,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<FetchProfile>(_onFetchProfile);
     on<DeleteRecord>(_onDeleteRecord);
     on<AddFriend>(_onAddFriend);
+    on<DeleteFriend>(_onDeleteFriend);
     on<UploadPhoto>(_onUploadPhoto);
+  }
+
+  // Note, max friend retrieval is 1k, so this approach can be very expensive and also may not work if a user has more than 1k friends, (but there's no other option right now).
+  Future<FriendshipState?> _getFriendshipState(Session session, uid) async {
+    final friendsList = await getNakamaClient().listFriends(
+      session: session,
+      limit: 1000,
+    );
+
+    final friends = friendsList.friends;
+
+    if (friends == null || friends.isEmpty) {
+      return null;
+    }
+
+    final friend = friends.firstWhere((friend) => friend.user.id == uid);
+
+    return friend.state;
   }
 
   Future<void> _onFetchProfile(
@@ -52,7 +72,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       final isMyProfile = account.user.id == user.id;
 
-      // TODO: See if user is my friend already.
+      debugPrint('Friends: ${user.edgeCount}');
+
+      FriendshipState? friendshipState;
+      if (!isMyProfile) {
+        friendshipState = await _getFriendshipState(session, user.id);
+      }
 
       final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
 
@@ -73,6 +98,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           isMyProfile: isMyProfile,
           gamesPlayed: gamesPlayed,
           tournamentEntries: entries,
+          friendshipState: friendshipState,
         ),
       );
     } on GrpcError catch (e) {
@@ -117,6 +143,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
 
+      // Note: A user who has been blocked will not know which users have blocked them. That user can continue to add friends and interact with other users.
       await getNakamaClient().addFriends(
         session: session,
         ids: [event.uid],
@@ -124,6 +151,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(
         ProfileSuccess(message: 'Request sent successfully'),
+      );
+    } on GrpcError catch (e) {
+      emit(ProfileError(
+          message: e.message ?? 'Unknown GRPC Error: ${e.codeName}'));
+    } catch (e) {
+      emit(ProfileError(message: 'Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onDeleteFriend(
+    DeleteFriend event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(ProfileLoading());
+
+    try {
+      final session = await _nakamaService.getValidSessionOrLogout(authBloc);
+
+      await getNakamaClient().deleteFriends(
+        session: session,
+        ids: [event.uid],
+      );
+
+      emit(
+        ProfileSuccess(message: 'Friend deleted successfully'),
       );
     } on GrpcError catch (e) {
       emit(ProfileError(

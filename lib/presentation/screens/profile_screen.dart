@@ -79,6 +79,45 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
     }
   }
 
+  Widget _buildFriendButton(
+    BuildContext context,
+    String uid,
+    FriendshipState? friendshipState,
+  ) {
+    switch (friendshipState) {
+      case null:
+        return ElevatedButton(
+          onPressed: () => context.read<ProfileBloc>().add(
+                AddFriend(uid: uid),
+              ),
+          child: Text('Add as Friend'),
+        );
+      case FriendshipState.mutual:
+        return ElevatedButton(
+          onPressed: () => context.read<ProfileBloc>().add(
+                DeleteFriend(uid: uid),
+              ),
+          child: Text('Delete Friend'),
+        );
+      case FriendshipState.outgoingRequest:
+        return ElevatedButton(
+          onPressed: () => context.read<ProfileBloc>().add(
+                DeleteFriend(uid: uid),
+              ),
+          child: Text('Cancel Request'),
+        );
+      case FriendshipState.incomingRequest:
+        return ElevatedButton(
+          onPressed: () => context.read<ProfileBloc>().add(
+                AddFriend(uid: uid),
+              ),
+          child: Text('Accept Friend Request'),
+        );
+      case FriendshipState.blocked:
+        return SizedBox.shrink();
+    }
+  }
+
   @override
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as ProfileLoaded;
@@ -112,12 +151,7 @@ class ProfileScreen extends SmartBloc<ProfileBloc, ProfileState> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (!state.isMyProfile) ...[
-                  ElevatedButton(
-                    onPressed: () => context.read<ProfileBloc>().add(
-                          AddFriend(uid: user.id),
-                        ),
-                    child: Text('Add as Friend'),
-                  ),
+                  _buildFriendButton(context, user.id, state.friendshipState),
                   Gap(8),
                   ElevatedButton(
                     onPressed: () => context.pushNamed(

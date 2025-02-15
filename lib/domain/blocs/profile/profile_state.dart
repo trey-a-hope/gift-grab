@@ -14,12 +14,14 @@ class ProfileLoaded extends ProfileState {
   final bool isMyProfile;
   final int gamesPlayed;
   final List<LeaderboardEntry> tournamentEntries;
+  final FriendshipState? friendshipState;
 
   ProfileLoaded({
     required this.user,
     required this.isMyProfile,
     required this.gamesPlayed,
     required this.tournamentEntries,
+    required this.friendshipState,
   });
 }
 

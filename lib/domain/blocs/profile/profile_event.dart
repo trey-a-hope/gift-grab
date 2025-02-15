@@ -10,6 +10,12 @@ class AddFriend extends ProfileEvent {
   AddFriend({required this.uid});
 }
 
+class DeleteFriend extends ProfileEvent {
+  final String uid;
+
+  DeleteFriend({required this.uid});
+}
+
 class DeleteRecord extends ProfileEvent {}
 
 class UploadPhoto extends ProfileEvent {}
