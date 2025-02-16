@@ -14,7 +14,15 @@ class SaveAccount extends AccountEvent {
 
 class DeleteAccount extends AccountEvent {}
 
-class LinkEmailAccount extends AccountEvent {}
+class LinkEmailAccount extends AccountEvent {
+  final String email;
+  final String password;
+
+  LinkEmailAccount({
+    required this.email,
+    required this.password,
+  });
+}
 
 class UnlinkEmailAccount extends AccountEvent {}
 

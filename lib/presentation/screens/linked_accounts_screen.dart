@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/blocs/account/account_bloc.dart';
 import 'package:gift_grab/presentation/extensions/build_context_extensions.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:smart_bloc/smart_bloc.dart';
+
+class ProviderInfo {
+  final String title;
+  final String subtitle;
+  final bool isLinked;
+  final VoidCallback onLink;
+  final VoidCallback onUnlink;
+
+  const ProviderInfo({
+    required this.title,
+    required this.subtitle,
+    required this.isLinked,
+    required this.onLink,
+    required this.onUnlink,
+  });
+}
 
 class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
   const LinkedAccountsScreen({super.key});
@@ -36,54 +53,69 @@ class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
       );
 
   Widget _buildAccountContent(BuildContext context, AccountLoaded state) {
-    final user = state.account!.user;
-    final providers = [
-      {
-        'title': 'Email',
-        'subtitle': state.account!.email ?? '',
-        'isLinked': state.account!.email != '',
-        'onLink': () => context.read<AccountBloc>().add(LinkEmailAccount()),
-        'onUnlink': () => context.read<AccountBloc>().add(UnlinkEmailAccount()),
-      },
-      {
-        'title': 'Google',
-        'subtitle': user.googleId ?? '',
-        'isLinked': user.googleId != '',
-        'onLink': () => context.read<AccountBloc>().add(LinkGoogleAccount()),
-        'onUnlink': () =>
-            context.read<AccountBloc>().add(UnlinkGoogleAccount()),
-      },
-      {
-        'title': 'Apple',
-        'subtitle': user.appleId ?? '',
-        'isLinked': user.appleId != '',
-        'onLink': () => context.read<AccountBloc>().add(LinkAppleAccount()),
-        'onUnlink': () => context.read<AccountBloc>().add(UnlinkAppleAccount()),
-      },
+    final user = state.account?.user;
+
+    if (user == null) {
+      throw Exception('User is null...');
+    }
+
+    final providers = <ProviderInfo>[
+      ProviderInfo(
+        title: 'Email',
+        subtitle: state.account!.email ?? '',
+        isLinked: state.account!.email != '',
+        onLink: () async {
+          final result =
+              await ModalService.showEmailPasswordDialog(context: context);
+
+          if (result == null) return;
+
+          final email = result.$1;
+          final password = result.$2;
+
+          if (!context.mounted) return;
+
+          context.read<AccountBloc>().add(
+                LinkEmailAccount(
+                  email: email,
+                  password: password,
+                ),
+              );
+        },
+        onUnlink: () => context.read<AccountBloc>().add(UnlinkEmailAccount()),
+      ),
+      ProviderInfo(
+        title: 'Google',
+        subtitle: user.googleId ?? '',
+        isLinked: user.googleId != '',
+        onLink: () => context.read<AccountBloc>().add(LinkGoogleAccount()),
+        onUnlink: () => context.read<AccountBloc>().add(UnlinkGoogleAccount()),
+      ),
+      ProviderInfo(
+        title: 'Apple',
+        subtitle: user.appleId ?? '',
+        isLinked: user.appleId != '',
+        onLink: () => context.read<AccountBloc>().add(LinkAppleAccount()),
+        onUnlink: () => context.read<AccountBloc>().add(UnlinkAppleAccount()),
+      ),
     ];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: providers
-          .map((provider) => _buildSocialProviderTile(
-                context: context,
-                title: provider['title'] as String,
-                subtitle: provider['subtitle'] as String,
-                isLinked: provider['isLinked'] as bool,
-                onLink: provider['onLink'] as VoidCallback,
-                onUnlink: provider['onUnlink'] as VoidCallback,
-              ))
+          .map(
+            (provider) => _buildSocialProviderTile(
+              context: context,
+              provider: provider,
+            ),
+          )
           .toList(),
     );
   }
 
   Widget _buildSocialProviderTile({
     required BuildContext context,
-    required String title,
-    required String subtitle,
-    required bool isLinked,
-    required VoidCallback onLink,
-    required VoidCallback onUnlink,
+    required ProviderInfo provider,
   }) {
     final theme = Theme.of(context);
     return Padding(
@@ -92,13 +124,14 @@ class LinkedAccountsScreen extends SmartBloc<AccountBloc, AccountState> {
         borderRadius: BorderRadius.circular(16),
         color: theme.colorScheme.onInverseSurface,
         child: SwitchListTile(
-          title: Text(title, style: theme.textTheme.headlineMedium),
-          subtitle: Text(subtitle, style: theme.textTheme.headlineSmall),
-          value: isLinked,
+          title: Text(provider.title, style: theme.textTheme.headlineMedium),
+          subtitle:
+              Text(provider.subtitle, style: theme.textTheme.headlineSmall),
+          value: provider.isLinked,
           onChanged: (bool? value) {
             if (value == null) return;
-            debugPrint('Toggling $title connection: $value');
-            value ? onLink() : onUnlink();
+            debugPrint('Toggling ${provider.title} connection: $value');
+            value ? provider.onLink() : provider.onUnlink();
           },
         ),
       ),

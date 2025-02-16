@@ -153,11 +153,10 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
 
-      // TODO: Remove hard-coded values
       await getNakamaClient().linkEmail(
         session: session,
-        email: 'trey.a.hope@gmail.com',
-        password: 'Peachy4040',
+        email: event.email,
+        password: event.password,
       );
 
       emit(
@@ -188,10 +187,16 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
 
+      final email = state.account?.email;
+
+      if (email == null) {
+        throw Exception('Email is null...');
+      }
+
       await getNakamaClient().unlinkEmail(
         session: session,
-        email: 'trey.a.hope@gmail.com',
-        password: 'Peachy4040',
+        email: email,
+        password: '', //Note, password is not required to unlink email.
       );
 
       emit(
