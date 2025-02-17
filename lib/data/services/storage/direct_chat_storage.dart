@@ -1,14 +1,18 @@
 part of 'base_storage_service.dart';
 
-class ChatStorage extends BaseStorageService<List<String>> {
-  @override
-  String get collection => 'chat';
+class DirectChatStorage extends BaseStorageService<List<String>> {
+  final String uid;
+
+  DirectChatStorage({required this.uid});
 
   @override
-  String get key => 'rooms';
+  String get collection => uid;
 
   @override
-  String get valueKey => 'rooms';
+  String get key => 'direct-chats';
+
+  @override
+  String get valueKey => 'direct-chats';
 
   @override
   List<String> get defaultValue => [];

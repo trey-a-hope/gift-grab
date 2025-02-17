@@ -82,6 +82,7 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
             onPreviewDataFetched: null,
             onSendPressed: (val) {
               debugPrint('uid: ${user.id}');
+
               context.read<ChatRoomBloc>().add(
                     SendMessage(val.text),
                   );
@@ -114,9 +115,6 @@ class ChatRoomScreen extends SmartBloc<ChatRoomBloc, ChatRoomState> {
             authBloc: context.read<AuthBloc>(),
           )..add(ConnectToSocket(target, channelType)),
           child: BlocConsumer<ChatRoomBloc, ChatRoomState>(
-            // listenWhen: (previous, current) => context.listenWhen(
-            //   Globals.routes.chatRoom,
-            // ),
             listener: listener,
             builder: builder,
           ),

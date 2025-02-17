@@ -3,6 +3,7 @@ import 'package:nakama/nakama.dart';
 
 part 'chat_storage.dart';
 part 'games_played_storage.dart';
+part 'direct_chat_storage.dart';
 
 abstract class BaseStorageService<T> {
   String get collection;
