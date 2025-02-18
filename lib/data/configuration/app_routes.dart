@@ -201,6 +201,11 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const NotificationsScreen(),
             ),
             GoRoute(
+              path: Globals.routes.directChats,
+              name: Globals.routes.directChats,
+              builder: (context, state) => Text('hello'),
+            ),
+            GoRoute(
               path: Globals.routes.settings,
               name: Globals.routes.settings,
               builder: (context, state) => const SettingsScreen(),

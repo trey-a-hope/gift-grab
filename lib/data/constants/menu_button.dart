@@ -1,8 +1,8 @@
 import 'package:gift_grab/data/constants/globals.dart';
 
 enum MenuButton {
-  liveChat(
-    'Live Chat',
+  chatRooms(
+    'Chat Rooms',
     Globals.lottieChat,
   ),
   deleteAccount(

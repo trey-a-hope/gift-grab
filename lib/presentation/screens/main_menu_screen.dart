@@ -74,7 +74,7 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     ),
                   ),
                   MenuButtonWidget(
-                    menuButton: MenuButton.liveChat,
+                    menuButton: MenuButton.chatRooms,
                     onTap: () => context.pushNamed(
                       Globals.routes.chatRooms,
                     ),
@@ -106,6 +106,12 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
             Globals.routes.notifications,
           ),
           icon: Icon(Icons.notifications),
+        ),
+        IconButton.filledTonal(
+          onPressed: () => context.pushNamed(
+            Globals.routes.directChats,
+          ),
+          icon: Icon(Icons.chat),
         ),
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(

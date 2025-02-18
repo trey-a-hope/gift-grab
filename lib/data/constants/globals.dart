@@ -98,6 +98,7 @@ class _Routes {
   final String friends = 'friends';
   final String searchUsers = 'search_users';
   final String chatRooms = 'chat_rooms';
+  final String directChats = 'direct_chats';
   final String chatRoom = 'chat_room';
   final String createChatRoom = 'create_chat_room';
   final String tournaments = 'tournaments';

@@ -35,7 +35,7 @@ class ChatRoomsScreen extends SmartBloc<ChatRoomsBloc, ChatRoomsState> {
   @override
   Widget build(BuildContext context) {
     return GGScaffoldWidget(
-      title: 'Live Chat',
+      title: 'Chat Rooms',
       actions: [
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(
