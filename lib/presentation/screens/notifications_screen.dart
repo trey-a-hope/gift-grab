@@ -15,17 +15,6 @@ class NotificationsScreen
   });
 
   @override
-  void listener(BuildContext context, NotificationsState state) {
-    super.listener(context, state);
-
-    if (state is NotificationsSuccess) {
-      context.read<NotificationsBloc>().add(
-            FetchNotifications(),
-          );
-    }
-  }
-
-  @override
   Widget buildLoadedContent(BuildContext context, state) {
     state = state as NotificationsLoaded;
 
@@ -50,6 +39,17 @@ class NotificationsScreen
               ),
       ),
     );
+  }
+
+  @override
+  void listener(BuildContext context, NotificationsState state) {
+    super.listener(context, state);
+
+    if (state is NotificationsSuccess) {
+      context.read<NotificationsBloc>().add(
+            FetchNotifications(),
+          );
+    }
   }
 
   @override
