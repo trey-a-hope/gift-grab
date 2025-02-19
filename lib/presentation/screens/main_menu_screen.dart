@@ -68,6 +68,12 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     ),
                   ),
                   MenuButtonWidget(
+                    menuButton: MenuButton.notifications,
+                    onTap: () => context.pushNamed(
+                      Globals.routes.notifications,
+                    ),
+                  ),
+                  MenuButtonWidget(
                     menuButton: MenuButton.leaderboard,
                     onTap: () => context.pushNamed(
                       Globals.routes.leaderboard,
@@ -83,6 +89,12 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
                     menuButton: MenuButton.tournaments,
                     onTap: () => context.pushNamed(
                       Globals.routes.tournaments,
+                    ),
+                  ),
+                  MenuButtonWidget(
+                    menuButton: MenuButton.searchUsers,
+                    onTap: () => context.pushNamed(
+                      Globals.routes.searchUsers,
                     ),
                   ),
                 ],
@@ -101,19 +113,6 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
     return GGScaffoldWidget(
       title: 'Gift Grab',
       actions: [
-        // TODO: Move these to menu buttons...only settings should be a scaffold action...
-        IconButton.filledTonal(
-          onPressed: () => context.pushNamed(
-            Globals.routes.notifications,
-          ),
-          icon: Icon(Icons.notifications),
-        ),
-        IconButton.filledTonal(
-          onPressed: () => context.pushNamed(
-            Globals.routes.searchUsers,
-          ),
-          icon: Icon(Icons.search),
-        ),
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(
             Globals.routes.settings,

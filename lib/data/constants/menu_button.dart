@@ -25,6 +25,10 @@ enum MenuButton {
     'Linked Accounts',
     Globals.lottieLinkedAccounts,
   ),
+  notifications(
+    'Notifications',
+    Globals.lottieNotifications,
+  ),
   play(
     'Play',
     Globals.lottiePlay,
@@ -33,7 +37,10 @@ enum MenuButton {
     'Profile',
     Globals.lottieProfile,
   ),
-
+  searchUsers(
+    'Search Users',
+    Globals.lottieUsers,
+  ),
   signOut(
     'Sign Out',
     Globals.lottieSignOut,
