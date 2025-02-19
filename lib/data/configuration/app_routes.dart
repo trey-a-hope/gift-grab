@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/blocs/auth/auth_bloc.dart';
+import 'package:gift_grab/domain/blocs/direct_messages/direct_messages_screen.dart';
 import 'package:gift_grab/domain/blocs/group/groups/groups_bloc.dart';
 import 'package:gift_grab/presentation/screens/chat_room_screen.dart';
 import 'package:gift_grab/presentation/screens/chat_rooms_screen.dart';
@@ -203,7 +204,7 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
             GoRoute(
               path: Globals.routes.directChats,
               name: Globals.routes.directChats,
-              builder: (context, state) => Text('hello'),
+              builder: (context, state) => DirectMessagesScreen(),
             ),
             GoRoute(
               path: Globals.routes.settings,

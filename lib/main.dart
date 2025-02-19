@@ -20,8 +20,6 @@ import 'package:gift_grab/domain/blocs/group/group_users/group_users_bloc.dart';
 // mason make smart_bloc
 // https://pub.dev/packages/cloudinary_public for image storage
 
-// TODO: Create Messages page that would list the uids a user has a chat with.
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
