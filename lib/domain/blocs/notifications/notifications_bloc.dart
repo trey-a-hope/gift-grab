@@ -187,8 +187,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     DeleteNotification event,
     Emitter<NotificationsState> emit,
   ) async {
-    emit(NotificationsLoading(cursor: state.cursor));
-
     try {
       final session = await _nakamaService.getValidSessionOrLogout(authBloc);
 

@@ -101,17 +101,12 @@ class MainMenuScreen extends SmartBloc<AccountBloc, AccountState> {
     return GGScaffoldWidget(
       title: 'Gift Grab',
       actions: [
+        // TODO: Move these to menu buttons...only settings should be a scaffold action...
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(
             Globals.routes.notifications,
           ),
           icon: Icon(Icons.notifications),
-        ),
-        IconButton.filledTonal(
-          onPressed: () => context.pushNamed(
-            Globals.routes.directChats,
-          ),
-          icon: Icon(Icons.chat),
         ),
         IconButton.filledTonal(
           onPressed: () => context.pushNamed(
