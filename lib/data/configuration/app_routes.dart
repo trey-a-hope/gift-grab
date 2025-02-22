@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class StreamToListenable extends ChangeNotifier {
@@ -34,8 +35,12 @@ GoRouter appRouter() => GoRouter(
         GoRoute(
           path: '/${Globals.routes.main}',
           name: Globals.routes.main,
+          builder: (context, state) => const MainMenuScreen(),
+        ),
+        GoRoute(
+          path: '/${Globals.routes.game}',
+          name: Globals.routes.game,
           builder: (context, state) => const GameScreen(),
         ),
       ],
-      redirect: (context, state) => '/main',
     );
