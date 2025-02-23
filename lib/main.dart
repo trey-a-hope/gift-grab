@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
 
 // mason make smart_bloc
@@ -9,6 +10,12 @@ import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  getNakamaClient(
+    host: '24.144.85.68',
+    ssl: false,
+    serverKey: 'defaultkey',
+  );
 
   runApp(
     AppInfo(
