@@ -2,10 +2,11 @@ import 'package:cloudinary/cloudinary.dart';
 
 class Globals {
   Globals._();
-
-  // Lottie urls.
   static const lottieFriends =
       'https://lottie.host/1741de59-5532-45e4-b3f7-00ba3cfa92ad/0RBy5DNOHl.json';
+
+  static const lottieEditProfile =
+      'https://lottie.host/cf6238c1-ebcc-4741-a1c2-15098c620b83/xQETyKlA5A.json';
 
   static const lottieChat =
       'https://lottie.host/d2d2b81d-e378-4842-b525-3f0d1bd72897/0z7ilexIZ9.json';
