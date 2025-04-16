@@ -1322,15 +1322,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  smart_bloc:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: main
-      resolved-ref: "15107251cdc8d1b48e0fa461335fe6214425f801"
-      url: "https://github.com/trey-a-hope/smart-bloc.git"
-    source: git
-    version: "0.0.1"
   source_span:
     dependency: transitive
     description:
