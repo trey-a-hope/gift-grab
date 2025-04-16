@@ -16,7 +16,6 @@ class GameOverOverlay extends StatelessWidget {
 
     return GGScaffoldWidget(
       title: 'Game Over',
-      canPop: false,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
