@@ -1,3 +1,4 @@
 bricks:
   smart_bloc:
     path: "../mason-bricks/bricks/state_management/smart_bloc"
+  flutter_bloc_feature: ^0.4.0
