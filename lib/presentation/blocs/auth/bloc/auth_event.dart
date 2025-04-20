@@ -29,3 +29,5 @@ class SignUpEmail extends AuthEvent {
 class CheckAuthStatus extends AuthEvent {}
 
 class LoginGoogle extends AuthEvent {}
+
+class LoginApple extends AuthEvent {}

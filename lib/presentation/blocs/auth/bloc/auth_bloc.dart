@@ -99,5 +99,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         errorState: (message) => state.copyWith(error: message),
       ),
     );
+    on<LoginApple>(
+      (event, emit) async =>
+          await EventHandlerService.handleBlocEvent<AuthState>(
+        action: () async {
+          final idToken = await _socialAuthService.getAppleToken();
+
+          if (idToken == null) {
+            throw Exception('Failed to get Apple authentication.');
+          }
+
+          final session = await getNakamaClient().authenticateApple(
+            token: idToken,
+          );
+
+          await _nakamaSessionService.saveSessionTokens(session);
+
+          emit(state.copyWith(authenticated: true));
+        },
+        emit: emit,
+        errorState: (message) => state.copyWith(error: message),
+      ),
+    );
   }
 }
