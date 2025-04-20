@@ -3,7 +3,7 @@ import 'package:flame/components.dart';
 import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 
-class GiftSpawner extends Component with HasGameRef<GiftGrabGame> {
+class GiftSpawner extends Component with HasGameReference<GiftGrabGame> {
   final Random _random = Random();
 
   @override
@@ -25,8 +25,8 @@ class GiftSpawner extends Component with HasGameRef<GiftGrabGame> {
 
   Vector2 _createRandomPosition() {
     return Vector2(
-      _random.nextDouble() * gameRef.size.x,
-      _random.nextDouble() * gameRef.size.y,
+      _random.nextDouble() * game.size.x,
+      _random.nextDouble() * game.size.y,
     );
   }
 }

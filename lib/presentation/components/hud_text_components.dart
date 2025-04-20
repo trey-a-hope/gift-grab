@@ -6,7 +6,9 @@ import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 
 class HUDTextComponents extends PositionComponent
-    with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
+    with
+        HasGameReference<GiftGrabGame>,
+        FlameBlocListenable<GameBloc, GameState> {
   late TextComponent _scoreText;
   late TextComponent _timerText;
   late TextComponent _flameTimerText;
@@ -30,7 +32,7 @@ class HUDTextComponents extends PositionComponent
 
     _scoreText = TextComponent(
       text: 'Score: 0',
-      position: Vector2(gameRef.size.x - 40, 50),
+      position: Vector2(game.size.x - 40, 50),
       anchor: Anchor.topRight,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -42,7 +44,7 @@ class HUDTextComponents extends PositionComponent
 
     _flameTimerText = TextComponent(
       text: 'Flame Time: 0',
-      position: Vector2(gameRef.size.x - 40, 100),
+      position: Vector2(game.size.x - 40, 100),
       anchor: Anchor.topRight,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -54,7 +56,7 @@ class HUDTextComponents extends PositionComponent
 
     _cookieTimerText = TextComponent(
       text: 'Cookie FTime: 0',
-      position: Vector2(gameRef.size.x - 40, 150),
+      position: Vector2(game.size.x - 40, 150),
       anchor: Anchor.topRight,
       textRenderer: TextPaint(
         style: TextStyle(

@@ -6,7 +6,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'dart:math' as math;
 
 class IceComponent extends SpriteComponent
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
+    with HasGameReference<GiftGrabGame>, CollisionCallbacks {
   static const double _tableHeight = 200.0;
   static const double _tabletSpeed = 300.0;
   static const double sizeRatio = 1.0;
@@ -28,7 +28,7 @@ class IceComponent extends SpriteComponent
   }
 
   Future<void> _setupSprite() async {
-    sprite = await gameRef.loadSprite(Globals.iceSprite);
+    sprite = await game.loadSprite(Globals.iceSprite);
     width = _spriteHeight * sizeRatio;
     height = _spriteHeight;
     anchor = Anchor.center;
@@ -36,8 +36,8 @@ class IceComponent extends SpriteComponent
 
   void _setupPhysics() {
     position = Vector2(
-      math.Random().nextDouble() * gameRef.size.x,
-      math.Random().nextDouble() * gameRef.size.y,
+      math.Random().nextDouble() * game.size.x,
+      math.Random().nextDouble() * game.size.y,
     );
     _velocity = _calculateInitialVelocity();
   }
@@ -69,13 +69,13 @@ class IceComponent extends SpriteComponent
   }
 
   void _keepInBounds() {
-    if (position.x < 0 || position.x > gameRef.size.x) {
+    if (position.x < 0 || position.x > game.size.x) {
       _velocity.x = -_velocity.x;
-      position.x = position.x.clamp(0, gameRef.size.x);
+      position.x = position.x.clamp(0, game.size.x);
     }
-    if (position.y < 0 || position.y > gameRef.size.y) {
+    if (position.y < 0 || position.y > game.size.y) {
       _velocity.y = -_velocity.y;
-      position.y = position.y.clamp(0, gameRef.size.y);
+      position.y = position.y.clamp(0, game.size.y);
     }
   }
 }

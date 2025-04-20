@@ -1,7 +1,9 @@
 part of 'gift_grab_game.dart';
 
 class GameStateHandler extends Component
-    with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
+    with
+        HasGameReference<GiftGrabGame>,
+        FlameBlocListenable<GameBloc, GameState> {
   @override
   void onNewState(GameState state) {
     debugPrint('onNewState: ${state.toString()}');
@@ -10,15 +12,15 @@ class GameStateHandler extends Component
       bloc.stopTimer();
 
       // Flame -> Flutter Bloc conversion.
-      gameRef.score = state.score;
-      gameRef.resetGame = () {
-        gameRef.resumeEngine();
-        gameRef.overlays.remove('gameOver');
+      game.score = state.score;
+      game.resetGame = () {
+        game.resumeEngine();
+        game.overlays.remove('gameOver');
         bloc.add(ResetGameEvent());
       };
       // Normal gameRef variables.
-      gameRef.pauseEngine();
-      gameRef.overlays.add('gameOver');
+      game.pauseEngine();
+      game.overlays.add('gameOver');
     }
   }
 }

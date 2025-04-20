@@ -7,7 +7,7 @@ import 'dart:math' as math;
 import 'package:gift_grab/data/constants/globals.dart';
 
 class FlameComponent extends SpriteComponent
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
+    with HasGameReference<GiftGrabGame>, CollisionCallbacks {
   static const double _tableHeight = 160.0;
   static const double _tabletSpeed = 300.0;
   static const double sizeRatio = 0.8;
@@ -30,7 +30,7 @@ class FlameComponent extends SpriteComponent
   }
 
   Future<void> _setupSprite() async {
-    sprite = await gameRef.loadSprite(Globals.flameSprite);
+    sprite = await game.loadSprite(Globals.flameSprite);
     width = _spriteHeight * sizeRatio;
     height = _spriteHeight;
     anchor = Anchor.center;
@@ -68,13 +68,13 @@ class FlameComponent extends SpriteComponent
   }
 
   void _keepInBounds() {
-    if (position.x < 0 || position.x > gameRef.size.x) {
+    if (position.x < 0 || position.x > game.size.x) {
       _velocity.x = -_velocity.x;
-      position.x = position.x.clamp(0, gameRef.size.x);
+      position.x = position.x.clamp(0, game.size.x);
     }
-    if (position.y < 0 || position.y > gameRef.size.y) {
+    if (position.y < 0 || position.y > game.size.y) {
       _velocity.y = -_velocity.y;
-      position.y = position.y.clamp(0, gameRef.size.y);
+      position.y = position.y.clamp(0, game.size.y);
     }
   }
 

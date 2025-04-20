@@ -19,7 +19,7 @@ enum MovementState {
 
 class SantaComponent extends SpriteGroupComponent<MovementState>
     with
-        HasGameRef<GiftGrabGame>,
+        HasGameReference<GiftGrabGame>,
         CollisionCallbacks,
         FlameBlocReader<GameBloc, GameState> {
   final double _spriteHeight = 200;
@@ -39,12 +39,12 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     await super.onLoad();
 
     // Load sprites
-    final Sprite santaIdle = await gameRef.loadSprite(Globals.santaIdle);
+    final Sprite santaIdle = await game.loadSprite(Globals.santaIdle);
     final Sprite santaSlideLeft =
-        await gameRef.loadSprite(Globals.santaSlideLeftSprite);
+        await game.loadSprite(Globals.santaSlideLeftSprite);
     final Sprite santaSlideRight =
-        await gameRef.loadSprite(Globals.santaSlideRightSprite);
-    final Sprite santaFrozen = await gameRef.loadSprite(Globals.santaFrozen);
+        await game.loadSprite(Globals.santaSlideRightSprite);
+    final Sprite santaFrozen = await game.loadSprite(Globals.santaFrozen);
 
     sprites = {
       MovementState.idle: santaIdle,
@@ -54,17 +54,17 @@ class SantaComponent extends SpriteGroupComponent<MovementState>
     };
 
     // Set boundaries
-    _rightBound = gameRef.size.x - 45;
+    _rightBound = game.size.x - 45;
     _leftBound = 0 + 45;
     _upBound = 0 + 55;
-    _downBound = gameRef.size.y - 55;
+    _downBound = game.size.y - 55;
 
     // Set dimensions
     width = _spriteHeight * 1.42;
     height = _spriteHeight;
     anchor = Anchor.center;
 
-    position = gameRef.size / 2;
+    position = game.size / 2;
     current = MovementState.idle;
 
     add(CircleHitbox()..radius = 1);

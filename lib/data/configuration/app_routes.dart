@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/screens/game_screen.dart';
+import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,8 +31,22 @@ class StreamToListenable extends ChangeNotifier {
   void _tt(event) => notifyListeners();
 }
 
-GoRouter appRouter() => GoRouter(
+GoRouter appRouter(AuthBloc authBloc) => GoRouter(
       initialLocation: '/${Globals.routes.main}',
+      refreshListenable: StreamToListenable([authBloc.stream]),
+      redirect: (context, state) {
+        final isAuthenticated = authBloc.state.authenticated;
+
+        if (!isAuthenticated && !state.matchedLocation.contains('/login')) {
+          return '/login';
+        }
+
+        if (isAuthenticated && state.matchedLocation == '/login') {
+          return '/main';
+        }
+
+        return null;
+      },
       routes: [
         GoRoute(
           path: '/${Globals.routes.main}',
@@ -41,6 +57,11 @@ GoRouter appRouter() => GoRouter(
           path: '/${Globals.routes.game}',
           name: Globals.routes.game,
           builder: (context, state) => const GameScreen(),
+        ),
+        GoRoute(
+          path: '/${Globals.routes.login}',
+          name: Globals.routes.login,
+          builder: (_, __) => LoginScreen(),
         ),
       ],
     );

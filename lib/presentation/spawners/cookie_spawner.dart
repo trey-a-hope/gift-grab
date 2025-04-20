@@ -7,7 +7,9 @@ import 'package:gift_grab/presentation/components/cookie_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 
 class CookieSpawner extends Component
-    with HasGameRef<GiftGrabGame>, FlameBlocListenable<GameBloc, GameState> {
+    with
+        HasGameReference<GiftGrabGame>,
+        FlameBlocListenable<GameBloc, GameState> {
   bool _hasSpawned = false;
 
   @override
@@ -15,8 +17,8 @@ class CookieSpawner extends Component
     if (state.isCookieSpawned && !_hasSpawned) {
       _hasSpawned = true;
       final randomPosition = Vector2(
-        Random().nextDouble() * gameRef.size.x,
-        Random().nextDouble() * gameRef.size.y,
+        Random().nextDouble() * game.size.x,
+        Random().nextDouble() * game.size.y,
       );
       add(CookieComponent(startPosition: randomPosition));
     }

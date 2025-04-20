@@ -9,7 +9,7 @@ import 'dart:math' as math;
 import 'package:gift_grab/data/constants/globals.dart';
 
 class CookieComponent extends SpriteComponent
-    with HasGameRef<GiftGrabGame>, CollisionCallbacks {
+    with HasGameReference<GiftGrabGame>, CollisionCallbacks {
   final double _spriteHeight = 160.0;
   late Vector2 _velocity;
   double speed = 600;
@@ -24,7 +24,7 @@ class CookieComponent extends SpriteComponent
   Future<void> onLoad() async {
     await super.onLoad();
 
-    sprite = await gameRef.loadSprite(Globals.cookieSprite);
+    sprite = await game.loadSprite(Globals.cookieSprite);
 
     final double spawnAngle = _getSpawnAngle();
     final double vx = math.cos(spawnAngle * degree) * speed;
@@ -50,13 +50,13 @@ class CookieComponent extends SpriteComponent
   }
 
   void _keepInBounds() {
-    if (position.x < 0 || position.x > gameRef.size.x) {
+    if (position.x < 0 || position.x > game.size.x) {
       _velocity.x = -_velocity.x;
-      position.x = position.x.clamp(0, gameRef.size.x);
+      position.x = position.x.clamp(0, game.size.x);
     }
-    if (position.y < 0 || position.y > gameRef.size.y) {
+    if (position.y < 0 || position.y > game.size.y) {
       _velocity.y = -_velocity.y;
-      position.y = position.y.clamp(0, gameRef.size.y);
+      position.y = position.y.clamp(0, game.size.y);
     }
   }
 
