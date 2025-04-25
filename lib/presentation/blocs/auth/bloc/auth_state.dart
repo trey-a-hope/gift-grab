@@ -5,7 +5,11 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  const AuthState(this.authenticated, this.isLoading, this.error);
+  const AuthState({
+    this.authenticated = false,
+    this.isLoading = false,
+    this.error,
+  });
 
   AuthState copyWith({
     bool? authenticated,
@@ -13,8 +17,8 @@ class AuthState {
     String? error,
   }) =>
       AuthState(
-        authenticated ?? this.authenticated,
-        isLoading == true ? true : false,
-        error,
+        authenticated: authenticated ?? this.authenticated,
+        isLoading: isLoading == true ? true : false,
+        error: error,
       );
 }

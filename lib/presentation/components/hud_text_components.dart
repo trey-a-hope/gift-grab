@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/palette.dart' as palette;
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
+import 'package:gift_grab/presentation/blocs/game/game_bloc.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 
 class HUDTextComponents extends PositionComponent

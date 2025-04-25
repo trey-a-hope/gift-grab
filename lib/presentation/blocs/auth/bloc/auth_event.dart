@@ -12,7 +12,10 @@ class LoginEmail extends AuthEvent {
   });
 }
 
-class Logout extends AuthEvent {}
+class Logout extends AuthEvent {
+  final bool isDelete;
+  Logout({this.isDelete = false});
+}
 
 class SignUpEmail extends AuthEvent {
   final String email;

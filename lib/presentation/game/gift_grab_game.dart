@@ -3,7 +3,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
+import 'package:gift_grab/presentation/blocs/game/game_bloc.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/spawners/cookie_spawner.dart';
 import 'package:gift_grab/presentation/spawners/flame_spawner.dart';

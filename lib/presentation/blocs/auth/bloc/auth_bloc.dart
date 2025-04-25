@@ -16,12 +16,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SocialAuthService? socialAuthService})
       : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         _socialAuthService = socialAuthService ?? SocialAuthService(),
-        super(const AuthState(false, false, null)) {
+        super(const AuthState()) {
     on<Logout>(
       (event, emit) async =>
           await EventHandlerService.handleBlocEvent<AuthState>(
         action: () async {
-          await _nakamaSessionService.logout();
+          if (!event.isDelete) {
+            await _nakamaSessionService.logout();
+          }
           emit(state.copyWith(authenticated: false));
         },
         emit: emit,

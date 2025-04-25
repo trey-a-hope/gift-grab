@@ -2,7 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:gift_grab/domain/blocs/game/game_bloc.dart';
+import 'package:gift_grab/presentation/blocs/game/game_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/components/gift_component.dart';
 import 'package:gift_grab/presentation/game/gift_grab_game.dart';
