@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/blocs/game/game_bloc.dart';
+import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
 import 'package:gift_grab/presentation/components/ice_component.dart';
 import 'package:gift_grab/presentation/spawners/cookie_spawner.dart';
 import 'package:gift_grab/presentation/spawners/flame_spawner.dart';
@@ -16,6 +17,8 @@ import 'package:gift_grab/presentation/inputs/joystick.dart';
 part 'game_state_handler.dart';
 
 class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
+  final LeaderboardBloc leaderboardBloc;
+
   // Store state variables on the widget since Flame overlays are part of
   // the game engine system, and Flutter Bloc is part of the widget system.
   int score = 0;
@@ -23,7 +26,7 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
 
   late final JoystickComponent _joystick;
 
-  GiftGrabGame() {
+  GiftGrabGame(this.leaderboardBloc) {
     _joystick = createJoystick();
   }
 

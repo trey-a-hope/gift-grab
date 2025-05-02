@@ -22,7 +22,6 @@ class AuthView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        // TODO: return correct widget based on the state.
         return const SizedBox();
       },
     );

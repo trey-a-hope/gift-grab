@@ -98,6 +98,15 @@ class MainMenuView extends StatelessWidget {
                                   Globals.routes.linkedAccounts,
                                 ),
                               ),
+                              MenuButtonWidget(
+                                menuButton: MenuButton.leaderboard,
+                                onTap: () => context.pushNamed(
+                                  Globals.routes.leaderboard,
+                                  pathParameters: {
+                                    'uid': state.account!.user.id,
+                                  },
+                                ),
+                              ),
                               if (state.account != null &&
                                   state.account!.email != null) ...[
                                 MenuButtonWidget(

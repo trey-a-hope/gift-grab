@@ -11,6 +11,8 @@ class GameStateHandler extends Component
     if (state.isGameOver) {
       bloc.stopTimer();
 
+      game.leaderboardBloc.add(SubmitScore(state.score));
+
       // Flame -> Flutter Bloc conversion.
       game.score = state.score;
       game.resetGame = () {
