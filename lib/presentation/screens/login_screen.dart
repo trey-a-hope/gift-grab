@@ -10,6 +10,8 @@ import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   static const _usernameFormField = 'Username';
+  static const _savedEmail = 'trey.a.hope@gmail.com';
+  static const _savedPassword = 'Peachy5050';
 
   const LoginScreen({super.key});
 
@@ -18,6 +20,8 @@ class LoginScreen extends StatelessWidget {
         title: 'Login',
         canPop: false,
         child: FlutterLogin(
+          savedEmail: _savedEmail,
+          savedPassword: _savedPassword,
           title: 'Gift Grab',
           theme: LoginTheme(
             primaryColor: Colors.blueAccent,

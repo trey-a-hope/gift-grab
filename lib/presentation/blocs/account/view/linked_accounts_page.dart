@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
@@ -73,13 +75,15 @@ class LinkedAccountsPage extends StatelessWidget {
             onLink: () => accountBloc.add(LinkGoogleAccount()),
             onUnlink: () => accountBloc.add(UnlinkGoogleAccount()),
           ),
-          _ProviderInfo(
-            title: 'Apple',
-            subtitle: state.account?.user.appleId ?? '',
-            isLinked: state.account?.user.appleId != '',
-            onLink: () => accountBloc.add(LinkAppleAccount()),
-            onUnlink: () => accountBloc.add(UnlinkAppleAccount()),
-          ),
+          if (Platform.isIOS) ...{
+            _ProviderInfo(
+              title: 'Apple',
+              subtitle: state.account?.user.appleId ?? '',
+              isLinked: state.account?.user.appleId != '',
+              onLink: () => accountBloc.add(LinkAppleAccount()),
+              onUnlink: () => accountBloc.add(UnlinkAppleAccount()),
+            ),
+          }
         ];
 
         return GGScaffoldWidget(
