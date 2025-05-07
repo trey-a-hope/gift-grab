@@ -1,2 +1,0 @@
-/Users/treyhope/Desktop/Development/gift-grab/android/app/.cxx/Debug/3a1m6c4o/x86_64/CMakeFiles/edit_cache.dir
-/Users/treyhope/Desktop/Development/gift-grab/android/app/.cxx/Debug/3a1m6c4o/x86_64/CMakeFiles/rebuild_cache.dir
