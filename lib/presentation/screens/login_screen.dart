@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           savedPassword: _savedPassword,
           title: 'Gift Grab',
           theme: LoginTheme(
-            primaryColor: Colors.orange,
+            primaryColor: Colors.teal,
             accentColor: Colors.white,
           ),
           onLogin: (data) async => await _onLoginEmail(
