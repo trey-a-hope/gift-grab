@@ -47,6 +47,7 @@ dependencies:
   toastification: ^2.3.0
   toggle_switch: ^2.0.1
   uuid:
+  bloc_test: ^9.1.7
 
 dev_dependencies:
   flutter_test:
