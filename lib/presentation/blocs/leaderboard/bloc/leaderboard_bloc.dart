@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
@@ -13,9 +14,13 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
 
   final AuthBloc authBloc;
   final NakamaSessionService _nakamaSessionService;
+  final GamesPlayedStorage _gamesPlayedStorage;
 
-  LeaderboardBloc(this.authBloc, {NakamaSessionService? nakamaSessionService})
+  LeaderboardBloc(this.authBloc,
+      {NakamaSessionService? nakamaSessionService,
+      GamesPlayedStorage? gamesPlayedStorage})
       : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
+        _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
         super(const LeaderboardState()) {
     on<FetchLeaderboard>((event, emit) async {
       return await EventHandlerService.handleBlocEvent<LeaderboardState>(
@@ -81,6 +86,10 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
               leaderboardName: _leaderboardId,
               score: event.score,
             );
+
+            final gamesPlayed =
+                await _gamesPlayedStorage.getValue(session, session.userId);
+            await _gamesPlayedStorage.updateValue(session, gamesPlayed + 1);
 
             emit(state.copyWith());
           },
