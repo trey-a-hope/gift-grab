@@ -10,6 +10,7 @@ import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MainMenuPage extends StatelessWidget {
   const MainMenuPage({super.key});
@@ -33,6 +34,10 @@ class MainMenuView extends StatelessWidget {
         return GGScaffoldWidget(
           title: 'Gift Grab',
           actions: [
+            IconButton.filledTonal(
+              onPressed: () => showLicensePage(context: context),
+              icon: Icon(MdiIcons.fileDocument),
+            ),
             IconButton.filledTonal(
               onPressed: () async {
                 final confirm = await ModalService.showConfirmation(
