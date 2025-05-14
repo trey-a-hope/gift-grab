@@ -32,6 +32,8 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         final user = state.user;
@@ -72,6 +74,10 @@ class ProfileView extends StatelessWidget {
                           ).image,
                         ),
                         const Gap(16),
+                        Text(
+                          'Games Played: ${state.gamesPlayed}',
+                          style: theme.textTheme.displayLarge,
+                        ),
                       ],
                     ),
                   ),

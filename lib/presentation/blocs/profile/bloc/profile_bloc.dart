@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
@@ -14,13 +15,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final AccountBloc accountBloc;
 
   final NakamaSessionService _nakamaSessionService;
+  final GamesPlayedStorage _gamesPlayedStorage;
 
   ProfileBloc(
     this.uid,
     this.authBloc,
     this.accountBloc, {
     NakamaSessionService? nakamaSessionService,
+    GamesPlayedStorage? gamesPlayedStorage,
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
+        _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
         super(const ProfileState()) {
     on<ReadProfile>(
       (event, emit) async =>
@@ -41,7 +45,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
           final isMyProfile = account.user.id == user.id;
 
-          emit(state.copyWith(user: user, isMyProfile: isMyProfile));
+          final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
+
+          emit(
+            state.copyWith(
+              user: user,
+              isMyProfile: isMyProfile,
+              gamesPlayed: gamesPlayed,
+            ),
+          );
         },
         emit: emit,
         errorState: (message) => state.copyWith(error: message),
