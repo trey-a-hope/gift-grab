@@ -3,6 +3,7 @@ import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:gift_grab/presentation/extensions/list_friend_extensions.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -47,11 +48,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
           final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
 
+          final friendsList = await getNakamaClient().listFriends(
+            session: session,
+            limit: 1000,
+          );
+          final friends = friendsList.friends;
+          final friendshipState = friends?.getFriendshipState(uid);
+
           emit(
             state.copyWith(
               user: user,
               isMyProfile: isMyProfile,
               gamesPlayed: gamesPlayed,
+              friendshipState: friendshipState,
             ),
           );
         },

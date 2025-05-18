@@ -4,8 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 import '../profile.dart';
 
@@ -74,6 +76,11 @@ class ProfileView extends StatelessWidget {
                           ).image,
                         ),
                         const Gap(16),
+                        _buildFriendshipStateButton(
+                          context,
+                          uid: user.id,
+                          friendshipState: state.friendshipState,
+                        ),
                         Text(
                           'Games Played: ${state.gamesPlayed}',
                           style: theme.textTheme.displayLarge,
@@ -85,5 +92,34 @@ class ProfileView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildFriendshipStateButton(
+    BuildContext context, {
+    required String uid,
+    FriendshipState? friendshipState,
+  }) {
+    final friendsBloc = context.read<FriendsBloc>();
+    final profileBloc = context.read<ProfileBloc>();
+
+    switch (friendshipState) {
+      case null:
+        return ElevatedButton(
+          onPressed: () {
+            friendsBloc.add(AddFriend(uid: uid));
+            profileBloc.add(ReadProfile());
+          },
+          child: Text('Add as Friend'),
+        );
+      case FriendshipState.outgoingRequest:
+        return ElevatedButton(
+          onPressed: () {},
+          child: Text('Cancel Request'),
+        );
+      case FriendshipState.blocked:
+      case FriendshipState.mutual:
+      case FriendshipState.incomingRequest:
+        return SizedBox.shrink();
+    }
   }
 }

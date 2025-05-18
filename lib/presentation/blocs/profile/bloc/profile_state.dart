@@ -4,6 +4,7 @@ class ProfileState {
   final User? user;
   final bool isMyProfile;
   final int gamesPlayed;
+  final FriendshipState? friendshipState;
   final bool isLoading;
   final String? error;
 
@@ -11,6 +12,7 @@ class ProfileState {
     this.user,
     this.isMyProfile = false,
     this.gamesPlayed = 0,
+    this.friendshipState,
     this.isLoading = true,
     this.error,
   });
@@ -19,6 +21,7 @@ class ProfileState {
     User? user,
     bool? isMyProfile,
     int? gamesPlayed,
+    FriendshipState? friendshipState,
     bool? isLoading,
     String? error,
   }) =>
@@ -26,6 +29,7 @@ class ProfileState {
         user: user ?? this.user,
         isMyProfile: isMyProfile ?? this.isMyProfile,
         gamesPlayed: gamesPlayed ?? this.gamesPlayed,
+        friendshipState: friendshipState ?? this.friendshipState,
         isLoading: isLoading == true ? true : false,
         error: error,
       );
