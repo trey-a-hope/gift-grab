@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/view/leaderboard_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/edit_profile_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/profile_page.dart';
@@ -100,6 +101,11 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
             if (uid == null) throw Exception();
             return LeaderboardPage(uid);
           },
+        ),
+        GoRoute(
+          path: '/${Globals.routes.friends}',
+          name: Globals.routes.friends,
+          builder: (context, state) => const FriendsScreen(),
         ),
       ],
     );

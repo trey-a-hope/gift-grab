@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/blocs/friends/friends.dart';
+import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
@@ -18,12 +18,21 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ProfileBloc(
-        uid,
-        context.read<AuthBloc>(),
-        context.read<AccountBloc>(),
-      )..add(ReadProfile()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ProfileBloc>(
+          create: (_) => ProfileBloc(
+            uid,
+            context.read<AuthBloc>(),
+            context.read<AccountBloc>(),
+          )..add(ReadProfile()),
+        ),
+        BlocProvider<FriendsBloc>(
+          create: (_) => FriendsBloc(
+            context.read<AuthBloc>(),
+          ),
+        ),
+      ],
       child: const ProfileView(),
     );
   }
@@ -55,13 +64,13 @@ class ProfileView extends StatelessWidget {
                     context.read<ProfileBloc>().add(ReadProfile());
                   }
                 },
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
               ),
             ]
           ],
           child: Center(
             child: state.isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Column(
@@ -109,17 +118,17 @@ class ProfileView extends StatelessWidget {
             friendsBloc.add(AddFriend(uid: uid));
             profileBloc.add(ReadProfile());
           },
-          child: Text('Add as Friend'),
+          child: const Text('Add as Friend'),
         );
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
           onPressed: () {},
-          child: Text('Cancel Request'),
+          child: const Text('Cancel Request'),
         );
       case FriendshipState.blocked:
       case FriendshipState.mutual:
       case FriendshipState.incomingRequest:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 }

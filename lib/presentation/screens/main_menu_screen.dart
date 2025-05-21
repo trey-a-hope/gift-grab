@@ -112,6 +112,12 @@ class MainMenuView extends StatelessWidget {
                                   },
                                 ),
                               ),
+                              MenuButtonWidget(
+                                menuButton: MenuButton.friends,
+                                onTap: () => context.pushNamed(
+                                  Globals.routes.friends,
+                                ),
+                              ),
                               if (state.account != null &&
                                   state.account!.email != null) ...[
                                 MenuButtonWidget(
