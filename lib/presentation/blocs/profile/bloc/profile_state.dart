@@ -1,19 +1,21 @@
 part of 'profile_bloc.dart';
 
-class ProfileState {
+class ProfileState extends BaseState {
   final User? user;
   final bool isMyProfile;
   final int gamesPlayed;
   final FriendshipState? friendshipState;
   final bool isLoading;
+  final String? success;
   final String? error;
 
-  const ProfileState({
+  ProfileState({
     this.user,
     this.isMyProfile = false,
     this.gamesPlayed = 0,
     this.friendshipState,
     this.isLoading = true,
+    this.success,
     this.error,
   });
 
@@ -22,15 +24,20 @@ class ProfileState {
     bool? isMyProfile,
     int? gamesPlayed,
     FriendshipState? friendshipState,
+    bool clearFriendshipState = false,
     bool? isLoading,
+    String? success,
     String? error,
   }) =>
       ProfileState(
         user: user ?? this.user,
         isMyProfile: isMyProfile ?? this.isMyProfile,
         gamesPlayed: gamesPlayed ?? this.gamesPlayed,
-        friendshipState: friendshipState ?? this.friendshipState,
+        friendshipState: clearFriendshipState
+            ? null
+            : (friendshipState ?? this.friendshipState),
         isLoading: isLoading == true ? true : false,
+        success: success,
         error: error,
       );
 }

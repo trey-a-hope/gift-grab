@@ -5,6 +5,7 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
@@ -49,10 +50,17 @@ class _MyAppState extends State<MyApp> {
           create: (context) => _authBloc,
         ),
         BlocProvider<AccountBloc>(
-          create: (context) => AccountBloc(_authBloc),
+          create: (context) => AccountBloc(
+            context.read<AuthBloc>(),
+          ),
         ),
         BlocProvider<LeaderboardBloc>(
           create: (context) => LeaderboardBloc(
+            context.read<AuthBloc>(),
+          ),
+        ),
+        BlocProvider<FriendsBloc>(
+          create: (context) => FriendsBloc(
             context.read<AuthBloc>(),
           ),
         ),

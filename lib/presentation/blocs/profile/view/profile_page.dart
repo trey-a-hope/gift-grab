@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
+import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
@@ -18,21 +19,13 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ProfileBloc>(
-          create: (_) => ProfileBloc(
-            uid,
-            context.read<AuthBloc>(),
-            context.read<AccountBloc>(),
-          )..add(ReadProfile()),
-        ),
-        BlocProvider<FriendsBloc>(
-          create: (_) => FriendsBloc(
-            context.read<AuthBloc>(),
-          ),
-        ),
-      ],
+    return BlocProvider<ProfileBloc>(
+      create: (_) => ProfileBloc(
+        uid,
+        context.read<AuthBloc>(),
+        context.read<AccountBloc>(),
+        context.read<FriendsBloc>(),
+      ),
       child: const ProfileView(),
     );
   }
@@ -45,9 +38,15 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<ProfileBloc, ProfileState>(
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state.success != null) {
+          ModalService.showSuccess(title: state.success!);
+        }
+      },
       builder: (context, state) {
         final user = state.user;
+        final profileBloc = context.read<ProfileBloc>();
 
         return GGScaffoldWidget(
           title: user?.username ?? '',
@@ -61,10 +60,30 @@ class ProfileView extends StatelessWidget {
                   if (!context.mounted) return;
 
                   if (success != null && success) {
-                    context.read<ProfileBloc>().add(ReadProfile());
+                    profileBloc.add(ReadProfile());
                   }
                 },
                 icon: const Icon(Icons.edit),
+              ),
+            ],
+            if (state.friendshipState == FriendshipState.mutual) ...[
+              IconButton.filledTonal(
+                onPressed: () async {
+                  final confirm = await ModalService.showConfirmation(
+                    context: context,
+                    title: 'Block Friend',
+                    message: 'Are you sure?',
+                  );
+
+                  if (confirm == null || confirm == false) {
+                    return;
+                  }
+
+                  if (!context.mounted) return;
+
+                  // context.read<ProfileBloc>().add(BlockFriend());
+                },
+                icon: const Icon(Icons.block),
               ),
             ]
           ],
@@ -86,8 +105,8 @@ class ProfileView extends StatelessWidget {
                         ),
                         const Gap(16),
                         _buildFriendshipStateButton(
-                          context,
-                          uid: user.id,
+                          isMyProfile: state.isMyProfile,
+                          profileBloc: context.read<ProfileBloc>(),
                           friendshipState: state.friendshipState,
                         ),
                         Text(
@@ -103,26 +122,26 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildFriendshipStateButton(
-    BuildContext context, {
-    required String uid,
-    FriendshipState? friendshipState,
+  Widget _buildFriendshipStateButton({
+    required bool isMyProfile,
+    required ProfileBloc profileBloc,
+    required FriendshipState? friendshipState,
   }) {
-    final friendsBloc = context.read<FriendsBloc>();
-    final profileBloc = context.read<ProfileBloc>();
-
     switch (friendshipState) {
       case null:
-        return ElevatedButton(
-          onPressed: () {
-            friendsBloc.add(AddFriend(uid: uid));
-            profileBloc.add(ReadProfile());
-          },
-          child: const Text('Add as Friend'),
-        );
+        return isMyProfile
+            ? const SizedBox.shrink()
+            : ElevatedButton(
+                onPressed: () {
+                  profileBloc.add(SendRequest());
+                },
+                child: const Text('Send Request'),
+              );
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            profileBloc.add(CancelRequest());
+          },
           child: const Text('Cancel Request'),
         );
       case FriendshipState.blocked:

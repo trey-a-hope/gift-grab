@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'search_users_event.dart';
 part 'search_users_state.dart';
@@ -10,6 +13,8 @@ part 'search_users_state.dart';
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   final AuthBloc authBloc;
   final NakamaSessionService _nakamaSessionService;
+
+  Timer? _debounceTimer;
 
   SearchUsersBloc(this.authBloc, {NakamaSessionService? nakamaSessionService})
       : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
@@ -36,6 +41,19 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
         emit: emit,
         errorState: (message) => state.copyWith(error: message),
       ),
+      transformer: _debounce(
+        const Duration(milliseconds: 300),
+      ),
     );
+  }
+
+  EventTransformer<T> _debounce<T>(Duration duration) {
+    return (events, mapper) => events.debounce(duration).switchMap(mapper);
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
   }
 }

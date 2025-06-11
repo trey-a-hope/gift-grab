@@ -1,8 +1,35 @@
 import 'package:dio/dio.dart'; // HTTP client for making API requests.
-
 import 'package:flutter_bloc/flutter_bloc.dart'; // BLoC pattern for state management.
 import 'package:grpc/grpc.dart'; // gRPC client for remote procedure calls.
 
+abstract class BaseState {
+  bool get isLoading;
+  String? get error;
+  BaseState copyWith({String? error});
+}
+
+class BlocHandler<T extends BaseState> {
+  Future<void> handle({
+    required Future<void> Function() action,
+    required Emitter<T> emit,
+    required T state,
+  }) async {
+    try {
+      return await action();
+    } on DioException catch (e) {
+      final errorMessage = e.message ?? 'Unknown DioException has occurred.';
+      emit(state.copyWith(error: errorMessage) as T);
+    } on GrpcError catch (e) {
+      final errorMessage = e.message ?? 'Unknown GRPC Error: ${e.codeName}';
+      emit(state.copyWith(error: errorMessage) as T);
+    } catch (e) {
+      final errorMessage = 'Unexpected error: ${e.toString()}';
+      emit(state.copyWith(error: errorMessage) as T);
+    }
+  }
+}
+
+// @deprecated
 // A service class to handle BLoC events with centralized error handling.
 class EventHandlerService {
   // Static method to execute an async action and manage its outcome in a BLoC.

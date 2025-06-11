@@ -12,3 +12,7 @@ class UsernameChange extends ProfileEvent {
 }
 
 class UpdateProfile extends ProfileEvent {}
+
+class SendRequest extends ProfileEvent {}
+
+class CancelRequest extends ProfileEvent {}

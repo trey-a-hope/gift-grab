@@ -1,28 +1,24 @@
 part of 'friends_bloc.dart';
 
-class FriendsState {
-  final String? cursor;
-  final List<Friend> friends;
+class FriendsState extends BaseState {
   final bool isLoading;
+  final String? success;
   final String? error;
 
-  const FriendsState({
-    this.cursor,
-    this.friends = const [],
-    this.isLoading = false,
+  FriendsState({
+    this.isLoading = true,
+    this.success,
     this.error,
   });
 
   FriendsState copyWith({
-    String? cursor,
-    List<Friend>? friends,
     bool? isLoading,
+    String? success,
     String? error,
   }) =>
       FriendsState(
-        cursor: cursor ?? this.cursor,
-        friends: friends ?? this.friends,
         isLoading: isLoading == true ? true : false,
+        success: success,
         error: error,
       );
 }

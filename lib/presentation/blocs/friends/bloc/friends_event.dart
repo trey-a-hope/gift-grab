@@ -6,7 +6,10 @@ sealed class FriendsEvent {
 
 class AddFriend extends FriendsEvent {
   final String uid;
-  const AddFriend({required this.uid});
+  const AddFriend(this.uid);
 }
 
-class FetchFriends extends FriendsEvent {}
+class DeleteFriend extends FriendsEvent {
+  final String uid;
+  const DeleteFriend(this.uid);
+}

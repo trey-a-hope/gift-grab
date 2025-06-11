@@ -14,6 +14,7 @@ dependencies:
   animated_search_bar: ^2.8.0
   build_runner: ^2.1.8
   cloudinary: ^1.2.0
+  collection: ^1.17.0
   cupertino_icons: ^1.0.2
   dio: ^5.7.0
   equatable: ^2.0.5

@@ -84,6 +84,11 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           builder: (context, state) => const EditProfilePage(),
         ),
         GoRoute(
+          path: '/${Globals.routes.friends}',
+          name: Globals.routes.friends,
+          builder: (context, state) => const FriendsPage(),
+        ),
+        GoRoute(
           path: '/${Globals.routes.searchUsers}',
           name: Globals.routes.searchUsers,
           builder: (context, state) => const SearchUsersPage(),
@@ -101,11 +106,6 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
             if (uid == null) throw Exception();
             return LeaderboardPage(uid);
           },
-        ),
-        GoRoute(
-          path: '/${Globals.routes.friends}',
-          name: Globals.routes.friends,
-          builder: (context, state) => const FriendsScreen(),
         ),
       ],
     );

@@ -45,6 +45,7 @@ class SearchUsersView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: AnimatedSearchBar(
+                          autoFocus: true,
                           controller: controller,
                           label: "Enter username...",
                           labelStyle: theme.textTheme.displaySmall!,

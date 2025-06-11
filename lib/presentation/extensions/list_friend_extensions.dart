@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:nakama/nakama.dart';
 
 extension ListFriendExtensions on List<Friend> {
@@ -6,8 +7,8 @@ extension ListFriendExtensions on List<Friend> {
       return null;
     }
 
-    final friend = firstWhere((friend) => friend.user.id == uid);
+    final friend = firstWhereOrNull((friend) => friend.user.id == uid);
 
-    return friend.state;
+    return friend?.state;
   }
 }
