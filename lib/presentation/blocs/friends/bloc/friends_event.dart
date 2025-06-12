@@ -4,12 +4,17 @@ sealed class FriendsEvent {
   const FriendsEvent();
 }
 
-class AddFriend extends FriendsEvent {
+class Add extends FriendsEvent {
   final String uid;
-  const AddFriend(this.uid);
+  const Add(this.uid);
 }
 
-class DeleteFriend extends FriendsEvent {
+class Delete extends FriendsEvent {
   final String uid;
-  const DeleteFriend(this.uid);
+  const Delete(this.uid);
+}
+
+class Block extends FriendsEvent {
+  final String uid;
+  const Block(this.uid);
 }

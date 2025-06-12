@@ -8,6 +8,7 @@ import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nakama/nakama.dart';
 
 import '../profile.dart';
@@ -81,9 +82,29 @@ class ProfileView extends StatelessWidget {
 
                   if (!context.mounted) return;
 
-                  // context.read<ProfileBloc>().add(BlockFriend());
+                  profileBloc.add(BlockFriend());
                 },
                 icon: const Icon(Icons.block),
+              ),
+            ],
+            if (state.friendshipState == FriendshipState.blocked) ...[
+              IconButton.filledTonal(
+                onPressed: () async {
+                  final confirm = await ModalService.showConfirmation(
+                    context: context,
+                    title: 'Unblock User',
+                    message: 'Are you sure?',
+                  );
+
+                  if (confirm == null || confirm == false) {
+                    return;
+                  }
+
+                  if (!context.mounted) return;
+
+                  profileBloc.add(UnblockFriend());
+                },
+                icon: Icon(MdiIcons.lockOpen),
               ),
             ]
           ],
@@ -109,6 +130,7 @@ class ProfileView extends StatelessWidget {
                           profileBloc: context.read<ProfileBloc>(),
                           friendshipState: state.friendshipState,
                         ),
+                        const Gap(16),
                         Text(
                           'Games Played: ${state.gamesPlayed}',
                           style: theme.textTheme.displayLarge,
@@ -140,14 +162,37 @@ class ProfileView extends StatelessWidget {
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
           onPressed: () {
-            profileBloc.add(CancelRequest());
+            profileBloc.add(CancelOutgoingRequest());
           },
           child: const Text('Cancel Request'),
         );
-      case FriendshipState.blocked:
       case FriendshipState.mutual:
+        return ElevatedButton(
+          onPressed: () {
+            profileBloc.add(DeleteFriend());
+          },
+          child: const Text('Delete Friend'),
+        );
       case FriendshipState.incomingRequest:
-        return const SizedBox.shrink();
+        return Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                profileBloc.add(AcceptIncomingRequest());
+              },
+              child: const Text('Accept Request'),
+            ),
+            const Gap(8),
+            ElevatedButton(
+              onPressed: () {
+                profileBloc.add(RejectIncomingRequest());
+              },
+              child: const Text('Reject Request'),
+            ),
+          ],
+        );
+      case FriendshipState.blocked:
+        return SizedBox.shrink();
     }
   }
 }

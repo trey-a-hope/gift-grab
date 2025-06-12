@@ -30,97 +30,237 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
         super(ProfileState()) {
-    on<ReadProfile>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<ProfileState>(
-        action: () async {
-          emit(state.copyWith(isLoading: true));
+    on<ReadProfile>(_onReadProfile);
+    on<SendRequest>(_onSendRequest);
+    on<CancelOutgoingRequest>(_onCancelOutgoingRequest);
+    on<AcceptIncomingRequest>(_onAcceptIncomingRequest);
+    on<RejectIncomingRequest>(_onRejectIncomingRequest);
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
-
-          final account = accountBloc.state.account!;
-
-          final user =
-              (await getNakamaClient().getUsers(session: session, ids: [uid]))
-                  .first;
-
-          final isMyProfile = account.user.id == user.id;
-
-          final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
-
-          final friendsList = await getNakamaClient().listFriends(
-            session: session,
-            limit: 1000,
-          );
-          final friends = friendsList.friends;
-
-          final friendshipState = friends?.getFriendshipState(uid);
-
-          emit(
-            state.copyWith(
-              user: user,
-              isMyProfile: isMyProfile,
-              gamesPlayed: gamesPlayed,
-              friendshipState: friendshipState,
-            ),
-          );
-        },
-        emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<SendRequest>(
-      (event, emit) async {
-        return await BlocHandler<ProfileState>().handle(
-          action: () async {
-            friendsBloc.add(AddFriend(uid));
-
-            await for (final friendsState in friendsBloc.stream) {
-              if (friendsState.success != null) {
-                emit(state.copyWith(
-                    friendshipState: FriendshipState.outgoingRequest,
-                    success: friendsState.success!));
-                break;
-              }
-              if (friendsState.error != null) {
-                emit(state.copyWith(error: friendsState.error!));
-                break;
-              }
-            }
-          },
-          emit: emit,
-          state: state,
-        );
-      },
-    );
-    on<CancelRequest>(
-      (event, emit) async {
-        return await BlocHandler<ProfileState>().handle(
-          action: () async {
-            friendsBloc.add(DeleteFriend(uid));
-
-            await for (final friendsState in friendsBloc.stream) {
-              if (friendsState.success != null) {
-                emit(state.copyWith(
-                    clearFriendshipState: true,
-                    success: friendsState.success!));
-                break; // Important: break out of the loop
-              }
-              if (friendsState.error != null) {
-                emit(state.copyWith(error: friendsState.error!));
-                break; // Important: break out of the loop
-              }
-            }
-          },
-          emit: emit,
-          state: state,
-        );
-      },
-    );
+    on<DeleteFriend>(_onDeleteFriend);
+    on<BlockFriend>(_onBlockFriend);
+    on<UnblockFriend>(_onUnblockFriend);
 
     add(ReadProfile());
   }
+
+  Future<void> _onReadProfile(
+    ReadProfile event,
+    Emitter<ProfileState> emit,
+  ) async {
+    return await EventHandlerService.handleBlocEvent<ProfileState>(
+      action: () async {
+        emit(state.copyWith(isLoading: true));
+
+        final session = (await _nakamaSessionService.getValidSession(
+          requireValid: true,
+          authBloc: authBloc,
+        ))!;
+
+        final account = accountBloc.state.account!;
+
+        final user = (await getNakamaClient().getUsers(
+          session: session,
+          ids: [uid],
+        ))
+            .first;
+
+        final isMyProfile = account.user.id == user.id;
+
+        final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
+
+        final friendsList = await getNakamaClient().listFriends(
+          session: session,
+          limit: 1000,
+        );
+        final friends = friendsList.friends;
+
+        final friendshipState = friends?.getFriendshipState(uid);
+
+        emit(
+          state.copyWith(
+            user: user,
+            isMyProfile: isMyProfile,
+            gamesPlayed: gamesPlayed,
+            friendshipState: friendshipState,
+          ),
+        );
+      },
+      emit: emit,
+      errorState: (message) => state.copyWith(error: message),
+    );
+  }
+
+  Future<void> _onSendRequest(
+    SendRequest event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Add(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  friendshipState: FriendshipState.outgoingRequest,
+                  success: friendsState.success!));
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onCancelOutgoingRequest(
+    CancelOutgoingRequest event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  clearFriendshipState: true, success: friendsState.success!));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onAcceptIncomingRequest(
+    AcceptIncomingRequest event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Add(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  friendshipState: FriendshipState.mutual,
+                  success: 'Friend request accepted'));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onRejectIncomingRequest(
+    RejectIncomingRequest event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  friendshipState: FriendshipState.mutual,
+                  success: 'Request rejected'));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onDeleteFriend(
+    DeleteFriend event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  clearFriendshipState: true, success: friendsState.success!));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onBlockFriend(
+    BlockFriend event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Block(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  friendshipState: FriendshipState.blocked,
+                  success: friendsState.success!));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onUnblockFriend(
+    UnblockFriend event,
+    Emitter<ProfileState> emit,
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                clearFriendshipState: true,
+                success: 'User unblocked',
+              ));
+              break; // Important: break out of the loop
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break; // Important: break out of the loop
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
 }

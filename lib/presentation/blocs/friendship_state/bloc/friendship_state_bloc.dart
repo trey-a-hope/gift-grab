@@ -14,15 +14,30 @@ class FriendshipStateBloc
   final AuthBloc authBloc;
   final FriendsBloc friendsBloc;
   final NakamaSessionService _nakamaSessionService;
+  final FriendshipState friendshipState;
 
   FriendshipStateBloc(
     this.authBloc,
     this.friendsBloc,
-    FriendshipState friendshipState,
+    this.friendshipState,
   )   : _nakamaSessionService = NakamaSessionService(),
         super(FriendshipStateState(friendshipState)) {
-    on<ListFriends>(
-      (event, emit) async => BlocHandler<FriendshipStateState>().handle(
+    on<ListFriends>(_onListFriends);
+    on<CancelOutgoingRequest>(_onCancelOutgoingRequest);
+    on<AcceptIncomingRequest>(_onAcceptIncomingRequest);
+    on<RejectIncomingRequest>(_onRejectIncomingRequest);
+    on<DeleteFriend>(_onDeleteFriend);
+    on<BlockFriend>(_onBlockFriend);
+    on<UnblockFriend>(_onUnblockFriend);
+
+    add(ListFriends(clearCursor: false));
+  }
+
+  Future<void> _onListFriends(
+    ListFriends event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
@@ -46,13 +61,15 @@ class FriendshipStateBloc
         },
         emit: emit,
         state: state,
-      ),
-    );
+      );
 
-    on<CancelRequest>(
-      (event, emit) async => BlocHandler<FriendshipStateState>().handle(
+  Future<void> _onCancelOutgoingRequest(
+    CancelOutgoingRequest event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
         action: () async {
-          friendsBloc.add(DeleteFriend(event.uid));
+          friendsBloc.add(Delete(event.uid));
 
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
@@ -69,11 +86,132 @@ class FriendshipStateBloc
         },
         emit: emit,
         state: state,
-      ),
-    );
+      );
 
-    add(ListFriends(clearCursor: false));
-  }
+  Future<void> _onAcceptIncomingRequest(
+    AcceptIncomingRequest event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
+        action: () async {
+          friendsBloc.add(Add(event.uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(success: friendsState.success!));
+              add(ListFriends(clearCursor: true));
+
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onRejectIncomingRequest(
+    RejectIncomingRequest event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(event.uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(success: friendsState.success!));
+              add(ListFriends(clearCursor: true));
+
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onDeleteFriend(
+    DeleteFriend event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(event.uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(success: friendsState.success!));
+              add(ListFriends(clearCursor: true));
+
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onBlockFriend(
+    BlockFriend event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
+        action: () async {
+          friendsBloc.add(Block(event.uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(success: 'User blocked'));
+              add(ListFriends(clearCursor: true));
+
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onUnblockFriend(
+    UnblockFriend event,
+    Emitter<FriendshipStateState> emit,
+  ) async =>
+      BlocHandler<FriendshipStateState>().handle(
+        action: () async {
+          friendsBloc.add(Delete(event.uid));
+
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(success: 'User unblocked'));
+              add(ListFriends(clearCursor: true));
+
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
+          }
+        },
+        emit: emit,
+        state: state,
+      );
 
   Future<(String? newCursor, List<Friend> newFriends)> _fetchFriends(
     Session session, {
@@ -96,3 +234,4 @@ class FriendshipStateBloc
     return (newCursor, newFriends);
   }
 }
+//UnblockFriend

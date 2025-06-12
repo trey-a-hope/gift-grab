@@ -71,7 +71,9 @@ class FriendshipStateView extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Expanded(child: FriendListTile(friends[i])),
+                            Expanded(
+                              child: FriendListTile(friends[i]),
+                            ),
                             FriendshipActionButtons(
                               friend: friends[i],
                               friendshipState: friendshipState,

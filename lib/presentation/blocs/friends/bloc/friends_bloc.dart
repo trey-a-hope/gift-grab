@@ -16,7 +16,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     NakamaSessionService? nakamaSessionService,
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         super(FriendsState()) {
-    on<AddFriend>(
+    on<Add>(
       (event, emit) => BlocHandler<FriendsState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
@@ -37,7 +37,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         state: state,
       ),
     );
-    on<DeleteFriend>(
+    on<Delete>(
       (event, emit) => BlocHandler<FriendsState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
@@ -53,6 +53,27 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
           );
 
           emit(state.copyWith(success: 'Friend request canceled'));
+        },
+        emit: emit,
+        state: state,
+      ),
+    );
+    on<Block>(
+      (event, emit) => BlocHandler<FriendsState>().handle(
+        action: () async {
+          emit(state.copyWith(isLoading: true));
+
+          final session = (await _nakamaSessionService.getValidSession(
+            requireValid: true,
+            authBloc: authBloc,
+          ))!;
+
+          await getNakamaClient().blockFriends(
+            session: session,
+            ids: [event.uid],
+          );
+
+          emit(state.copyWith(success: 'Friend blocked'));
         },
         emit: emit,
         state: state,

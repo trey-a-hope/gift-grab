@@ -11,6 +11,8 @@ part 'search_users_event.dart';
 part 'search_users_state.dart';
 
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
+  static const int _pollingTimeMs = 300;
+
   final AuthBloc authBloc;
   final NakamaSessionService _nakamaSessionService;
 
@@ -41,9 +43,7 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
         emit: emit,
         errorState: (message) => state.copyWith(error: message),
       ),
-      transformer: _debounce(
-        const Duration(milliseconds: 300),
-      ),
+      transformer: _debounce(const Duration(milliseconds: _pollingTimeMs)),
     );
   }
 

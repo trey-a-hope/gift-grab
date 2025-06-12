@@ -5,19 +5,26 @@ import 'package:nakama/nakama.dart';
 
 class ClickableAvatar extends StatelessWidget {
   final User user;
+  final VoidCallback? onProfileReturnCallback;
 
   const ClickableAvatar(
     this.user, {
+    this.onProfileReturnCallback,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushNamed(
-        Globals.routes.profile,
-        pathParameters: {'uid': user.id},
-      ),
+      onTap: () async {
+        await context.pushNamed(
+          Globals.routes.profile,
+          pathParameters: {'uid': user.id},
+        );
+        if (onProfileReturnCallback != null) {
+          onProfileReturnCallback!();
+        }
+      },
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,

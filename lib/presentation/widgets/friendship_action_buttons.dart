@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friendship_state/bloc/friendship_state_bloc.dart';
 import 'package:nakama/nakama.dart';
 
@@ -19,7 +18,6 @@ class FriendshipActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = friend.user;
 
-    final friendsBloc = context.read<FriendsBloc>();
     final friendshipStateBloc = context.read<FriendshipStateBloc>();
 
     switch (friendshipState) {
@@ -29,8 +27,18 @@ class FriendshipActionButtons extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _buttonAction(
                 context,
-                title: 'Remove ${user.username ?? 'Unknown Name'} from friends',
-                action: () => friendsBloc.add(DeleteFriend(user.id)),
+                title: 'Block ${user.username ?? 'Unknown Name'} from friends?',
+                action: () => friendshipStateBloc.add(BlockFriend(user.id)),
+              ),
+              child: const Text('Block'),
+            ),
+            const Gap(8),
+            ElevatedButton(
+              onPressed: () => _buttonAction(
+                context,
+                title:
+                    'Remove ${user.username ?? 'Unknown Name'} from friends?',
+                action: () => friendshipStateBloc.add(DeleteFriend(user.id)),
               ),
               child: const Text('Remove'),
             ),
@@ -42,8 +50,11 @@ class FriendshipActionButtons extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _buttonAction(
                 context,
-                title: 'Accept request from ${user.username ?? 'Unknown Name'}',
-                action: () => friendsBloc.add(AddFriend(user.id)),
+                title:
+                    'Accept request from ${user.username ?? 'Unknown Name'}?',
+                action: () => friendshipStateBloc.add(
+                  AcceptIncomingRequest(user.id),
+                ),
               ),
               child: const Text('Accept'),
             ),
@@ -51,8 +62,10 @@ class FriendshipActionButtons extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _buttonAction(
                 context,
-                title: 'Reject request from ${user.username ?? 'Unknown Name'}',
-                action: () => friendsBloc.add(DeleteFriend(user.id)),
+                title:
+                    'Reject request from ${user.username ?? 'Unknown Name'}?',
+                action: () =>
+                    friendshipStateBloc.add(RejectIncomingRequest(user.id)),
               ),
               child: const Text('Reject'),
             ),
@@ -61,8 +74,9 @@ class FriendshipActionButtons extends StatelessWidget {
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
           onPressed: () => _buttonAction(context,
-              title: 'Cancel request for ${user.username ?? 'Unknown Name'}',
-              action: () => friendshipStateBloc.add(CancelRequest(user.id))),
+              title: 'Cancel request for ${user.username ?? 'Unknown Name'}?',
+              action: () =>
+                  friendshipStateBloc.add(CancelOutgoingRequest(user.id))),
           child: const Text('Cancel'),
         );
       case FriendshipState.blocked:
@@ -70,8 +84,8 @@ class FriendshipActionButtons extends StatelessWidget {
           onPressed: () => _buttonAction(
             context,
             title:
-                'Unblock ${user.username ?? 'Unknown Name'} (you will need to send a new request)',
-            action: () => friendsBloc.add(DeleteFriend(user.id)),
+                'Unblock ${user.username ?? 'Unknown Name'} (you will need to send a new request)?',
+            action: () => friendshipStateBloc.add(UnblockFriend(user.id)),
           ),
           child: const Text('Unblock'),
         );
