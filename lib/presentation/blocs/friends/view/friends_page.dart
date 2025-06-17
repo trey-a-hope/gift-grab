@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/presentation/blocs/friendship_state/view/friendship_state_page.dart';
+import 'package:gift_grab/presentation/blocs/friendship_group/view/friendship_group_page.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendsPage extends StatelessWidget {
+  static const _tabs = [
+    Tab(text: 'Friends'),
+    Tab(text: 'Invites'),
+    Tab(text: 'Requests'),
+    Tab(text: 'Blocked'),
+  ];
+
+  static const List<Widget> _tabsContent = [
+    FriendshipGroupPage(FriendshipState.mutual),
+    FriendshipGroupPage(FriendshipState.incomingRequest),
+    FriendshipGroupPage(FriendshipState.outgoingRequest),
+    FriendshipGroupPage(FriendshipState.blocked),
+  ];
+
   const FriendsPage({super.key});
 
   @override
@@ -13,7 +27,7 @@ class FriendsPage extends StatelessWidget {
     return GGScaffoldWidget(
       title: 'Friends',
       child: DefaultTabController(
-        length: 4,
+        length: _tabs.length,
         child: Column(
           children: [
             TabBar(
@@ -22,23 +36,9 @@ class FriendsPage extends StatelessWidget {
               labelStyle: theme.textTheme.displaySmall,
               indicatorColor: Colors.white,
               unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(text: 'Friends'),
-                Tab(text: 'Invites'),
-                Tab(text: 'Requests'),
-                Tab(text: 'Blocked'),
-              ],
+              tabs: _tabs,
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  FriendshipStatePage(FriendshipState.mutual),
-                  FriendshipStatePage(FriendshipState.incomingRequest),
-                  FriendshipStatePage(FriendshipState.outgoingRequest),
-                  FriendshipStatePage(FriendshipState.blocked),
-                ],
-              ),
-            ),
+            Expanded(child: TabBarView(children: _tabsContent)),
           ],
         ),
       ),

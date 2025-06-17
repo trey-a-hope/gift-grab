@@ -32,10 +32,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         super(ProfileState()) {
     on<ReadProfile>(_onReadProfile);
     on<SendRequest>(_onSendRequest);
-    on<CancelOutgoingRequest>(_onCancelOutgoingRequest);
     on<AcceptIncomingRequest>(_onAcceptIncomingRequest);
+    on<CancelOutgoingRequest>(_onCancelOutgoingRequest);
     on<RejectIncomingRequest>(_onRejectIncomingRequest);
-
     on<DeleteFriend>(_onDeleteFriend);
     on<BlockFriend>(_onBlockFriend);
     on<UnblockFriend>(_onUnblockFriend);
@@ -78,11 +77,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
         emit(
           state.copyWith(
-            user: user,
-            isMyProfile: isMyProfile,
-            gamesPlayed: gamesPlayed,
-            friendshipState: friendshipState,
-          ),
+              user: user,
+              isMyProfile: isMyProfile,
+              gamesPlayed: gamesPlayed,
+              friendshipState: friendshipState),
         );
       },
       emit: emit,
@@ -93,6 +91,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onSendRequest(
     SendRequest event,
     Emitter<ProfileState> emit,
+  ) async {
+    return await EventHandlerService.handleBlocEvent<ProfileState>(
+      action: () async {
+        friendsBloc.add(Add(uid));
+
+        await for (final friendsState in friendsBloc.stream) {
+          if (friendsState.success != null) {
+            emit(state.copyWith(
+                friendshipState: FriendshipState.outgoingRequest,
+                success: friendsState.success!));
+            break;
+          }
+          if (friendsState.error != null) {
+            emit(state.copyWith(error: friendsState.error!));
+            break;
+          }
+        }
+      },
+      emit: emit,
+      errorState: (message) => state.copyWith(error: message),
+    );
+  }
+
+  Future<void> _onAcceptIncomingRequest(
+    AcceptIncomingRequest event,
+    Emitter<ProfileState> emit,
   ) async =>
       await BlocHandler<ProfileState>().handle(
         action: () async {
@@ -101,8 +125,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
-                  friendshipState: FriendshipState.outgoingRequest,
-                  success: friendsState.success!));
+                success: 'Request accepted',
+                friendshipState: FriendshipState.mutual,
+              ));
               break;
             }
             if (friendsState.error != null) {
@@ -126,37 +151,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
-                  clearFriendshipState: true, success: friendsState.success!));
-              break; // Important: break out of the loop
+                success: 'Request canceled',
+                clearFriendshipState: true,
+              ));
+              break;
             }
             if (friendsState.error != null) {
               emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
-            }
-          }
-        },
-        emit: emit,
-        state: state,
-      );
-
-  Future<void> _onAcceptIncomingRequest(
-    AcceptIncomingRequest event,
-    Emitter<ProfileState> emit,
-  ) async =>
-      await BlocHandler<ProfileState>().handle(
-        action: () async {
-          friendsBloc.add(Add(uid));
-
-          await for (final friendsState in friendsBloc.stream) {
-            if (friendsState.success != null) {
-              emit(state.copyWith(
-                  friendshipState: FriendshipState.mutual,
-                  success: 'Friend request accepted'));
-              break; // Important: break out of the loop
-            }
-            if (friendsState.error != null) {
-              emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
+              break;
             }
           }
         },
@@ -175,13 +177,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
-                  friendshipState: FriendshipState.mutual,
-                  success: 'Request rejected'));
-              break; // Important: break out of the loop
+                success: 'Request rejected',
+                clearFriendshipState: true,
+              ));
+              break;
             }
             if (friendsState.error != null) {
               emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
+              break;
             }
           }
         },
@@ -200,12 +203,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
-                  clearFriendshipState: true, success: friendsState.success!));
-              break; // Important: break out of the loop
+                success: 'Friend Deleted',
+                clearFriendshipState: true,
+              ));
+              break;
             }
             if (friendsState.error != null) {
               emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
+              break;
             }
           }
         },
@@ -224,13 +229,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
-                  friendshipState: FriendshipState.blocked,
-                  success: friendsState.success!));
-              break; // Important: break out of the loop
+                success: 'Friend blocked',
+                friendshipState: FriendshipState.blocked,
+              ));
+              break;
             }
             if (friendsState.error != null) {
               emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
+              break;
             }
           }
         },
@@ -249,14 +255,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await for (final friendsState in friendsBloc.stream) {
             if (friendsState.success != null) {
               emit(state.copyWith(
+                success: 'Friend unblocked',
                 clearFriendshipState: true,
-                success: 'User unblocked',
               ));
-              break; // Important: break out of the loop
+              break;
             }
             if (friendsState.error != null) {
               emit(state.copyWith(error: friendsState.error!));
-              break; // Important: break out of the loop
+              break;
             }
           }
         },

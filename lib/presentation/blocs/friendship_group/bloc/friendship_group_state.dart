@@ -1,15 +1,14 @@
-part of 'friendship_state_bloc.dart';
+part of 'friendship_group_bloc.dart';
 
-class FriendshipStateState extends BaseState {
+class FriendshipGroupState extends BaseState {
   final FriendshipState friendshipState;
   final List<Friend> friends;
   final String? cursor;
   final bool isLoading;
   final String? success;
-
   final String? error;
 
-  FriendshipStateState(
+  FriendshipGroupState(
     this.friendshipState, {
     this.friends = const [],
     this.cursor,
@@ -18,14 +17,14 @@ class FriendshipStateState extends BaseState {
     this.error,
   });
 
-  FriendshipStateState copyWith({
+  FriendshipGroupState copyWith({
     List<Friend>? friends,
     String? cursor,
     bool? isLoading,
     String? success,
     String? error,
   }) =>
-      FriendshipStateState(
+      FriendshipGroupState(
         friendshipState,
         friends: friends ?? this.friends,
         cursor: cursor ?? this.cursor,

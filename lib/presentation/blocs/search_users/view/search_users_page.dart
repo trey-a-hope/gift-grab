@@ -5,7 +5,7 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
-import 'package:gift_grab/presentation/widgets/searched_user_list_tile.dart';
+import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
 import 'package:go_router/go_router.dart';
 
 import '../search_users.dart';
@@ -67,7 +67,7 @@ class SearchUsersView extends StatelessWidget {
                                       Globals.routes.profile,
                                       pathParameters: {'uid': user.id},
                                     ),
-                                    child: SearchedUserListTile(user),
+                                    child: UserListTile(user),
                                   ),
                       ),
                     ],

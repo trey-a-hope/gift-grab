@@ -17,30 +17,16 @@ class UpdateProfile extends ProfileEvent {
   const UpdateProfile();
 }
 
-class SendRequest extends ProfileEvent {
-  const SendRequest();
-}
+class SendRequest extends ProfileEvent {}
 
-class AcceptIncomingRequest extends ProfileEvent {
-  const AcceptIncomingRequest();
-}
+class AcceptIncomingRequest extends ProfileEvent {}
 
-class CancelOutgoingRequest extends ProfileEvent {
-  const CancelOutgoingRequest();
-}
+class CancelOutgoingRequest extends ProfileEvent {}
 
-class RejectIncomingRequest extends ProfileEvent {
-  const RejectIncomingRequest();
-}
+class RejectIncomingRequest extends ProfileEvent {}
 
-class DeleteFriend extends ProfileEvent {
-  const DeleteFriend();
-}
+class DeleteFriend extends ProfileEvent {}
 
-class BlockFriend extends ProfileEvent {
-  const BlockFriend();
-}
+class BlockFriend extends ProfileEvent {}
 
-class UnblockFriend extends ProfileEvent {
-  const UnblockFriend();
-}
+class UnblockFriend extends ProfileEvent {}

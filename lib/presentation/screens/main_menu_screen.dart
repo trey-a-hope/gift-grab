@@ -41,7 +41,7 @@ class MainMenuView extends StatelessWidget {
             IconButton.filledTonal(
               onPressed: () async {
                 final confirm = await ModalService.showConfirmation(
-                  context: context,
+                  context,
                   title: 'Logout?',
                   message: 'Are you sure?',
                 );

@@ -98,8 +98,8 @@ class ModalService {
         ),
       );
 
-  static Future<bool?> showConfirmation({
-    required BuildContext context,
+  static Future<bool?> showConfirmation(
+    BuildContext context, {
     required String title,
     required String message,
   }) async =>

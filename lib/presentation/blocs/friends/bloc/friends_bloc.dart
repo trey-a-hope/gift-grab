@@ -16,8 +16,16 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     NakamaSessionService? nakamaSessionService,
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         super(FriendsState()) {
-    on<Add>(
-      (event, emit) => BlocHandler<FriendsState>().handle(
+    on<Add>(_onAdd);
+    on<Delete>(_onDelete);
+    on<Block>(_onBlock);
+  }
+
+  Future<void> _onAdd(
+    Add event,
+    Emitter<FriendsState> emit,
+  ) async =>
+      await BlocHandler<FriendsState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
@@ -35,10 +43,13 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         },
         emit: emit,
         state: state,
-      ),
-    );
-    on<Delete>(
-      (event, emit) => BlocHandler<FriendsState>().handle(
+      );
+
+  Future<void> _onDelete(
+    Delete event,
+    Emitter<FriendsState> emit,
+  ) async =>
+      await BlocHandler<FriendsState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
@@ -52,14 +63,17 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
             ids: [event.uid],
           );
 
-          emit(state.copyWith(success: 'Friend request canceled'));
+          emit(state.copyWith(success: 'Friend request deleted'));
         },
         emit: emit,
         state: state,
-      ),
-    );
-    on<Block>(
-      (event, emit) => BlocHandler<FriendsState>().handle(
+      );
+
+  Future<void> _onBlock(
+    Block event,
+    Emitter<FriendsState> emit,
+  ) async =>
+      await BlocHandler<FriendsState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
@@ -77,7 +91,5 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         },
         emit: emit,
         state: state,
-      ),
-    );
-  }
+      );
 }

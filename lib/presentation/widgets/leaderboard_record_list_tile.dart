@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
+import 'package:gift_grab/presentation/extensions/string_extensions.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
-import 'package:gift_grab/presentation/widgets/clickable_avatar.dart';
+import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
 
 class LeaderboardRecordListTile extends StatelessWidget {
   final LeaderboardEntry entry;
   final String uid;
-
-  final double _avatarRadius = 30;
 
   const LeaderboardRecordListTile({
     required this.entry,
@@ -20,36 +20,43 @@ class LeaderboardRecordListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ListTile(
+    return GestureDetector(
       onLongPress: () {
         if (uid == entry.user.id) {
           context.read<LeaderboardBloc>().add(DeleteRecord());
         }
       },
-      leading: CircleAvatar(
-        radius: _avatarRadius,
-        backgroundColor: Colors.blue,
-        child: Text(
-          '${entry.record.rank}',
-          style: theme.textTheme.headlineLarge,
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(8),
+        child: Row(
+          children: [
+            Expanded(child: UserListTile(entry.user)),
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.blue,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsetsGeometry.all(4),
+                  child: Text(
+                    '${entry.record.rank?.ordinal}',
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                ),
+              ),
+            ),
+            const Gap(16),
+            Card(
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(16),
+                child: Text(
+                  '${entry.record.score} gifts',
+                  style: theme.textTheme.headlineLarge,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      title: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.white,
-        ),
-        height: 50,
-        child: Center(
-          child: Text('${entry.user.username} - ${entry.record.score}',
-              style: theme.textTheme.headlineLarge!.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-      ),
-      trailing: ClickableAvatar(entry.user),
     );
   }
 }

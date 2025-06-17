@@ -6,10 +6,10 @@ enum NoResultsEnum {
   // Chat
   chatRooms('No chat rooms', Globals.lottieFriends),
   // Friends
-  blocks('No blocks', Globals.lottieFriends),
-  friends('No friends', Globals.lottieFriends),
-  invites('No invites', Globals.lottieFriends),
-  requests('No requests', Globals.lottieFriends),
+  blocked('No blocks', Globals.lottieFriends),
+  mutual('No friends', Globals.lottieFriends),
+  incomingRequest('No invites', Globals.lottieFriends),
+  outgoingRequest('No requests', Globals.lottieFriends),
   // Groups
   allGroups('No groups', Globals.lottieGroups),
   myGroups('No groups you belong to', Globals.lottieGroups),
