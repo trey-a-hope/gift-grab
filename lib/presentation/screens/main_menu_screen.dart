@@ -92,18 +92,6 @@ class MainMenuView extends StatelessWidget {
                                 ),
                               ),
                               MenuButtonWidget(
-                                menuButton: MenuButton.searchUsers,
-                                onTap: () => context.pushNamed(
-                                  Globals.routes.searchUsers,
-                                ),
-                              ),
-                              MenuButtonWidget(
-                                menuButton: MenuButton.linkedAccounts,
-                                onTap: () => context.pushNamed(
-                                  Globals.routes.linkedAccounts,
-                                ),
-                              ),
-                              MenuButtonWidget(
                                 menuButton: MenuButton.leaderboard,
                                 onTap: () => context.pushNamed(
                                   Globals.routes.leaderboard,
@@ -116,6 +104,24 @@ class MainMenuView extends StatelessWidget {
                                 menuButton: MenuButton.friends,
                                 onTap: () => context.pushNamed(
                                   Globals.routes.friends,
+                                ),
+                              ),
+                              MenuButtonWidget(
+                                menuButton: MenuButton.groups,
+                                onTap: () => context.pushNamed(
+                                  Globals.routes.groups,
+                                ),
+                              ),
+                              MenuButtonWidget(
+                                menuButton: MenuButton.searchUsers,
+                                onTap: () => context.pushNamed(
+                                  Globals.routes.searchUsers,
+                                ),
+                              ),
+                              MenuButtonWidget(
+                                menuButton: MenuButton.linkedAccounts,
+                                onTap: () => context.pushNamed(
+                                  Globals.routes.linkedAccounts,
                                 ),
                               ),
                               if (state.account != null &&

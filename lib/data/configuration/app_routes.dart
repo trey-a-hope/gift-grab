@@ -5,6 +5,9 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
+import 'package:gift_grab/presentation/blocs/group_create/view/group_create_page.dart';
+import 'package:gift_grab/presentation/blocs/groups_list/view/groups_page.dart';
+import 'package:gift_grab/presentation/blocs/groups_list/widgets/group_details_page.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/view/leaderboard_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/edit_profile_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/profile_page.dart';
@@ -13,6 +16,7 @@ import 'package:gift_grab/presentation/screens/game_screen.dart';
 import 'package:gift_grab/presentation/screens/login_screen.dart';
 import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nakama/nakama.dart';
 
 class StreamToListenable extends ChangeNotifier {
   late final List<StreamSubscription> subscriptions;
@@ -87,6 +91,30 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
           path: '/${Globals.routes.friends}',
           name: Globals.routes.friends,
           builder: (context, state) => const FriendsPage(),
+        ),
+        GoRoute(
+          path: '/${Globals.routes.groups}',
+          name: Globals.routes.groups,
+          builder: (context, state) => GroupsPage(),
+          routes: [
+            GoRoute(
+              path: '${Globals.routes.createGroup}',
+              name: Globals.routes.createGroup,
+              builder: (context, state) => const GroupCreatePage(),
+            ),
+            GoRoute(
+              path: '${Globals.routes.groupDetails}/:groupId',
+              name: Globals.routes.groupDetails,
+              builder: (context, state) {
+                final groupId = state.pathParameters['groupId']!;
+                final group = state.extra as Group;
+
+                debugPrint('Group ID: $groupId');
+
+                return GroupDetailsPage(group);
+              },
+            )
+          ],
         ),
         GoRoute(
           path: '/${Globals.routes.searchUsers}',
