@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/presentation/formz_inputs/slider.dart' as formz;
+import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart'
+    as formz;
 
 class SliderInput extends StatelessWidget {
   final formz.Slider slider;
+  final String title;
   final void Function(double)? onChanged;
 
   const SliderInput(
     this.slider, {
+    required this.title,
     this.onChanged,
     super.key,
   });
@@ -26,7 +29,7 @@ class SliderInput extends StatelessWidget {
             ),
             const Gap(8),
             Text(
-              'Member Limit',
+              title,
               style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     color: Colors.white,
                   ),

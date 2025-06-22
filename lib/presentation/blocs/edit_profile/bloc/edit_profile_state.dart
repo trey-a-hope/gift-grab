@@ -1,17 +1,17 @@
 part of 'edit_profile_bloc.dart';
 
 class EditProfileState {
-  final Name username;
+  final ShortText username;
 
   final FormzSubmissionStatus status;
 
   EditProfileState({
-    this.username = const Name.pure(),
+    this.username = const ShortText.pure(),
     this.status = FormzSubmissionStatus.inProgress,
   });
 
   EditProfileState copyWith({
-    Name? username,
+    ShortText? username,
     FormzSubmissionStatus? status,
   }) =>
       EditProfileState(

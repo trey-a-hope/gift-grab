@@ -4,10 +4,9 @@ import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/formz_inputs/comment.dart';
-import 'package:gift_grab/presentation/formz_inputs/comment_input.dart';
-import 'package:gift_grab/presentation/formz_inputs/name_input.dart';
-import 'package:gift_grab/presentation/formz_inputs/slider_input.dart';
+import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
+import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
+import 'package:gift_grab/presentation/formz_inputs/slider/slider_input.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
 import '../group_create.dart';
@@ -54,8 +53,9 @@ class GroupCreateView extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsetsGeometry.all(16),
-                        child: NameInput(
+                        child: ShortTextInput(
                           state.name,
+                          labelText: 'Name',
                           onChanged: (name) => context
                               .read<GroupCreateBloc>()
                               .add(NameChanged(name)),
@@ -63,11 +63,11 @@ class GroupCreateView extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsetsGeometry.all(16),
-                        child: CommentInput(
+                        child: LongTextInput(
                           state.description,
                           labelText: 'Description',
                           helperText:
-                              'Describe your group (${state.description.value.length}/${Comment.max})',
+                              'Describe your group (${state.description.value.length}/${LongText.max})',
                           onChanged: (name) => context
                               .read<GroupCreateBloc>()
                               .add(DescriptionChanged(name)),
@@ -77,6 +77,7 @@ class GroupCreateView extends StatelessWidget {
                           padding: EdgeInsetsGeometry.all(16),
                           child: SliderInput(
                             state.maxCount,
+                            title: 'Member Limit',
                             onChanged: (val) => context
                                 .read<GroupCreateBloc>()
                                 .add(MaxCountChanged(val.toInt())),

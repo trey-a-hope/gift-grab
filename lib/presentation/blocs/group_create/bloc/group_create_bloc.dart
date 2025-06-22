@@ -2,9 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/formz_inputs/comment.dart';
-import 'package:gift_grab/presentation/formz_inputs/name.dart';
-import 'package:gift_grab/presentation/formz_inputs/slider.dart';
+import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
+import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
+import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -33,7 +33,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
   ) =>
       emit(
         state.copyWith(
-          name: Name.dirty(event.name),
+          name: ShortText.dirty(event.name),
           status: FormzSubmissionStatus.initial,
         ),
       );
@@ -44,7 +44,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
   ) =>
       emit(
         state.copyWith(
-          description: Comment.dirty(event.description),
+          description: LongText.dirty(event.description),
           status: FormzSubmissionStatus.initial,
         ),
       );

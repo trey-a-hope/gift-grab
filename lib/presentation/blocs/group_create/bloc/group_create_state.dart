@@ -1,8 +1,8 @@
 part of 'group_create_bloc.dart';
 
 class GroupCreateState extends BaseState with FormzMixin {
-  final Name name;
-  final Comment description;
+  final ShortText name;
+  final LongText description;
   final Slider maxCount;
   final FormzSubmissionStatus status;
   final bool isLoading;
@@ -10,8 +10,8 @@ class GroupCreateState extends BaseState with FormzMixin {
   final String? error;
 
   GroupCreateState({
-    this.name = const Name.pure(),
-    this.description = const Comment.pure(),
+    this.name = const ShortText.pure(),
+    this.description = const LongText.pure(),
     this.maxCount = const Slider.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.isLoading = false,
@@ -20,8 +20,8 @@ class GroupCreateState extends BaseState with FormzMixin {
   });
 
   GroupCreateState copyWith({
-    Name? name,
-    Comment? description,
+    ShortText? name,
+    LongText? description,
     Slider? maxCount,
     FormzSubmissionStatus? status,
     bool? isLoading,

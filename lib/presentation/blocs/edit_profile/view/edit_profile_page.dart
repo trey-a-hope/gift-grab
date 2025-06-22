@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/formz_inputs/name_input.dart';
+import 'package:gift_grab/presentation/formz_inputs/short_text/short_text_input.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -58,8 +58,9 @@ class EditProfileView extends StatelessWidget {
                         const Gap(32),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: NameInput(
+                          child: ShortTextInput(
                             state.username,
+                            labelText: 'Username',
                             onChanged: (name) => editProfileBloc.add(
                               UsernameChanged(name),
                             ),

@@ -3,7 +3,7 @@ import 'package:formz/formz.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/auth/auth.dart';
-import 'package:gift_grab/presentation/formz_inputs/name.dart';
+import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 
 part 'edit_profile_event.dart';
 part 'edit_profile_state.dart';
@@ -38,7 +38,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
     emit(
       state.copyWith(
-        username: Name.dirty(account.user.username ?? ''),
+        username: ShortText.dirty(account.user.username ?? ''),
         status: FormzSubmissionStatus.initial,
       ),
     );
@@ -50,7 +50,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   ) =>
       emit(
         state.copyWith(
-          username: Name.dirty(event.name),
+          username: ShortText.dirty(event.name),
           status: FormzSubmissionStatus.initial,
         ),
       );

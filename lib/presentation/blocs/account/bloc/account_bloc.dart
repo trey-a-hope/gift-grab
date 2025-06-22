@@ -3,7 +3,6 @@ import 'package:formz/formz.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
-import 'package:gift_grab/presentation/formz_inputs/name.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -37,7 +36,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           emit(
             state.copyWith(
               account: account,
-              currentUsername: Name.dirty(account.user.username!),
               status: FormzSubmissionStatus.initial,
             ),
           );
@@ -56,10 +54,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             requireValid: true,
             authBloc: authBloc,
           ))!;
-
-          if (state.currentUsername == state.account?.user.username) {
-            throw Exception('New name required');
-          }
 
           await getNakamaClient().updateAccount(
             session: session,
