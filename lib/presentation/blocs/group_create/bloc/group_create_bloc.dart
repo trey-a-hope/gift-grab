@@ -5,6 +5,7 @@ import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
+import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -23,6 +24,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
     on<NameChanged>(_onNameChanged);
     on<DescriptionChanged>(_onDescriptionChanged);
     on<MaxCountChanged>(_onMaxCountChanged);
+    on<IsOpenChanged>(_onIsOpenChanged);
 
     on<CreateGroup>(_onCreateGroup);
   }
@@ -61,6 +63,18 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
     );
   }
 
+  void _onIsOpenChanged(
+    IsOpenChanged event,
+    Emitter<GroupCreateState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        isOpen: Toggle.dirty(event.isOpen),
+        status: FormzSubmissionStatus.initial,
+      ),
+    );
+  }
+
   Future<void> _onCreateGroup(
     CreateGroup event,
     Emitter<GroupCreateState> emit,
@@ -81,7 +95,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
             name: state.name.value,
             description: state.description.value,
             maxCount: state.maxCount.value,
-            open: true,
+            open: state.isOpen.value,
           );
 
           emit(

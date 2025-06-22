@@ -29,7 +29,10 @@ class GroupDetailsPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Center(
-                    child: Text('Right Pane'),
+                    child: Text(
+                      'Group Is Open: ${group.open}',
+                      style: theme.textTheme.headlineLarge,
+                    ),
                   ),
                 )
               ],

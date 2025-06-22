@@ -7,6 +7,7 @@ import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider_input.dart';
+import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
 import '../group_create.dart';
@@ -74,15 +75,27 @@ class GroupCreateView extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                          padding: EdgeInsetsGeometry.all(16),
-                          child: SliderInput(
-                            state.maxCount,
-                            title: 'Member Limit',
-                            onChanged: (val) => context
-                                .read<GroupCreateBloc>()
-                                .add(MaxCountChanged(val.toInt())),
-                          )),
-                      // TODO: IS OPEN OG
+                        padding: EdgeInsetsGeometry.all(16),
+                        child: SliderInput(
+                          state.maxCount,
+                          title: 'Member Limit',
+                          onChanged: (val) => context
+                              .read<GroupCreateBloc>()
+                              .add(MaxCountChanged(val.toInt())),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(16),
+                        child: ToggleInput(
+                          state.isOpen,
+                          title: 'Group Is Open',
+                          subtitle:
+                              'Open groups do not require request acceptance',
+                          onChanged: (val) => context
+                              .read<GroupCreateBloc>()
+                              .add(IsOpenChanged(val)),
+                        ),
+                      ),
                       Center(
                         child: ElevatedButton(
                           child: Text('Submit'),

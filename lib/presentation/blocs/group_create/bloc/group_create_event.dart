@@ -19,6 +19,11 @@ class MaxCountChanged extends GroupCreateEvent {
   MaxCountChanged(this.maxCount);
 }
 
+class IsOpenChanged extends GroupCreateEvent {
+  final bool isOpen;
+  IsOpenChanged(this.isOpen);
+}
+
 class CreateGroup extends GroupCreateEvent {
   const CreateGroup();
 }

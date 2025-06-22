@@ -4,6 +4,7 @@ class GroupCreateState extends BaseState with FormzMixin {
   final ShortText name;
   final LongText description;
   final Slider maxCount;
+  final Toggle isOpen;
   final FormzSubmissionStatus status;
   final bool isLoading;
   final String? success;
@@ -13,6 +14,7 @@ class GroupCreateState extends BaseState with FormzMixin {
     this.name = const ShortText.pure(),
     this.description = const LongText.pure(),
     this.maxCount = const Slider.pure(),
+    this.isOpen = const Toggle.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.isLoading = false,
     this.success,
@@ -23,6 +25,7 @@ class GroupCreateState extends BaseState with FormzMixin {
     ShortText? name,
     LongText? description,
     Slider? maxCount,
+    Toggle? isOpen,
     FormzSubmissionStatus? status,
     bool? isLoading,
     String? success,
@@ -32,6 +35,7 @@ class GroupCreateState extends BaseState with FormzMixin {
         name: name ?? this.name,
         description: description ?? this.description,
         maxCount: maxCount ?? this.maxCount,
+        isOpen: isOpen ?? this.isOpen,
         status: status ?? this.status,
         isLoading: isLoading == true ? true : false,
         success: success,
