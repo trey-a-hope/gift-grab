@@ -103,6 +103,18 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
               builder: (context, state) => const GroupCreatePage(),
             ),
             GoRoute(
+              path: '${Globals.routes.editGroup}/:groupId',
+              name: Globals.routes.editGroup,
+              builder: (context, state) {
+                final groupId = state.pathParameters['groupId']!;
+                final group = state.extra as Group;
+
+                debugPrint('Group ID: $groupId');
+
+                return GroupCreatePage(group: group);
+              },
+            ),
+            GoRoute(
               path: '${Globals.routes.groupDetails}/:groupId',
               name: Globals.routes.groupDetails,
               builder: (context, state) {

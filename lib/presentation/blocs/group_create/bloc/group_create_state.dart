@@ -47,5 +47,6 @@ class GroupCreateState extends BaseState with FormzMixin {
         name,
         description,
         maxCount,
+        isOpen,
       ];
 }

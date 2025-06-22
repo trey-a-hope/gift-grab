@@ -21,6 +21,7 @@ class GGScaffoldWidget extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         actions: actions,
         leading: canPop
             ? IconButton.filledTonal(

@@ -26,7 +26,7 @@ class GroupsListPage extends StatelessWidget {
                       itemCount: groups.length,
                       itemBuilder: (_, int index) => GroupDetailsListTile(
                         group: groups[index],
-                        isOwner: false,
+                        isOwner: !state.all,
                       ),
                     ),
             ),

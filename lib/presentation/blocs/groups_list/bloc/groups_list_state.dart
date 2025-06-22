@@ -1,13 +1,15 @@
 part of 'groups_list_bloc.dart';
 
 class GroupsListState extends BaseState {
+  final bool all;
   final List<Group> groups;
   final String? cursor;
   final bool isLoading;
   final String? success;
   final String? error;
 
-  GroupsListState({
+  GroupsListState(
+    this.all, {
     this.groups = const [],
     this.cursor,
     this.isLoading = true,
@@ -23,6 +25,7 @@ class GroupsListState extends BaseState {
     String? error,
   }) =>
       GroupsListState(
+        this.all,
         groups: groups ?? this.groups,
         cursor: cursor ?? this.cursor,
         isLoading: isLoading == true ? true : false,

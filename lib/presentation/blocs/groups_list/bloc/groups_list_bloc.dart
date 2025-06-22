@@ -18,7 +18,7 @@ class GroupsListBloc extends Bloc<GroupsListEvent, GroupsListState> {
     required this.all,
     NakamaSessionService? nakamaSessionService,
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
-        super(GroupsListState()) {
+        super(GroupsListState(all)) {
     on<ListGroups>(_onListGroups);
   }
 
@@ -37,7 +37,7 @@ class GroupsListBloc extends Bloc<GroupsListEvent, GroupsListState> {
 
           final res = await _fetchGroups(session, clearCursor: false, uid: uid);
 
-          final curGroups = event.clearCursor ? [] : state.groups;
+          final curGroups = event.clearCursor ? <Group>[] : state.groups;
 
           emit(state
               .copyWith(groups: [...curGroups, ...res.$2], cursor: res.$1));

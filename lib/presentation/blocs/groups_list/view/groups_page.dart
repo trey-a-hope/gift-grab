@@ -15,8 +15,8 @@ class GroupsPage extends StatefulWidget {
 
 class _GroupsPageState extends State<GroupsPage> {
   static const _tabs = [
-    Tab(text: 'All Groups'),
-    Tab(text: 'My Groups'),
+    Tab(text: 'All'),
+    Tab(text: 'Me'),
   ];
 
   late GroupsListBloc allGroupsListBloc;
@@ -24,6 +24,8 @@ class _GroupsPageState extends State<GroupsPage> {
 
   @override
   void initState() {
+    super.initState();
+
     final authBloc = context.read<AuthBloc>();
 
     allGroupsListBloc = GroupsListBloc(
@@ -35,8 +37,13 @@ class _GroupsPageState extends State<GroupsPage> {
       authBloc,
       all: false,
     )..add(ListGroups(clearCursor: true));
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    allGroupsListBloc.close();
+    myGroupsListBloc.close();
+    super.dispose();
   }
 
   @override
@@ -48,14 +55,15 @@ class _GroupsPageState extends State<GroupsPage> {
       actions: [
         IconButton.filledTonal(
           onPressed: () async {
-            final success = await context.pushNamed<bool>(
-              Globals.routes.createGroup,
-            );
-            if (success == true) {
-              allGroupsListBloc.add(ListGroups(clearCursor: true));
-              myGroupsListBloc.add(ListGroups(clearCursor: true));
-            }
+            allGroupsListBloc.add(ListGroups(clearCursor: true));
+            myGroupsListBloc.add(ListGroups(clearCursor: true));
           },
+          icon: const Icon(Icons.refresh),
+        ),
+        IconButton.filledTonal(
+          onPressed: () async => await context.pushNamed<bool>(
+            Globals.routes.createGroup,
+          ),
           icon: const Icon(Icons.add),
         ),
       ],
@@ -64,7 +72,7 @@ class _GroupsPageState extends State<GroupsPage> {
         child: Column(
           children: [
             TabBar(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               labelColor: Colors.white,
               labelStyle: theme.textTheme.displaySmall,
               indicatorColor: Colors.white,
@@ -76,11 +84,11 @@ class _GroupsPageState extends State<GroupsPage> {
                 children: [
                   BlocProvider<GroupsListBloc>.value(
                     value: allGroupsListBloc,
-                    child: GroupsListPage(),
+                    child: const GroupsListPage(),
                   ),
                   BlocProvider<GroupsListBloc>.value(
                     value: myGroupsListBloc,
-                    child: GroupsListPage(),
+                    child: const GroupsListPage(),
                   ),
                 ],
               ),

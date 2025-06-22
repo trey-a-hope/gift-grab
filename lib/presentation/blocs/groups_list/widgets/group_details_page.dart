@@ -10,6 +10,7 @@ class GroupDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return GGScaffoldWidget(
       title: group.name ?? 'Unknown Group Name',
       child: Column(

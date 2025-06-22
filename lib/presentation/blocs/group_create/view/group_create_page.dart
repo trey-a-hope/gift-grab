@@ -9,16 +9,25 @@ import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider_input.dart';
 import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:nakama/nakama.dart';
 
 import '../group_create.dart';
 
 class GroupCreatePage extends StatelessWidget {
-  const GroupCreatePage({super.key});
+  final Group? group;
+
+  const GroupCreatePage({
+    this.group,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => GroupCreateBloc(context.read<AuthBloc>()),
+      create: (_) => GroupCreateBloc(
+        context.read<AuthBloc>(),
+        group: group,
+      ),
       child: const GroupCreateView(),
     );
   }
@@ -120,7 +129,7 @@ class GroupCreateView extends StatelessWidget {
                                 return;
                               }
 
-                              _groupCreateBloc.add(CreateGroup());
+                              _groupCreateBloc.add(SubmitForm());
                             } else {
                               ModalService.showError(title: 'Form not valid');
                             }

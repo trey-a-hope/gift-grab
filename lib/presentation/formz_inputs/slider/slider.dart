@@ -1,11 +1,11 @@
 import 'package:formz/formz.dart';
 
+// TODO: Change to Range
 enum _SliderValidationError { belowMin, aboveMax }
 
 class Slider extends FormzInput<int, _SliderValidationError> {
   final int min = 2;
   final int max = 10;
-
   const Slider.pure({
     int value = 2,
   }) : super.pure(value);
