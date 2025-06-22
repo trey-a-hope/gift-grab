@@ -4,12 +4,15 @@ sealed class AccountEvent {}
 
 class ReadAccount extends AccountEvent {}
 
-class UsernameChange extends AccountEvent {
-  final String username;
-  UsernameChange(this.username);
-}
+// class UsernameChange extends AccountEvent {
+//   final String username;
+//   UsernameChange(this.username);
+// }
 
-class UpdateAccount extends AccountEvent {}
+class UpdateAccount extends AccountEvent {
+  final String username;
+  UpdateAccount({required this.username});
+}
 
 class DeleteAccount extends AccountEvent {}
 

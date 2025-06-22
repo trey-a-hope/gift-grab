@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:gift_grab/presentation/formz_inputs/name.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -23,7 +25,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       (event, emit) async =>
           await EventHandlerService.handleBlocEvent<AccountState>(
         action: () async {
-          emit(state.copyWith(isLoading: true));
+          // emit(state.copyWith(isLoading: true));
 
           final session = (await _nakamaSessionService.getValidSession(
             requireValid: true,
@@ -32,21 +34,14 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final account = await getNakamaClient().getAccount(session);
 
-          emit(state.copyWith(
-            account: account,
-            currentUsername: account.user.username,
-          ));
+          emit(
+            state.copyWith(
+              account: account,
+              currentUsername: Name.dirty(account.user.username!),
+              status: FormzSubmissionStatus.initial,
+            ),
+          );
         },
-        emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<UsernameChange>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
-        action: () async => emit(
-          state.copyWith(currentUsername: event.username),
-        ),
         emit: emit,
         errorState: (message) => state.copyWith(error: message),
       ),
@@ -68,7 +63,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           await getNakamaClient().updateAccount(
             session: session,
-            username: state.currentUsername,
+            username: event.username,
           );
 
           final updatedAccount = await getNakamaClient().getAccount(

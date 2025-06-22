@@ -19,6 +19,7 @@ class CommentInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      initialValue: comment.value,
       onChanged: onChanged,
       style: theme.textTheme.displayLarge,
       decoration: InputDecoration(

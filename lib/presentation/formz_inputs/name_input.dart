@@ -15,6 +15,7 @@ class NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      initialValue: name.value,
       onChanged: onChanged,
       style: theme.textTheme.displayLarge,
       decoration: InputDecoration(
