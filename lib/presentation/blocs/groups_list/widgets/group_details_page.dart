@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gift_grab/presentation/blocs/group_users/view/group_users_page.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:nakama/nakama.dart';
 
@@ -21,11 +22,8 @@ class GroupDetailsPage extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Center(
-                    child: Text(
-                      '${group.edgeCount}/${group.maxCount} members',
-                      style: theme.textTheme.headlineLarge,
-                    ),
+                  child: GroupUsersPage(
+                    group.id,
                   ),
                 ),
                 Expanded(
