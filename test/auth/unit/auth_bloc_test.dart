@@ -1,48 +1,68 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:nakama/nakama.dart';
 
-class MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
+class MockNakamaClient extends Mock implements NakamaBaseClient {}
+
+class MockSession extends Mock implements Session {}
+
+class MockNakamaSessionService extends Mock implements NakamaSessionService {}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  late MockAuthBloc mockAuthBloc;
-
-  setUp(() {
-    mockAuthBloc = MockAuthBloc();
-  });
+  const email = 'trey.a.hope@gmail.com';
+  const password = 'Peachy4040';
 
   group(
     'AuthBloc',
     () {
-      blocTest<AuthBloc, AuthState>(
-        'emits [] when nothing is added',
-        build: () => mockAuthBloc,
-        expect: () => [],
-      );
+      late AuthBloc bloc;
+      late MockNakamaClient mockClient;
+      late MockSession mockSession;
+      late MockNakamaSessionService mockSessionService;
+
+      setUp(() {
+        mockClient = MockNakamaClient();
+        mockSession = MockSession();
+        mockSessionService = MockNakamaSessionService();
+      });
+
+      tearDown(() {
+        bloc.close();
+      });
 
       blocTest<AuthBloc, AuthState>(
-        'emits [AuthLoadingState, AuthSuccessState] when LoginEmail is added',
+        'LoginEmail',
+        setUp: () {
+          when(
+            () => mockClient.authenticateEmail(
+              email: email,
+              password: password,
+            ),
+          ).thenAnswer((_) async => mockSession);
+
+          when(
+            () => mockSessionService.saveSessionTokens(mockSession),
+          ).thenAnswer((_) async => {});
+        },
         build: () {
-          whenListen(
-            mockAuthBloc,
-            Stream.fromIterable([
-              AuthState(isLoading: true),
-              AuthState(authenticated: true),
-            ]),
-            initialState: AuthState(),
+          bloc = AuthBloc(
+            nakamaClient: mockClient,
+            nakamaSessionService: mockSessionService,
           );
-
-          return mockAuthBloc;
+          return bloc;
         },
         act: (bloc) => bloc.add(
-          LoginEmail(email: 'trey.a.hope@gmail.com', password: 'Peachy4040'),
+          LoginEmail(
+            email: email,
+            password: password,
+          ),
         ),
         expect: () => [
-          predicate<AuthState>((state) =>
-              state.isLoading == true && state.authenticated == false),
-          predicate<AuthState>((state) =>
-              state.isLoading == false && state.authenticated == true),
+          AuthState(authenticated: false, isLoading: true),
+          AuthState(authenticated: true, isLoading: false),
         ],
       );
     },

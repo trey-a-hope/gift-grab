@@ -1,6 +1,6 @@
 part of 'auth_bloc.dart';
 
-class AuthState {
+class AuthState extends Equatable {
   final bool authenticated;
   final bool isLoading;
   final String? error;
@@ -21,4 +21,11 @@ class AuthState {
         isLoading: isLoading == true ? true : false,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        authenticated,
+        isLoading,
+        error,
+      ];
 }

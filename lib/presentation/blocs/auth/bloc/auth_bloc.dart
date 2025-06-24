@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
@@ -8,13 +9,17 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final NakamaBaseClient _nakamaClient;
+
   final NakamaSessionService _nakamaSessionService;
   final SocialAuthService _socialAuthService;
 
   AuthBloc(
-      {NakamaSessionService? nakamaSessionService,
+      {NakamaBaseClient? nakamaClient,
+      NakamaSessionService? nakamaSessionService,
       SocialAuthService? socialAuthService})
-      : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
+      : _nakamaClient = nakamaClient ?? getNakamaClient(),
+        _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         _socialAuthService = socialAuthService ?? SocialAuthService(),
         super(const AuthState()) {
     on<Logout>(
@@ -35,8 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await EventHandlerService.handleBlocEvent<AuthState>(
         action: () async {
           emit(state.copyWith(isLoading: true));
-
-          final session = await getNakamaClient().authenticateEmail(
+          final session = await _nakamaClient.authenticateEmail(
             email: event.email,
             password: event.password,
           );
