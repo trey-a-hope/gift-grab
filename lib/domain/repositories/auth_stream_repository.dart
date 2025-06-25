@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:nakama/nakama.dart';
 
 class AuthStreamRepository {
   final NakamaBaseClient nakamaClient;
-  final NakamaSessionService nakamaSessionService;
+  final SessionService sessionService;
   final SocialAuthService socialAuthService;
 
   AuthStreamRepository(
-      this.nakamaClient, this.nakamaSessionService, this.socialAuthService);
+    this.nakamaClient,
+    this.sessionService,
+    this.socialAuthService,
+  );
 
   final StreamController<_AuthState> _authStateController =
       StreamController<_AuthState>.broadcast();
@@ -32,7 +35,7 @@ class AuthStreamRepository {
         password: password,
       );
 
-      await nakamaSessionService.saveSessionTokens(session);
+      await sessionService.saveSessionTokens(session);
 
       final newState = _currentState.copyWith(
         authenticated: true,
@@ -58,7 +61,7 @@ class AuthStreamRepository {
         create: true,
       );
 
-      await nakamaSessionService.saveSessionTokens(session);
+      await sessionService.saveSessionTokens(session);
 
       final newState = _currentState.copyWith(
         authenticated: true,
@@ -76,7 +79,7 @@ class AuthStreamRepository {
 
   Future<void> logout() async {
     try {
-      final _ = await nakamaSessionService.logout();
+      final _ = await sessionService.logout();
 
       final newState = _currentState.copyWith(
         authenticated: false,
@@ -94,7 +97,7 @@ class AuthStreamRepository {
 
   Future<void> checkAuthStatus() async {
     try {
-      final session = await nakamaSessionService.getStoredSession();
+      final session = await sessionService.getStoredSession();
 
       if (session == null) {
         final newState = _currentState.copyWith(
@@ -103,8 +106,8 @@ class AuthStreamRepository {
 
         _updateState(newState);
       } else {
-        if (nakamaSessionService.shouldRefreshSession(session)) {
-          await nakamaSessionService.refreshSession(session);
+        if (sessionService.shouldRefreshSession(session)) {
+          await sessionService.refreshSession(session);
         }
 
         final newState = _currentState.copyWith(
@@ -134,7 +137,7 @@ class AuthStreamRepository {
         token: idToken,
       );
 
-      await nakamaSessionService.saveSessionTokens(session);
+      await sessionService.saveSessionTokens(session);
 
       final newState = _currentState.copyWith(
         authenticated: true,
@@ -162,7 +165,7 @@ class AuthStreamRepository {
         token: idToken,
       );
 
-      await nakamaSessionService.saveSessionTokens(session);
+      await sessionService.saveSessionTokens(session);
 
       final newState = _currentState.copyWith(
         authenticated: true,

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/storage/games_played_storage.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
@@ -11,21 +11,18 @@ part 'leaderboard_state.dart';
 class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
   static const _leaderboardId = 'monthly_leaderboard';
 
-  final NakamaSessionService _nakamaSessionService;
+  final SessionService sessionService;
   final GamesPlayedStorage _gamesPlayedStorage;
 
-  LeaderboardBloc(
-      {NakamaSessionService? nakamaSessionService,
-      GamesPlayedStorage? gamesPlayedStorage})
-      : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
-        _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
+  LeaderboardBloc(this.sessionService, {GamesPlayedStorage? gamesPlayedStorage})
+      : _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
         super(const LeaderboardState()) {
     on<FetchLeaderboard>((event, emit) async {
       return await EventHandlerService.handleBlocEvent<LeaderboardState>(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getSession());
+          final session = (await sessionService.getSession());
 
           final leaderboardRecordList =
               await getNakamaClient().listLeaderboardRecords(
@@ -71,7 +68,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
           action: () async {
             emit(state.copyWith(isLoading: true));
 
-            final session = (await _nakamaSessionService.getSession());
+            final session = (await sessionService.getSession());
 
             await getNakamaClient().writeLeaderboardRecord(
               session: session,
@@ -95,7 +92,7 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getSession());
+          final session = (await sessionService.getSession());
 
           await getNakamaClient().deleteLeaderboardRecord(
             session: session,

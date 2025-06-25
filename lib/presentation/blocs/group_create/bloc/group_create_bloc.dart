@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
@@ -13,16 +13,15 @@ part 'group_create_state.dart';
 
 //TODO: change to upsert
 class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
-  final NakamaSessionService _nakamaSessionService;
+  final SessionService sessionService;
   final Group? group;
 
   bool get isNew => group == null;
 
-  GroupCreateBloc({
-    NakamaSessionService? nakamaSessionService,
+  GroupCreateBloc(
+    this.sessionService, {
     this.group,
-  })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
-        super(GroupCreateState()) {
+  }) : super(GroupCreateState()) {
     on<Init>(_onInit);
     on<NameChanged>(_onNameChanged);
     on<DescriptionChanged>(_onDescriptionChanged);
@@ -121,7 +120,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
             ),
           );
 
-          final session = (await _nakamaSessionService.getSession());
+          final session = (await sessionService.getSession());
 
           final newGroup = await getNakamaClient().createGroup(
             session: session,
@@ -154,7 +153,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
             ),
           );
 
-          final session = (await _nakamaSessionService.getSession());
+          final session = (await sessionService.getSession());
 
           await getNakamaClient().updateGroup(
             groupId: group!.id,

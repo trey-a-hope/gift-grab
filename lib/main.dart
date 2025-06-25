@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/data/repositories/session_repository.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
-import 'package:gift_grab/domain/auth_stream_repository.dart';
+import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
@@ -39,8 +41,13 @@ class MyAppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<NakamaSessionService>(
-          create: (context) => NakamaSessionService(),
+        RepositoryProvider<SessionService>(
+          create: (context) => SessionService(
+            SessionRepository(
+              const FlutterSecureStorage(),
+              getNakamaClient(),
+            ),
+          ),
         ),
         RepositoryProvider<SocialAuthService>(
           create: (context) => SocialAuthService(),
@@ -48,7 +55,7 @@ class MyAppPage extends StatelessWidget {
         RepositoryProvider<AuthStreamRepository>(
           create: (context) => AuthStreamRepository(
             getNakamaClient(),
-            context.read<NakamaSessionService>(),
+            context.read<SessionService>(),
             context.read<SocialAuthService>(),
           ),
         ),
@@ -56,13 +63,19 @@ class MyAppPage extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AccountBloc>(
-            create: (context) => AccountBloc(),
+            create: (context) => AccountBloc(
+              context.read<SessionService>(),
+            ),
           ),
           BlocProvider<LeaderboardBloc>(
-            create: (context) => LeaderboardBloc(),
+            create: (context) => LeaderboardBloc(
+              context.read<SessionService>(),
+            ),
           ),
           BlocProvider<FriendsBloc>(
-            create: (context) => FriendsBloc(),
+            create: (context) => FriendsBloc(
+              context.read<SessionService>(),
+            ),
           ),
         ],
         child: MyAppView(),

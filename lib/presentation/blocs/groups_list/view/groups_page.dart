@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/groups_list/groups_list.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,10 +27,12 @@ class _GroupsPageState extends State<GroupsPage> {
     super.initState();
 
     allGroupsListBloc = GroupsListBloc(
+      context.read<SessionService>(),
       all: true,
     )..add(ListGroups(clearCursor: true));
 
     myGroupsListBloc = GroupsListBloc(
+      context.read<SessionService>(),
       all: false,
     )..add(ListGroups(clearCursor: true));
   }

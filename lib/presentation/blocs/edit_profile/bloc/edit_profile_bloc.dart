@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 
@@ -9,13 +9,12 @@ part 'edit_profile_state.dart';
 
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   final AccountBloc accountBloc;
-  final NakamaSessionService _nakamaSessionService;
+  final SessionService sessionService;
 
   EditProfileBloc(
-    this.accountBloc, {
-    NakamaSessionService? nakamaSessionService,
-  })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
-        super(EditProfileState()) {
+    this.accountBloc,
+    this.sessionService,
+  ) : super(EditProfileState()) {
     on<Init>(_onInit);
     on<UsernameChanged>(_onUsernameChanged);
     on<SaveForm>(_onSaveForm);
@@ -56,7 +55,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     SaveForm event,
     Emitter<EditProfileState> emit,
   ) async {
-    final _ = (await _nakamaSessionService.getSession());
+    final _ = (await sessionService.getSession());
 
     accountBloc.add(UpdateAccount(username: state.username.value));
 

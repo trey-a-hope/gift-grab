@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/widgets/friendship_state_button.dart';
@@ -23,6 +24,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileBloc>(
       create: (_) => ProfileBloc(
+        context.read<SessionService>(),
         uid,
         context.read<AccountBloc>(),
         context.read<FriendsBloc>(),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/auth_stream_repository.dart';
+import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
 import 'package:gift_grab/presentation/blocs/edit_profile/view/edit_profile_page.dart';
 import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';

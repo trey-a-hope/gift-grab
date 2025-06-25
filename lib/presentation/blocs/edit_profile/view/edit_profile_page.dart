@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/short_text_input.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
@@ -18,6 +19,7 @@ class EditProfilePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => EditProfileBloc(
         context.read<AccountBloc>(),
+        context.read<SessionService>(),
       ),
       child: const EditProfileView(),
     );

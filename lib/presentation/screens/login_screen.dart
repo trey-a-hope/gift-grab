@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gift_grab/domain/auth_stream_repository.dart';
+import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
 class LoginScreen extends StatelessWidget {

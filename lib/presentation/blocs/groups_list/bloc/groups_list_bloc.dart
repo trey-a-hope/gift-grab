@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/extensions/list_user_group_extensions.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
@@ -10,12 +10,12 @@ part 'groups_list_state.dart';
 
 class GroupsListBloc extends Bloc<GroupsListEvent, GroupsListState> {
   final bool all;
-  final NakamaSessionService _nakamaSessionService;
-  GroupsListBloc({
+  final SessionService sessionService;
+
+  GroupsListBloc(
+    this.sessionService, {
     required this.all,
-    NakamaSessionService? nakamaSessionService,
-  })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
-        super(GroupsListState(all)) {
+  }) : super(GroupsListState(all)) {
     on<ListGroups>(_onListGroups);
   }
 
@@ -27,7 +27,7 @@ class GroupsListBloc extends Bloc<GroupsListEvent, GroupsListState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getSession());
+          final session = (await sessionService.getSession());
 
           String? uid = all ? null : session.userId;
 

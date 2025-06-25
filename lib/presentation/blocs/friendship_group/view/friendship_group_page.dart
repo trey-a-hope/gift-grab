@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/friends_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
@@ -21,6 +22,7 @@ class FriendshipGroupPage extends StatelessWidget {
       create: (_) => FriendshipGroupBloc(
         friendsBloc,
         friendshipState,
+        context.read<SessionService>(),
       ),
       child: const FriendshipGroupView(),
     );

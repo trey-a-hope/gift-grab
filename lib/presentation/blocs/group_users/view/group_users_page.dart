@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
 
 import '../group_users.dart';
@@ -13,6 +14,7 @@ class GroupUsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => GroupUsersBloc(
+        context.read<SessionService>(),
         groupId: groupId,
       ),
       child: const GroupUsersView(),
