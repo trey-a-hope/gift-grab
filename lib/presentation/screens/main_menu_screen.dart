@@ -4,8 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
+import 'package:gift_grab/domain/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
@@ -27,6 +27,7 @@ class MainMenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authStreamRepo = context.read<AuthStreamRepository>();
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, state) {
         final theme = Theme.of(context);
@@ -52,7 +53,7 @@ class MainMenuView extends StatelessWidget {
 
                 if (!context.mounted) return;
 
-                context.read<AuthBloc>().add(Logout());
+                authStreamRepo.logout();
               },
               icon: Icon(Icons.logout),
             )

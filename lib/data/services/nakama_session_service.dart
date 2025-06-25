@@ -1,5 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:nakama/nakama.dart';
 
 class NakamaSessionService {
@@ -24,7 +23,7 @@ class NakamaSessionService {
     }
   }
 
-  Future<Session?> _getStoredSession() async {
+  Future<Session?> getStoredSession() async {
     final token = await _storage.read(key: _tokenKey);
     final refreshToken = await _storage.read(key: _refreshTokenKey);
 
@@ -50,13 +49,13 @@ class NakamaSessionService {
     ]);
   }
 
-  bool _shouldRefreshSession(Session session) =>
+  bool shouldRefreshSession(Session session) =>
       session.isExpired ||
       session.hasExpired(
         DateTime.now().add(_preemptiveRefreshDuration),
       );
 
-  Future<Session> _refreshSession(Session session) async {
+  Future<Session> refreshSession(Session session) async {
     try {
       final newSession =
           await getNakamaClient().sessionRefresh(session: session);
@@ -68,43 +67,31 @@ class NakamaSessionService {
     }
   }
 
-  Future<Session?> getValidSession({
-    bool requireValid = false,
-    AuthBloc? authBloc,
-  }) async {
+  Future<Session> getSession(
+      // AuthBloc authBloc,
+      ) async {
     try {
-      final session = await _getStoredSession();
+      final session = await getStoredSession();
 
       if (session == null) {
-        if (authBloc != null) {
-          authBloc.add(Logout());
-        }
-
-        if (requireValid) {
-          throw Exception('No valid session available');
-        }
-
-        return null;
+        // authBloc.add(Logout());
+        throw Exception('No stored session.');
       }
 
-      if (_shouldRefreshSession(session)) {
-        return await _refreshSession(session);
+      if (shouldRefreshSession(session)) {
+        return await refreshSession(session);
       }
 
       return session;
     } catch (e) {
       await _clearTokens();
-      if (requireValid) {
-        throw Exception('Failed to get valid session: $e');
-      }
-
-      return null;
+      rethrow;
     }
   }
 
   Future<bool> logout() async {
     try {
-      final session = await _getStoredSession();
+      final session = await getStoredSession();
 
       if (session != null) {
         try {

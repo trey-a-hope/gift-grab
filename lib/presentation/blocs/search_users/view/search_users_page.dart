@@ -2,7 +2,6 @@ import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
 import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
@@ -16,7 +15,7 @@ class SearchUsersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SearchUsersBloc(context.read<AuthBloc>()),
+      create: (_) => SearchUsersBloc(),
       child: const SearchUsersView(),
     );
   }

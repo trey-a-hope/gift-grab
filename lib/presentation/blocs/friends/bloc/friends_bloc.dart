@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -8,11 +7,9 @@ part 'friends_event.dart';
 part 'friends_state.dart';
 
 class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
-  final AuthBloc authBloc;
   final NakamaSessionService _nakamaSessionService;
 
-  FriendsBloc(
-    this.authBloc, {
+  FriendsBloc({
     NakamaSessionService? nakamaSessionService,
   })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         super(FriendsState()) {
@@ -29,10 +26,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().addFriends(
             session: session,
@@ -53,10 +47,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().deleteFriends(
             session: session,
@@ -77,10 +68,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().blockFriends(
             session: session,

@@ -3,8 +3,10 @@ import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:gift_grab/data/services/nakama_session_service.dart';
+import 'package:gift_grab/data/services/social_auth_service.dart';
+import 'package:gift_grab/domain/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
 import 'package:nakama/nakama.dart';
@@ -25,58 +27,75 @@ void main() async {
   runApp(
     AppInfo(
       data: await AppInfoData.get(),
-      child: const MyApp(),
+      child: const MyAppPage(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final _authBloc = AuthBloc();
+class MyAppPage extends StatelessWidget {
+  const MyAppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final router = appRouter(_authBloc..add(CheckAuthStatus()));
-
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => _authBloc,
+        RepositoryProvider<NakamaSessionService>(
+          create: (context) => NakamaSessionService(),
         ),
-        BlocProvider<AccountBloc>(
-          create: (context) => AccountBloc(
-            context.read<AuthBloc>(),
-          ),
+        RepositoryProvider<SocialAuthService>(
+          create: (context) => SocialAuthService(),
         ),
-        BlocProvider<LeaderboardBloc>(
-          create: (context) => LeaderboardBloc(
-            context.read<AuthBloc>(),
-          ),
-        ),
-        BlocProvider<FriendsBloc>(
-          create: (context) => FriendsBloc(
-            context.read<AuthBloc>(),
+        RepositoryProvider<AuthStreamRepository>(
+          create: (context) => AuthStreamRepository(
+            getNakamaClient(),
+            context.read<NakamaSessionService>(),
+            context.read<SocialAuthService>(),
           ),
         ),
       ],
-      child: ToastificationWrapper(
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.dark,
-          title: 'Gift Grab',
-          routeInformationProvider: router.routeInformationProvider,
-          routerDelegate: router.routerDelegate,
-          routeInformationParser: router.routeInformationParser,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AccountBloc>(
+            create: (context) => AccountBloc(),
+          ),
+          BlocProvider<LeaderboardBloc>(
+            create: (context) => LeaderboardBloc(),
+          ),
+          BlocProvider<FriendsBloc>(
+            create: (context) => FriendsBloc(),
+          ),
+        ],
+        child: MyAppView(),
       ),
     );
   }
 }
+
+class MyAppView extends StatelessWidget {
+  const MyAppView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authStreamRepo = context.read<AuthStreamRepository>();
+
+    authStreamRepo.checkAuthStatus();
+
+    final router = appRouter(authStreamRepo);
+
+    return ToastificationWrapper(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.lightTheme,
+        darkTheme: AppThemes.darkTheme,
+        themeMode: ThemeMode.dark,
+        title: 'Gift Grab',
+        routeInformationProvider: router.routeInformationProvider,
+        routerDelegate: router.routerDelegate,
+        routeInformationParser: router.routeInformationParser,
+      ),
+    );
+  }
+}
+
+// TODO: Create interfaces for services into repos.
+// TODO: event_handler_service and modal_service -> util or helper -> flutter package

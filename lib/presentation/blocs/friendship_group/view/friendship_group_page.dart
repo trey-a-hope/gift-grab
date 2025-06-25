@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/services/modal_service.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/friends_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
@@ -16,12 +15,10 @@ class FriendshipGroupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = context.read<AuthBloc>();
     final friendsBloc = context.read<FriendsBloc>();
 
     return BlocProvider(
       create: (_) => FriendshipGroupBloc(
-        authBloc,
         friendsBloc,
         friendshipState,
       ),

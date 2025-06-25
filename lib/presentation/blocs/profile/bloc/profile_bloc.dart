@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/storage/games_played_storage.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/extensions/list_friend_extensions.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
@@ -13,7 +12,6 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final String uid;
-  final AuthBloc authBloc;
   final AccountBloc accountBloc;
   final FriendsBloc friendsBloc;
 
@@ -22,7 +20,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc(
     this.uid,
-    this.authBloc,
     this.accountBloc,
     this.friendsBloc, {
     NakamaSessionService? nakamaSessionService,
@@ -50,10 +47,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       action: () async {
         emit(state.copyWith(isLoading: true));
 
-        final session = (await _nakamaSessionService.getValidSession(
-          requireValid: true,
-          authBloc: authBloc,
-        ))!;
+        final session = (await _nakamaSessionService.getSession());
 
         final account = accountBloc.state.account!;
 

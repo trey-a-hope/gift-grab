@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart'; // BLoC pattern for state manag
 import 'package:grpc/grpc.dart'; // gRPC client for remote procedure calls.
 
 abstract class BaseState {
-  bool get isLoading;
+  bool
+      get isLoading; // Remvoe isLoading -> BaseState should be called ErrorState
   String? get error;
   BaseState copyWith({String? error});
 }

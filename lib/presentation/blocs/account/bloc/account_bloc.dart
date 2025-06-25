@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
 import 'package:gift_grab/data/services/social_auth_service.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -10,26 +9,20 @@ part 'account_event.dart';
 part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  final AuthBloc authBloc;
   final NakamaSessionService _nakamaSessionService;
   final SocialAuthService _socialAuthService;
 
-  AccountBloc(this.authBloc,
-      {NakamaSessionService? nakamaSessionService,
-      SocialAuthService? socialAuthService})
-      : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
+  AccountBloc({
+    NakamaSessionService? nakamaSessionService,
+    SocialAuthService? socialAuthService,
+  })  : _nakamaSessionService = nakamaSessionService ?? NakamaSessionService(),
         _socialAuthService = socialAuthService ?? SocialAuthService(),
         super(const AccountState()) {
     on<ReadAccount>(
       (event, emit) async =>
           await EventHandlerService.handleBlocEvent<AccountState>(
         action: () async {
-          // emit(state.copyWith(isLoading: true));
-
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final account = await getNakamaClient().getAccount(session);
 
@@ -50,10 +43,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().updateAccount(
             session: session,
@@ -79,17 +69,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().rpc(
             session: session,
             id: 'account_delete_id',
           );
-
-          authBloc.add(Logout(isDelete: true));
+          _nakamaSessionService.logout();
         },
         emit: emit,
         errorState: (message) => state.copyWith(error: message),
@@ -101,10 +87,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           await getNakamaClient().linkEmail(
             session: session,
@@ -128,10 +111,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
           final email = state.account?.email;
 
           if (email == null) {
@@ -158,10 +138,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final idToken = await _socialAuthService.getGoogleToken();
 
@@ -186,10 +163,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final idToken = await _socialAuthService.getGoogleToken();
 
@@ -215,10 +189,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final idToken = await _socialAuthService.getAppleToken();
 
@@ -243,10 +214,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final idToken = await _socialAuthService.getAppleToken();
 

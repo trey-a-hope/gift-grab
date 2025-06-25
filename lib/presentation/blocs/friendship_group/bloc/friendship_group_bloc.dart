@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/services/nakama_session_service.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart'
     show BaseState, BlocHandler;
@@ -12,13 +11,11 @@ part 'friendship_group_state.dart';
 
 class FriendshipGroupBloc
     extends Bloc<FriendshipGroupEvent, FriendshipGroupState> {
-  final AuthBloc authBloc;
   final FriendsBloc friendsBloc;
   final NakamaSessionService _nakamaSessionService;
   final FriendshipState friendshipState;
 
   FriendshipGroupBloc(
-    this.authBloc,
     this.friendsBloc,
     this.friendshipState,
   )   : _nakamaSessionService = NakamaSessionService(),
@@ -40,10 +37,7 @@ class FriendshipGroupBloc
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await _nakamaSessionService.getValidSession(
-            requireValid: true,
-            authBloc: authBloc,
-          ))!;
+          final session = (await _nakamaSessionService.getSession());
 
           final res = await _fetchFriends(
             session,

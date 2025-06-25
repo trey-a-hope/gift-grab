@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
+import 'package:gift_grab/domain/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:gift_grab/presentation/blocs/edit_profile/view/edit_profile_page.dart';
 import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
 import 'package:gift_grab/presentation/blocs/group_create/view/group_create_page.dart';
@@ -41,11 +42,11 @@ class StreamToListenable extends ChangeNotifier {
   void _tt(event) => notifyListeners();
 }
 
-GoRouter appRouter(AuthBloc authBloc) => GoRouter(
+GoRouter appRouter(AuthStreamRepository authRepository) => GoRouter(
       initialLocation: '/${Globals.routes.main}',
-      refreshListenable: StreamToListenable([authBloc.stream]),
+      refreshListenable: StreamToListenable([authRepository.authStateStream]),
       redirect: (context, state) {
-        final isAuthenticated = authBloc.state.authenticated;
+        final isAuthenticated = authRepository.currentState.authenticated;
 
         if (!isAuthenticated && !state.matchedLocation.contains('/login')) {
           return '/login';
@@ -71,7 +72,9 @@ GoRouter appRouter(AuthBloc authBloc) => GoRouter(
         GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,
-          builder: (_, __) => LoginScreen(),
+          builder: (context, __) => LoginScreen(
+            context.read<AuthStreamRepository>(),
+          ),
         ),
         GoRoute(
           path: '/${Globals.routes.profile}/:uid',

@@ -3,7 +3,6 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/presentation/blocs/groups_list/groups_list.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/presentation/blocs/auth/bloc/auth_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class GroupsPage extends StatefulWidget {
@@ -26,15 +25,11 @@ class _GroupsPageState extends State<GroupsPage> {
   void initState() {
     super.initState();
 
-    final authBloc = context.read<AuthBloc>();
-
     allGroupsListBloc = GroupsListBloc(
-      authBloc,
       all: true,
     )..add(ListGroups(clearCursor: true));
 
     myGroupsListBloc = GroupsListBloc(
-      authBloc,
       all: false,
     )..add(ListGroups(clearCursor: true));
   }
