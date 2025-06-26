@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/profile/bloc/profile_bloc.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendshipStateButton extends StatelessWidget {
@@ -23,7 +23,7 @@ class FriendshipStateButton extends StatelessWidget {
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
           onPressed: () async {
-            final confirm = await ModalService.showConfirmation(
+            final confirm = await ModalUtil.showConfirmation(
               context,
               title: 'Cancel request',
               message: 'Are you sure?',
@@ -38,7 +38,7 @@ class FriendshipStateButton extends StatelessWidget {
       case FriendshipState.mutual:
         return ElevatedButton(
           onPressed: () async {
-            final confirm = await ModalService.showConfirmation(
+            final confirm = await ModalUtil.showConfirmation(
               context,
               title: 'Delete Friend',
               message: 'Are you sure?',
@@ -56,7 +56,7 @@ class FriendshipStateButton extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
+                final confirm = await ModalUtil.showConfirmation(
                   context,
                   title: 'Accept request',
                   message: 'Are you sure?',
@@ -71,7 +71,7 @@ class FriendshipStateButton extends StatelessWidget {
             const Gap(8),
             ElevatedButton(
               onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
+                final confirm = await ModalUtil.showConfirmation(
                   context,
                   title: 'Reject request',
                   message: 'Are you sure?',

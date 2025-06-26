@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 
 import '../account.dart';
 
@@ -35,10 +35,10 @@ class LinkedAccountsPage extends StatelessWidget {
 
         if (isSuccess || isError) {
           if (isSuccess) {
-            ModalService.showSuccess(title: state.success!);
+            ModalUtil.showSuccess(title: state.success!);
           }
           if (isError) {
-            ModalService.showError(title: state.error!);
+            ModalUtil.showError(title: state.error!);
           }
           context.read<AccountBloc>().add(ReadAccount());
         }
@@ -52,7 +52,7 @@ class LinkedAccountsPage extends StatelessWidget {
             subtitle: state.account?.email ?? '',
             isLinked: state.account?.email != '',
             onLink: () async {
-              final result = await ModalService.showEmailPasswordDialog(
+              final result = await ModalUtil.showEmailPasswordDialog(
                 context: context,
               );
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/leaderboard_record_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 
 import '../leaderboard.dart';
 
@@ -28,7 +28,7 @@ class LeaderboardView extends StatelessWidget {
     return BlocConsumer<LeaderboardBloc, LeaderboardState>(
       listener: (context, state) {
         if (state.error != null) {
-          ModalService.showError(title: state.error!);
+          ModalUtil.showError(title: state.error!);
         }
       },
       builder: (context, state) {

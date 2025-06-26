@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/widgets/friendship_state_button.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 import '../profile.dart';
@@ -46,7 +46,7 @@ class ProfileView extends StatelessWidget {
     return BlocConsumer<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.success != null) {
-          ModalService.showSuccess(title: state.success!);
+          ModalUtil.showSuccess(title: state.success!);
         }
       },
       builder: (context, state) {
@@ -74,7 +74,7 @@ class ProfileView extends StatelessWidget {
             if (state.friendshipState == FriendshipState.mutual) ...[
               IconButton.filledTonal(
                 onPressed: () async {
-                  final confirm = await ModalService.showConfirmation(
+                  final confirm = await ModalUtil.showConfirmation(
                     context,
                     title: 'Block ${user?.username ?? ''}',
                     message: 'Are you sure?',
@@ -90,7 +90,7 @@ class ProfileView extends StatelessWidget {
             if (state.friendshipState == FriendshipState.blocked) ...[
               IconButton.filledTonal(
                 onPressed: () async {
-                  final confirm = await ModalService.showConfirmation(
+                  final confirm = await ModalUtil.showConfirmation(
                     context,
                     title: 'Unblock ${user?.username ?? ''}',
                     message: 'Are you sure?',

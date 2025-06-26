@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/friendship_group/friendship_group.dart';
 import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendListTile extends StatelessWidget {
@@ -49,7 +49,7 @@ class _FriendshipActionButtons extends StatelessWidget {
       case FriendshipState.mutual:
         return ElevatedButton(
           onPressed: () async {
-            final confirm = await ModalService.showConfirmation(
+            final confirm = await ModalUtil.showConfirmation(
               context,
               title: 'Delete friend ${user.username}',
               message: 'Are you sure?',
@@ -66,7 +66,7 @@ class _FriendshipActionButtons extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
+                final confirm = await ModalUtil.showConfirmation(
                   context,
                   title: 'Accept request from ${user.username}',
                   message: 'Are you sure?',
@@ -81,7 +81,7 @@ class _FriendshipActionButtons extends StatelessWidget {
             const Gap(8),
             ElevatedButton(
               onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
+                final confirm = await ModalUtil.showConfirmation(
                   context,
                   title: 'Reject invite from ${user.username}',
                   message: 'Are you sure?',
@@ -98,7 +98,7 @@ class _FriendshipActionButtons extends StatelessWidget {
       case FriendshipState.outgoingRequest:
         return ElevatedButton(
           onPressed: () async {
-            final confirm = await ModalService.showConfirmation(
+            final confirm = await ModalUtil.showConfirmation(
               context,
               title: 'Cancel request from ${user.username}',
               message: 'Are you sure?',

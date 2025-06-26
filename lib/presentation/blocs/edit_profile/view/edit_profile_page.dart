@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/short_text_input.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:go_router/go_router.dart';
 
 import '../edit_profile.dart';
@@ -35,11 +35,11 @@ class EditProfileView extends StatelessWidget {
       listener: (context, state) {
         if (state.status == FormzSubmissionStatus.success) {
           context.pop(true);
-          ModalService.showSuccess(title: 'Profile updated');
+          ModalUtil.showSuccess(title: 'Profile updated');
         }
 
         if (state.status == FormzSubmissionStatus.failure) {
-          ModalService.showError(title: 'Sorry, something went wrong');
+          ModalUtil.showError(title: 'Sorry, something went wrong');
         }
       },
       builder: (context, state) {
@@ -76,8 +76,7 @@ class EditProfileView extends StatelessWidget {
                             final inputsValid = Formz.validate(inputs);
 
                             if (inputsValid) {
-                              final confirm =
-                                  await ModalService.showConfirmation(
+                              final confirm = await ModalUtil.showConfirmation(
                                 context,
                                 title: 'Save profile',
                                 message: 'Are you sure?',
@@ -89,7 +88,7 @@ class EditProfileView extends StatelessWidget {
 
                               editProfileBloc.add(SaveForm());
                             } else {
-                              ModalService.showError(title: 'Form not valid');
+                              ModalUtil.showError(title: 'Form not valid');
                             }
                           },
                           child: Text('Save'),

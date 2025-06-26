@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -46,7 +46,7 @@ class SettingsView extends StatelessWidget {
                 MenuButtonWidget(
                   menuButton: MenuButton.logout,
                   onTap: () async {
-                    final confirm = await ModalService.showConfirmation(
+                    final confirm = await ModalUtil.showConfirmation(
                       context,
                       title: 'Logout?',
                       message: 'Are you sure?',
@@ -66,7 +66,7 @@ class SettingsView extends StatelessWidget {
                     menuButton: MenuButton.deleteAccount,
                     onTap: () async {
                       final confirm =
-                          await ModalService.showInputMatchConfirmation(
+                          await ModalUtil.showInputMatchConfirmation(
                         context: context,
                         title: 'Delete Account?',
                         hintText: 'Enter your email to confirm.',

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider_input.dart';
 import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/modal_util.dart';
 import 'package:nakama/nakama.dart';
 
 import '../group_create.dart';
@@ -43,10 +43,10 @@ class GroupCreateView extends StatelessWidget {
     return BlocConsumer<GroupCreateBloc, GroupCreateState>(
       listener: (context, state) {
         if (state.error != null) {
-          ModalService.showError(title: state.error!);
+          ModalUtil.showError(title: state.error!);
         }
         if (state.success != null) {
-          ModalService.showSuccess(title: state.success!);
+          ModalUtil.showSuccess(title: state.success!);
           Navigator.of(context).pop(true);
         }
       },
@@ -118,8 +118,7 @@ class GroupCreateView extends StatelessWidget {
                             final inputsValid = Formz.validate(inputs);
 
                             if (inputsValid) {
-                              final confirm =
-                                  await ModalService.showConfirmation(
+                              final confirm = await ModalUtil.showConfirmation(
                                 context,
                                 title: 'Submit Group',
                                 message: 'Are you sure?',
@@ -131,7 +130,7 @@ class GroupCreateView extends StatelessWidget {
 
                               _groupCreateBloc.add(SubmitForm());
                             } else {
-                              ModalService.showError(title: 'Form not valid');
+                              ModalUtil.showError(title: 'Form not valid');
                             }
                           },
                         ),
