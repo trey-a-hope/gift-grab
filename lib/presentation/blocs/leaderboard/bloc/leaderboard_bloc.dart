@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:gift_grab/data/services/storage/games_played_storage.dart';
+import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
@@ -12,11 +12,12 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
   static const _leaderboardId = 'monthly_leaderboard';
 
   final SessionService sessionService;
-  final GamesPlayedStorage _gamesPlayedStorage;
+  final GamesPlayedStorageService gamesPlayedStorageService;
 
-  LeaderboardBloc(this.sessionService, {GamesPlayedStorage? gamesPlayedStorage})
-      : _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
-        super(const LeaderboardState()) {
+  LeaderboardBloc(
+    this.sessionService,
+    this.gamesPlayedStorageService,
+  ) : super(const LeaderboardState()) {
     on<FetchLeaderboard>((event, emit) async {
       return await EventHandlerService.handleBlocEvent<LeaderboardState>(
         action: () async {
@@ -76,9 +77,10 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
               score: event.score,
             );
 
-            final gamesPlayed =
-                await _gamesPlayedStorage.getValue(session, session.userId);
-            await _gamesPlayedStorage.updateValue(session, gamesPlayed + 1);
+            final gamesPlayed = await gamesPlayedStorageService.getValue(
+                session, session.userId);
+            await gamesPlayedStorageService.updateValue(
+                session, gamesPlayed + 1);
 
             emit(state.copyWith());
           },

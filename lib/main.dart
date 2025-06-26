@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/configuration/app_themes.dart';
+import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/data/repositories/session_repository.dart';
-import 'package:gift_grab/data/services/social_auth_service.dart';
-import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
+import 'package:gift_grab/data/repositories/social_auth_repository.dart';
+import 'package:gift_grab/data/repositories/storage_repository.dart';
+import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
+import 'package:gift_grab/domain/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
@@ -50,7 +53,9 @@ class MyAppPage extends StatelessWidget {
           ),
         ),
         RepositoryProvider<SocialAuthService>(
-          create: (context) => SocialAuthService(),
+          create: (context) => SocialAuthService(
+            SocialAuthRepository(),
+          ),
         ),
         RepositoryProvider<AuthStreamRepository>(
           create: (context) => AuthStreamRepository(
@@ -59,17 +64,26 @@ class MyAppPage extends StatelessWidget {
             context.read<SocialAuthService>(),
           ),
         ),
+        RepositoryProvider<GamesPlayedStorageService>(
+          create: (context) => GamesPlayedStorageService(
+            StorageRepository(
+              getNakamaClient(),
+            ),
+          ),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AccountBloc>(
             create: (context) => AccountBloc(
               context.read<SessionService>(),
+              context.read<SocialAuthService>(),
             ),
           ),
           BlocProvider<LeaderboardBloc>(
             create: (context) => LeaderboardBloc(
               context.read<SessionService>(),
+              context.read<GamesPlayedStorageService>(),
             ),
           ),
           BlocProvider<FriendsBloc>(
@@ -109,6 +123,3 @@ class MyAppView extends StatelessWidget {
     );
   }
 }
-
-// TODO: Create interfaces for services into repos.
-// TODO: event_handler_service and modal_service -> util or helper -> flutter package

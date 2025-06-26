@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
+import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   static const _usernameFormField = 'Username';
   static const _savedEmail = 'trey.a.hope@gmail.com';
   static const _savedPassword = 'Peachy5050';
 
   final AuthStreamRepository authStreamRepository;
 
-  const LoginScreen(this.authStreamRepository, {super.key});
+  const LoginPage(this.authStreamRepository, {super.key});
 
   @override
   Widget build(BuildContext context) {

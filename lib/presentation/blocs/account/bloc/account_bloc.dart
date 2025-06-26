@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:gift_grab/data/services/social_auth_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
+import 'package:gift_grab/domain/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/services/event_handler_service.dart';
 import 'package:nakama/nakama.dart';
 
@@ -10,13 +10,12 @@ part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final SessionService sessionService;
-  final SocialAuthService _socialAuthService;
+  final SocialAuthService socialAuthService;
 
   AccountBloc(
-    this.sessionService, {
-    SocialAuthService? socialAuthService,
-  })  : _socialAuthService = socialAuthService ?? SocialAuthService(),
-        super(const AccountState()) {
+    this.sessionService,
+    this.socialAuthService,
+  ) : super(const AccountState()) {
     on<ReadAccount>(
       (event, emit) async =>
           await EventHandlerService.handleBlocEvent<AccountState>(
@@ -139,7 +138,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = (await sessionService.getSession());
 
-          final idToken = await _socialAuthService.getGoogleToken();
+          final idToken = await socialAuthService.getGoogleToken();
 
           if (idToken == null) {
             emit(state.copyWith());
@@ -164,7 +163,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = (await sessionService.getSession());
 
-          final idToken = await _socialAuthService.getGoogleToken();
+          final idToken = await socialAuthService.getGoogleToken();
 
           if (idToken == null) {
             emit(state.copyWith());
@@ -190,7 +189,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = (await sessionService.getSession());
 
-          final idToken = await _socialAuthService.getAppleToken();
+          final idToken = await socialAuthService.getAppleToken();
 
           if (idToken == null) {
             emit(state.copyWith());
@@ -215,7 +214,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = (await sessionService.getSession());
 
-          final idToken = await _socialAuthService.getAppleToken();
+          final idToken = await socialAuthService.getAppleToken();
 
           if (idToken == null) {
             emit(state.copyWith());

@@ -3,14 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/constants/menu_button.dart';
-import 'package:gift_grab/data/services/modal_service.dart';
-import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
 import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MainMenuPage extends StatelessWidget {
   const MainMenuPage({super.key});
@@ -27,7 +24,6 @@ class MainMenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authStreamRepo = context.read<AuthStreamRepository>();
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, state) {
         final theme = Theme.of(context);
@@ -36,27 +32,11 @@ class MainMenuView extends StatelessWidget {
           title: 'Gift Grab',
           actions: [
             IconButton.filledTonal(
-              onPressed: () => showLicensePage(context: context),
-              icon: Icon(MdiIcons.fileDocument),
+              onPressed: () => context.pushNamed(
+                Globals.routes.settings,
+              ),
+              icon: Icon(Icons.settings),
             ),
-            IconButton.filledTonal(
-              onPressed: () async {
-                final confirm = await ModalService.showConfirmation(
-                  context,
-                  title: 'Logout?',
-                  message: 'Are you sure?',
-                );
-
-                if (confirm != true) {
-                  return;
-                }
-
-                if (!context.mounted) return;
-
-                authStreamRepo.logout();
-              },
-              icon: Icon(Icons.logout),
-            )
           ],
           canPop: false,
           child: Center(
@@ -119,37 +99,6 @@ class MainMenuView extends StatelessWidget {
                                   Globals.routes.searchUsers,
                                 ),
                               ),
-                              MenuButtonWidget(
-                                menuButton: MenuButton.linkedAccounts,
-                                onTap: () => context.pushNamed(
-                                  Globals.routes.linkedAccounts,
-                                ),
-                              ),
-                              if (state.account != null &&
-                                  state.account!.email != null) ...[
-                                MenuButtonWidget(
-                                  menuButton: MenuButton.deleteAccount,
-                                  onTap: () async {
-                                    final confirm = await ModalService
-                                        .showInputMatchConfirmation(
-                                      context: context,
-                                      title: 'Delete Account?',
-                                      hintText: 'Enter your email to confirm.',
-                                      match: state.account!.email!,
-                                    );
-
-                                    if (confirm == null || confirm == false) {
-                                      return;
-                                    }
-
-                                    if (!context.mounted) return;
-
-                                    context
-                                        .read<AccountBloc>()
-                                        .add(DeleteAccount());
-                                  },
-                                ),
-                              ]
                             ],
                           ),
                         ),

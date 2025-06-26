@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:gift_grab/data/services/storage/games_played_storage.dart';
+import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
@@ -16,16 +16,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final FriendsBloc friendsBloc;
 
   final SessionService sessionService;
-  final GamesPlayedStorage _gamesPlayedStorage;
+  final GamesPlayedStorageService gamesPlayedStorageService;
 
   ProfileBloc(
     this.sessionService,
+    this.gamesPlayedStorageService,
     this.uid,
     this.accountBloc,
-    this.friendsBloc, {
-    GamesPlayedStorage? gamesPlayedStorage,
-  })  : _gamesPlayedStorage = gamesPlayedStorage ?? GamesPlayedStorage(),
-        super(ProfileState()) {
+    this.friendsBloc,
+  ) : super(ProfileState()) {
     on<ReadProfile>(_onReadProfile);
     on<SendRequest>(_onSendRequest);
     on<AcceptIncomingRequest>(_onAcceptIncomingRequest);
@@ -58,7 +57,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
         final isMyProfile = account.user.id == user.id;
 
-        final gamesPlayed = await _gamesPlayedStorage.getValue(session, uid);
+        final gamesPlayed =
+            await gamesPlayedStorageService.getValue(session, uid);
 
         final friendsList = await getNakamaClient().listFriends(
           session: session,

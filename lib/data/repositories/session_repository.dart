@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gift_grab/domain/repositories/i_session_repository.dart';
 import 'package:nakama/nakama.dart';
 
-class SessionRepository implements iSessionRepository {
+class SessionRepository implements ISessionRepository {
   static const _tokenKey = 'nakama_token';
   static const _refreshTokenKey = 'nakama_refresh_token';
 

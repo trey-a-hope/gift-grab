@@ -2,6 +2,8 @@ import 'package:dio/dio.dart'; // HTTP client for making API requests.
 import 'package:flutter_bloc/flutter_bloc.dart'; // BLoC pattern for state management.
 import 'package:grpc/grpc.dart'; // gRPC client for remote procedure calls.
 
+// TODO: Move to flutter package.
+
 abstract class BaseState {
   bool
       get isLoading; // Remvoe isLoading -> BaseState should be called ErrorState

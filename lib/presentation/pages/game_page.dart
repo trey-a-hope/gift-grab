@@ -6,8 +6,8 @@ import 'package:gift_grab/presentation/game/gift_grab_game.dart';
 import 'package:gift_grab/presentation/overlays/game_over_overlay.dart';
 import 'package:gift_grab/data/constants/screens.dart';
 
-class GameScreen extends StatelessWidget {
-  const GameScreen({
+class GamePage extends StatelessWidget {
+  const GamePage({
     super.key,
   });
 

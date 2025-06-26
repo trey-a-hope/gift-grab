@@ -1,20 +1,22 @@
+// data/repositories/social_auth_repository.dart
 import 'package:flutter/material.dart';
+import 'package:gift_grab/domain/repositories/i_social_auth_repository.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class SocialAuthService {
+class SocialAuthRepository implements ISocialAuthRepository {
   final GoogleSignIn _googleSignIn;
 
-  SocialAuthService({GoogleSignIn? googleSignIn})
+  SocialAuthRepository({GoogleSignIn? googleSignIn})
       : _googleSignIn = googleSignIn ??
             GoogleSignIn(
               scopes: [
                 'email',
                 'https://www.googleapis.com/auth/contacts.readonly',
               ],
-            ),
-        super();
+            );
 
+  @override
   Future<String?> getGoogleToken() async {
     try {
       final googleUser = await _googleSignIn.signIn();
@@ -27,6 +29,7 @@ class SocialAuthService {
     }
   }
 
+  @override
   Future<String?> getAppleToken() async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(

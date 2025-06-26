@@ -5,7 +5,7 @@ import 'package:nakama/nakama.dart';
 class SessionService {
   static const _preemptiveRefreshDuration = Duration(hours: 1);
 
-  final iSessionRepository _iSessionRepository;
+  final ISessionRepository _iSessionRepository;
 
   SessionService(this._iSessionRepository);
 

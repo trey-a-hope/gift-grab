@@ -25,9 +25,17 @@ enum MenuButton {
     'Leaderboard',
     Globals.lottieLeaderboard,
   ),
+  licenses(
+    'View Licenses',
+    Globals.lottieLicenses,
+  ),
   linkedAccounts(
     'Linked Accounts',
     Globals.lottieLinkedAccounts,
+  ),
+  logout(
+    'Logout',
+    Globals.lottieLogout,
   ),
   notifications(
     'Notifications',

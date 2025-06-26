@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/repositories/auth_stream_repository.dart';
+import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
 import 'package:gift_grab/presentation/blocs/edit_profile/view/edit_profile_page.dart';
 import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
@@ -13,9 +13,10 @@ import 'package:gift_grab/presentation/blocs/groups_list/widgets/group_details_p
 import 'package:gift_grab/presentation/blocs/leaderboard/view/leaderboard_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/profile_page.dart';
 import 'package:gift_grab/presentation/blocs/search_users/view/search_users_page.dart';
-import 'package:gift_grab/presentation/screens/game_screen.dart';
-import 'package:gift_grab/presentation/screens/login_screen.dart';
-import 'package:gift_grab/presentation/screens/main_menu_screen.dart';
+import 'package:gift_grab/presentation/pages/game_page.dart';
+import 'package:gift_grab/presentation/pages/login_page.dart';
+import 'package:gift_grab/presentation/pages/main_menu_page.dart';
+import 'package:gift_grab/presentation/pages/settings_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
 
@@ -65,14 +66,19 @@ GoRouter appRouter(AuthStreamRepository authRepository) => GoRouter(
           builder: (context, state) => const MainMenuPage(),
         ),
         GoRoute(
+          path: '/${Globals.routes.settings}',
+          name: Globals.routes.settings,
+          builder: (context, state) => const SettingsPage(),
+        ),
+        GoRoute(
           path: '/${Globals.routes.game}',
           name: Globals.routes.game,
-          builder: (context, state) => const GameScreen(),
+          builder: (context, state) => const GamePage(),
         ),
         GoRoute(
           path: '/${Globals.routes.login}',
           name: Globals.routes.login,
-          builder: (context, __) => LoginScreen(
+          builder: (context, __) => LoginPage(
             context.read<AuthStreamRepository>(),
           ),
         ),

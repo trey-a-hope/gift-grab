@@ -8,7 +8,7 @@ import 'package:gift_grab/presentation/widgets/input_match_confirmation_widget.d
 import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 
-/// Displays various, flexible modals.
+// TODO: Move to flutter package.
 class ModalService {
   static Future<(String, String)?> showEmailPasswordDialog({
     required BuildContext context,

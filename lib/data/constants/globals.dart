@@ -20,8 +20,14 @@ class Globals {
   static const lottieLeaderboard =
       'https://lottie.host/76d5c302-05ec-4aff-ac6c-3f73832201a9/VBsN3v28u9.json';
 
+  static const lottieLicenses =
+      'https://lottie.host/463e1a5d-c740-4ffb-9ee9-83e5f9b00923/VJliIpFOlF.json';
+
   static const lottieLinkedAccounts =
       'https://lottie.host/c949d875-6223-4e7e-8eb0-dec46cca9f2b/JN9abpQohW.json';
+
+  static const lottieLogout =
+      'https://lottie.host/b9a10e60-1dc2-45a3-aa2f-993b056d76dc/ah7AkC9WGn.json';
 
   static const lottiePlay =
       'https://lottie.host/afa5e507-7b25-40e2-8cf9-07c7c63bace0/07iIcuc1gh.json';

@@ -1,6 +1,6 @@
 import 'package:nakama/nakama.dart';
 
-abstract class iSessionRepository {
+abstract class ISessionRepository {
   Future<Session?> getStoredSession();
   Future<void> saveSession(Session session);
   Future<void> clearSession();
