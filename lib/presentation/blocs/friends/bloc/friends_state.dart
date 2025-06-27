@@ -1,6 +1,6 @@
 part of 'friends_bloc.dart';
 
-class FriendsState extends BaseState {
+class FriendsState extends Equatable implements ErrorState {
   final bool isLoading;
   final String? success;
   final String? error;
@@ -21,4 +21,11 @@ class FriendsState extends BaseState {
         success: success,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        isLoading,
+        success,
+        error,
+      ];
 }

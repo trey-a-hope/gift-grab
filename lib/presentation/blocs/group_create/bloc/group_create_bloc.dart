@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
@@ -5,7 +6,7 @@ import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
 import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'group_create_event.dart';
@@ -21,7 +22,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
   GroupCreateBloc(
     this.sessionService, {
     this.group,
-  }) : super(GroupCreateState()) {
+  }) : super(GroupCreateState(isNew: group == null)) {
     on<Init>(_onInit);
     on<NameChanged>(_onNameChanged);
     on<DescriptionChanged>(_onDescriptionChanged);
@@ -120,7 +121,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
             ),
           );
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final newGroup = await getNakamaClient().createGroup(
             session: session,
@@ -153,14 +154,13 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
             ),
           );
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().updateGroup(
             groupId: group!.id,
             session: session,
             name: state.name.value,
             description: state.description.value,
-            maxCount: state.maxCount.value,
             open: state.isOpen.value,
             langTag: 'en', //cannot be empty for some reason...
           );

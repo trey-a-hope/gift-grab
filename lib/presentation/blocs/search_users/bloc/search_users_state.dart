@@ -1,6 +1,6 @@
 part of 'search_users_bloc.dart';
 
-class SearchUsersState {
+class SearchUsersState extends Equatable implements ErrorState {
   final String query;
   final List<User> users;
   final bool isLoading;
@@ -25,4 +25,12 @@ class SearchUsersState {
         isLoading: isLoading == true ? true : false,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        query,
+        users,
+        isLoading,
+        error,
+      ];
 }

@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'friends_event.dart';
@@ -23,7 +24,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().addFriends(
             session: session,
@@ -44,7 +45,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().deleteFriends(
             session: session,
@@ -65,7 +66,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().blockFriends(
             session: session,

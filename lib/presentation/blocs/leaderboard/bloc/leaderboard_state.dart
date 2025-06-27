@@ -1,6 +1,6 @@
 part of 'leaderboard_bloc.dart';
 
-class LeaderboardState {
+class LeaderboardState extends Equatable implements ErrorState {
   final List<LeaderboardEntry> entries;
   final bool isLoading;
   final String? error;
@@ -21,4 +21,11 @@ class LeaderboardState {
         isLoading: isLoading == true ? true : false,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        entries,
+        isLoading,
+        error,
+      ];
 }

@@ -1,6 +1,6 @@
 part of 'groups_list_bloc.dart';
 
-class GroupsListState extends BaseState {
+class GroupsListState extends Equatable implements ErrorState {
   final bool all;
   final List<Group> groups;
   final String? cursor;
@@ -32,4 +32,14 @@ class GroupsListState extends BaseState {
         success: success,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        all,
+        groups,
+        cursor,
+        isLoading,
+        success,
+        error,
+      ];
 }

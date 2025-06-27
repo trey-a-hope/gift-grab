@@ -1,6 +1,6 @@
 part of 'friendship_group_bloc.dart';
 
-class FriendshipGroupState extends BaseState {
+class FriendshipGroupState extends Equatable implements ErrorState {
   final FriendshipState friendshipState;
   final List<Friend> friends;
   final String? cursor;
@@ -32,4 +32,14 @@ class FriendshipGroupState extends BaseState {
         success: success,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        friendshipState,
+        friends,
+        cursor,
+        isLoading,
+        success,
+        error,
+      ];
 }

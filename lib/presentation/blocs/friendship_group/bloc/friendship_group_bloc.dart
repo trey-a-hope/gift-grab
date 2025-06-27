@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'friendship_group_event.dart';
@@ -32,11 +33,11 @@ class FriendshipGroupBloc
     ListFriends event,
     Emitter<FriendshipGroupState> emit,
   ) async =>
-      BlocHandler<FriendshipGroupState>().handle(
+      await BlocHandler<FriendshipGroupState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final res = await _fetchFriends(
             session,

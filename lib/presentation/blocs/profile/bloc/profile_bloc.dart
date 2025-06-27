@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
 import 'package:gift_grab/presentation/extensions/list_friend_extensions.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'profile_event.dart';
@@ -40,72 +41,69 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onReadProfile(
     ReadProfile event,
     Emitter<ProfileState> emit,
-  ) async {
-    return await EventHandlerService.handleBlocEvent<ProfileState>(
-      action: () async {
-        emit(state.copyWith(isLoading: true));
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+          action: () async {
+            emit(state.copyWith(isLoading: true));
 
-        final session = (await sessionService.getSession());
+            final session = (await sessionService.getSession());
 
-        final account = accountBloc.state.account!;
+            final account = accountBloc.state.account!;
 
-        final user = (await getNakamaClient().getUsers(
-          session: session,
-          ids: [uid],
-        ))
-            .first;
+            final user = (await getNakamaClient().getUsers(
+              session: session,
+              ids: [uid],
+            ))
+                .first;
 
-        final isMyProfile = account.user.id == user.id;
+            final isMyProfile = account.user.id == user.id;
 
-        final gamesPlayed =
-            await gamesPlayedStorageService.getValue(session, uid);
+            final gamesPlayed =
+                await gamesPlayedStorageService.getValue(session, uid);
 
-        final friendsList = await getNakamaClient().listFriends(
-          session: session,
-          limit: 1000,
-        );
-        final friends = friendsList.friends;
+            final friendsList = await getNakamaClient().listFriends(
+              session: session,
+              limit: 1000,
+            );
+            final friends = friendsList.friends;
 
-        final friendshipState = friends?.getFriendshipState(uid);
+            final friendshipState = friends?.getFriendshipState(uid);
 
-        emit(
-          state.copyWith(
-              user: user,
-              isMyProfile: isMyProfile,
-              gamesPlayed: gamesPlayed,
-              friendshipState: friendshipState),
-        );
-      },
-      emit: emit,
-      errorState: (message) => state.copyWith(error: message),
-    );
-  }
+            emit(
+              state.copyWith(
+                  user: user,
+                  isMyProfile: isMyProfile,
+                  gamesPlayed: gamesPlayed,
+                  friendshipState: friendshipState),
+            );
+          },
+          emit: emit,
+          state: state);
 
   Future<void> _onSendRequest(
     SendRequest event,
     Emitter<ProfileState> emit,
-  ) async {
-    return await EventHandlerService.handleBlocEvent<ProfileState>(
-      action: () async {
-        friendsBloc.add(Add(uid));
+  ) async =>
+      await BlocHandler<ProfileState>().handle(
+        action: () async {
+          friendsBloc.add(Add(uid));
 
-        await for (final friendsState in friendsBloc.stream) {
-          if (friendsState.success != null) {
-            emit(state.copyWith(
-                friendshipState: FriendshipState.outgoingRequest,
-                success: friendsState.success!));
-            break;
+          await for (final friendsState in friendsBloc.stream) {
+            if (friendsState.success != null) {
+              emit(state.copyWith(
+                  friendshipState: FriendshipState.outgoingRequest,
+                  success: friendsState.success!));
+              break;
+            }
+            if (friendsState.error != null) {
+              emit(state.copyWith(error: friendsState.error!));
+              break;
+            }
           }
-          if (friendsState.error != null) {
-            emit(state.copyWith(error: friendsState.error!));
-            break;
-          }
-        }
-      },
-      emit: emit,
-      errorState: (message) => state.copyWith(error: message),
-    );
-  }
+        },
+        emit: emit,
+        state: state,
+      );
 
   Future<void> _onAcceptIncomingRequest(
     AcceptIncomingRequest event,

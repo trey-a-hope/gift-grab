@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'leaderboard_event.dart';
@@ -18,12 +19,20 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
     this.sessionService,
     this.gamesPlayedStorageService,
   ) : super(const LeaderboardState()) {
-    on<FetchLeaderboard>((event, emit) async {
-      return await EventHandlerService.handleBlocEvent<LeaderboardState>(
+    on<FetchLeaderboard>(_onFetchLeaderboard);
+    on<SubmitScore>(_onSubmitScore);
+    on<DeleteRecord>(_onDeleteRecord);
+  }
+
+  Future<void> _onFetchLeaderboard(
+    FetchLeaderboard event,
+    Emitter<LeaderboardState> emit,
+  ) async =>
+      await BlocHandler<LeaderboardState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final leaderboardRecordList =
               await getNakamaClient().listLeaderboardRecords(
@@ -60,41 +69,44 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
           }
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
+        state: state,
       );
-    });
-    on<SubmitScore>(
-      (event, emit) async {
-        return await EventHandlerService.handleBlocEvent<LeaderboardState>(
-          action: () async {
-            emit(state.copyWith(isLoading: true));
 
-            final session = (await sessionService.getSession());
-
-            await getNakamaClient().writeLeaderboardRecord(
-              session: session,
-              leaderboardName: _leaderboardId,
-              score: event.score,
-            );
-
-            final gamesPlayed = await gamesPlayedStorageService.getValue(
-                session, session.userId);
-            await gamesPlayedStorageService.updateValue(
-                session, gamesPlayed + 1);
-
-            emit(state.copyWith());
-          },
-          emit: emit,
-          errorState: (message) => state.copyWith(error: message),
-        );
-      },
-    );
-    on<DeleteRecord>((event, emit) async {
-      return await EventHandlerService.handleBlocEvent<LeaderboardState>(
+  Future<void> _onSubmitScore(
+    SubmitScore event,
+    Emitter<LeaderboardState> emit,
+  ) async =>
+      await BlocHandler<LeaderboardState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
+
+          await getNakamaClient().writeLeaderboardRecord(
+            session: session,
+            leaderboardName: _leaderboardId,
+            score: event.score,
+          );
+
+          final gamesPlayed =
+              await gamesPlayedStorageService.getValue(session, session.userId);
+          await gamesPlayedStorageService.updateValue(session, gamesPlayed + 1);
+
+          emit(state.copyWith());
+        },
+        emit: emit,
+        state: state,
+      );
+
+  Future<void> _onDeleteRecord(
+    DeleteRecord event,
+    Emitter<LeaderboardState> emit,
+  ) async =>
+      await BlocHandler<LeaderboardState>().handle(
+        action: () async {
+          emit(state.copyWith(isLoading: true));
+
+          final session = await sessionService.getSession();
 
           await getNakamaClient().deleteLeaderboardRecord(
             session: session,
@@ -110,8 +122,6 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
           emit(state.copyWith(entries: entries));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
+        state: state,
       );
-    });
-  }
 }

@@ -1,6 +1,6 @@
 part of 'group_users_bloc.dart';
 
-class GroupUsersState extends BaseState {
+class GroupUsersState extends Equatable implements ErrorState {
   final List<GroupUser> groupUsers;
 
   final bool isLoading;
@@ -22,4 +22,11 @@ class GroupUsersState extends BaseState {
         isLoading: isLoading == true ? true : false,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        groupUsers,
+        isLoading,
+        error,
+      ];
 }

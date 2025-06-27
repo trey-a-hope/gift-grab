@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/domain/services/social_auth_service.dart';
-import 'package:gift_grab/presentation/services/event_handler_service.dart';
+import 'package:gift_grab_ui/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'account_event.dart';
@@ -16,11 +17,24 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     this.sessionService,
     this.socialAuthService,
   ) : super(const AccountState()) {
-    on<ReadAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+    on<ReadAccount>(_onReadAccount);
+    on<UpdateAccount>(_onUpdateAccount);
+    on<DeleteAccount>(_onDeleteAccount);
+    on<LinkEmailAccount>(_onLinkEmailAccount);
+    on<UnlinkEmailAccount>(_onUnlinkEmailAccount);
+    on<LinkGoogleAccount>(_onLinkGoogleAccount);
+    on<UnlinkGoogleAccount>(_onUnlinkGoogleAccount);
+    on<LinkAppleAccount>(_onLinkAppleAccount);
+    on<UnlinkAppleAccount>(_onUnlinkAppleAccount);
+  }
+
+  void _onReadAccount(
+    ReadAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final account = await getNakamaClient().getAccount(session);
 
@@ -32,42 +46,45 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           );
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<UpdateAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onUpdateAccount(
+    UpdateAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
+          action: () async {
+            emit(state.copyWith(isLoading: true));
+
+            final session = await sessionService.getSession();
+
+            await getNakamaClient().updateAccount(
+              session: session,
+              username: event.username,
+            );
+
+            final updatedAccount = await getNakamaClient().getAccount(
+              session,
+            );
+
+            emit(state.copyWith(
+              success: 'Username updated successfully.',
+              account: updatedAccount,
+            ));
+          },
+          emit: emit,
+          state: state);
+
+  void _onDeleteAccount(
+    DeleteAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
-
-          await getNakamaClient().updateAccount(
-            session: session,
-            username: event.username,
-          );
-
-          final updatedAccount = await getNakamaClient().getAccount(
-            session,
-          );
-
-          emit(state.copyWith(
-            success: 'Username updated successfully.',
-            account: updatedAccount,
-          ));
-        },
-        emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<DeleteAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
-        action: () async {
-          emit(state.copyWith(isLoading: true));
-
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().rpc(
             session: session,
@@ -76,16 +93,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           sessionService.logout();
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<LinkEmailAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onLinkEmailAccount(
+    LinkEmailAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           await getNakamaClient().linkEmail(
             session: session,
@@ -100,16 +119,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           );
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<UnlinkEmailAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onUnlinkEmailAccount(
+    UnlinkEmailAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
           final email = state.account?.email;
 
           if (email == null) {
@@ -127,16 +148,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<LinkGoogleAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onLinkGoogleAccount(
+    LinkGoogleAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final idToken = await socialAuthService.getGoogleToken();
 
@@ -152,16 +175,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<UnlinkGoogleAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onUnlinkGoogleAccount(
+    UnlinkGoogleAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final idToken = await socialAuthService.getGoogleToken();
 
@@ -178,16 +203,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<LinkAppleAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onLinkAppleAccount(
+    LinkAppleAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final idToken = await socialAuthService.getAppleToken();
 
@@ -203,16 +230,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-    on<UnlinkAppleAccount>(
-      (event, emit) async =>
-          await EventHandlerService.handleBlocEvent<AccountState>(
+        state: state,
+      );
+
+  void _onUnlinkAppleAccount(
+    UnlinkAppleAccount event,
+    Emitter<AccountState> emit,
+  ) async =>
+      await BlocHandler<AccountState>().handle(
         action: () async {
           emit(state.copyWith(isLoading: true));
 
-          final session = (await sessionService.getSession());
+          final session = await sessionService.getSession();
 
           final idToken = await socialAuthService.getAppleToken();
 
@@ -228,8 +257,6 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ));
         },
         emit: emit,
-        errorState: (message) => state.copyWith(error: message),
-      ),
-    );
-  }
+        state: state,
+      );
 }

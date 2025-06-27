@@ -83,16 +83,18 @@ class GroupCreateView extends StatelessWidget {
                               .add(DescriptionChanged(name)),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsGeometry.all(16),
-                        child: SliderInput(
-                          state.maxCount,
-                          title: 'Member Limit',
-                          onChanged: (val) => context
-                              .read<GroupCreateBloc>()
-                              .add(MaxCountChanged(val.toInt())),
+                      if (state.isNew) ...[
+                        Padding(
+                          padding: EdgeInsetsGeometry.all(16),
+                          child: SliderInput(
+                            state.maxCount,
+                            title: 'Member Limit',
+                            onChanged: (val) => context
+                                .read<GroupCreateBloc>()
+                                .add(MaxCountChanged(val.toInt())),
+                          ),
                         ),
-                      ),
+                      ],
                       Padding(
                         padding: EdgeInsetsGeometry.all(16),
                         child: ToggleInput(

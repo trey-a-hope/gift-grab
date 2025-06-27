@@ -1,6 +1,7 @@
 part of 'group_create_bloc.dart';
 
-class GroupCreateState extends BaseState with FormzMixin {
+class GroupCreateState extends Equatable with FormzMixin implements ErrorState {
+  final bool isNew;
   final ShortText name;
   final LongText description;
   final Slider maxCount;
@@ -11,6 +12,7 @@ class GroupCreateState extends BaseState with FormzMixin {
   final String? error;
 
   GroupCreateState({
+    required this.isNew,
     this.name = const ShortText.pure(),
     this.description = const LongText.pure(),
     this.maxCount = const Slider.pure(),
@@ -32,6 +34,7 @@ class GroupCreateState extends BaseState with FormzMixin {
     String? error,
   }) =>
       GroupCreateState(
+        isNew: this.isNew,
         name: name ?? this.name,
         description: description ?? this.description,
         maxCount: maxCount ?? this.maxCount,
@@ -48,5 +51,17 @@ class GroupCreateState extends BaseState with FormzMixin {
         description,
         maxCount,
         isOpen,
+      ];
+
+  @override
+  List<Object?> get props => [
+        name,
+        description,
+        maxCount,
+        isOpen,
+        status,
+        isLoading,
+        success,
+        error,
       ];
 }

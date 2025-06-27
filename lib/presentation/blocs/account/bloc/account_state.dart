@@ -1,6 +1,6 @@
 part of 'account_bloc.dart';
 
-class AccountState {
+class AccountState extends Equatable implements ErrorState {
   final Account? account;
   final FormzSubmissionStatus status;
   final bool isLoading;
@@ -29,4 +29,13 @@ class AccountState {
         error: error,
         success: success,
       );
+
+  @override
+  List<Object?> get props => [
+        account,
+        status,
+        isLoading,
+        error,
+        success,
+      ];
 }

@@ -1,6 +1,6 @@
 part of 'profile_bloc.dart';
 
-class ProfileState extends BaseState {
+class ProfileState extends Equatable implements ErrorState {
   final User? user;
   final bool isMyProfile;
   final int gamesPlayed;
@@ -40,4 +40,15 @@ class ProfileState extends BaseState {
         success: success,
         error: error,
       );
+
+  @override
+  List<Object?> get props => [
+        user,
+        isMyProfile,
+        gamesPlayed,
+        friendshipState,
+        isLoading,
+        success,
+        error,
+      ];
 }
