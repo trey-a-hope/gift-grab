@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
-import 'package:gift_grab/presentation/extensions/string_extensions.dart';
-import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
+import 'package:gift_grab/domain/extensions/string_extensions.dart';
+import 'package:gift_grab/domain/entities/leaderboard_entry.dart';
 import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
 
 class LeaderboardRecordListTile extends StatelessWidget {

@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
         uid,
         context.read<AccountBloc>(),
         context.read<FriendsBloc>(),
-      ),
+      )..add(ReadProfile()),
       child: const ProfileView(),
     );
   }

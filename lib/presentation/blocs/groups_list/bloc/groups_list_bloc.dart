@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab/presentation/extensions/list_user_group_extensions.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/domain/extensions/list_user_group_extensions.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'groups_list_event.dart';

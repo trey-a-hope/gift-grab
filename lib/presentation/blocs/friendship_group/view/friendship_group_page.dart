@@ -23,7 +23,7 @@ class FriendshipGroupPage extends StatelessWidget {
         friendsBloc,
         friendshipState,
         context.read<SessionService>(),
-      ),
+      )..add(ListFriends(clearCursor: false)),
       child: const FriendshipGroupView(),
     );
   }

@@ -20,7 +20,7 @@ class EditProfilePage extends StatelessWidget {
       create: (_) => EditProfileBloc(
         context.read<AccountBloc>(),
         context.read<SessionService>(),
-      ),
+      )..add(Init()),
       child: const EditProfileView(),
     );
   }

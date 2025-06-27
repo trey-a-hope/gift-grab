@@ -27,7 +27,7 @@ class GroupCreatePage extends StatelessWidget {
       create: (_) => GroupCreateBloc(
         context.read<SessionService>(),
         group: group,
-      ),
+      )..add(Init()),
       child: const GroupCreateView(),
     );
   }

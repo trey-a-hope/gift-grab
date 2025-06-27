@@ -4,8 +4,8 @@ import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab/presentation/blocs/friends/friends.dart';
-import 'package:gift_grab/presentation/extensions/list_friend_extensions.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/domain/extensions/list_friend_extensions.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'profile_event.dart';
@@ -34,8 +34,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<DeleteFriend>(_onDeleteFriend);
     on<BlockFriend>(_onBlockFriend);
     on<UnblockFriend>(_onUnblockFriend);
-
-    add(ReadProfile());
   }
 
   Future<void> _onReadProfile(

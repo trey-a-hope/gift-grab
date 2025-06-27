@@ -6,7 +6,7 @@ import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
 import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
 import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'group_create_event.dart';
@@ -31,8 +31,6 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
     on<SubmitForm>(_onSubmitForm);
     on<CreateGroup>(_onCreateGroup);
     on<UpdateGroup>(_onUpdateGroup);
-
-    add(Init());
   }
 
   void _onInit(

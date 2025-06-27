@@ -16,7 +16,7 @@ class GroupUsersPage extends StatelessWidget {
       create: (_) => GroupUsersBloc(
         context.read<SessionService>(),
         groupId: groupId,
-      ),
+      )..add(ListGroupUsers()),
       child: const GroupUsersView(),
     );
   }

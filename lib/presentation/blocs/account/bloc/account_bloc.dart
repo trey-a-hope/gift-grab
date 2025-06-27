@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/domain/services/social_auth_service.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'account_event.dart';

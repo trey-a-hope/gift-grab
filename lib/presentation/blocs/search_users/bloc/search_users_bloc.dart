@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 import 'package:stream_transform/stream_transform.dart';
 

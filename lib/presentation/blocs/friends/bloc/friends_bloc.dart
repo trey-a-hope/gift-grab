@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'friends_event.dart';

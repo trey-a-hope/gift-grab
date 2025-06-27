@@ -18,8 +18,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     on<Init>(_onInit);
     on<UsernameChanged>(_onUsernameChanged);
     on<SaveForm>(_onSaveForm);
-
-    add(Init());
   }
 
   void _onInit(

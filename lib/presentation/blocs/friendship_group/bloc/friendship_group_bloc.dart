@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'friendship_group_event.dart';
@@ -25,8 +25,6 @@ class FriendshipGroupBloc
     on<CancelOutgoingRequest>(_onCancelOutgoingRequest);
     on<RejectIncomingRequest>(_onRejectIncomingRequest);
     on<DeleteFriend>(_onDeleteFriend);
-
-    add(ListFriends(clearCursor: false));
   }
 
   Future<void> _onListFriends(

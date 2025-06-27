@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab/presentation/models/leaderboard_entry.dart';
-import 'package:gift_grab_ui/bloc_handler.dart';
+import 'package:gift_grab/domain/entities/leaderboard_entry.dart';
+import 'package:gift_grab/presentation/utils/bloc_handler.dart';
 import 'package:nakama/nakama.dart';
 
 part 'leaderboard_event.dart';
