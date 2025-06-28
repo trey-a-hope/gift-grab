@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/groups_list/groups_list.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class GroupsPage extends StatefulWidget {

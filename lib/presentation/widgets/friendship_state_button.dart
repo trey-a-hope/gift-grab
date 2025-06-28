@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/blocs/profile/bloc/profile_bloc.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendshipStateButton extends StatelessWidget {

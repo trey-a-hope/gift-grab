@@ -3,16 +3,8 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:gift_grab/presentation/blocs/game/game_bloc.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
-import 'package:gift_grab/presentation/components/ice_component.dart';
-import 'package:gift_grab/presentation/spawners/cookie_spawner.dart';
-import 'package:gift_grab/presentation/spawners/flame_spawner.dart';
-import 'package:gift_grab/presentation/spawners/gift_spawner.dart';
-import 'package:gift_grab/presentation/components/hud_text_components.dart';
-import 'package:gift_grab/presentation/components/santa_component.dart';
-import 'package:gift_grab/presentation/components/background_component.dart';
-import 'package:gift_grab/presentation/inputs/joystick.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 
 part 'game_state_handler.dart';
 
@@ -42,13 +34,13 @@ class GiftGrabGame extends FlameGame with DragCallbacks, HasCollisionDetection {
             size: size,
             children: [
               GameStateHandler(),
-              BackgroundComponent(),
-              SantaComponent(joystick: _joystick),
-              HUDTextComponents(),
-              FlameSpawner(),
-              GiftSpawner(),
-              CookieSpawner(),
-              IceComponent(),
+              BackgroundComponent<GiftGrabGame>(),
+              SantaComponent<GiftGrabGame>(joystick: _joystick),
+              HUDTextComponents<GiftGrabGame>(),
+              FlameSpawner<GiftGrabGame>(),
+              GiftSpawner<GiftGrabGame>(),
+              CookieSpawner<GiftGrabGame>(),
+              IceComponent<GiftGrabGame>(),
             ],
           ),
         ],

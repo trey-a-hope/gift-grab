@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/blocs/group_users/view/group_users_page.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 class GroupDetailsPage extends StatelessWidget {

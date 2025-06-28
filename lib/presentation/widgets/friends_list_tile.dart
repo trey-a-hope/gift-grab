@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/presentation/blocs/friendship_group/friendship_group.dart';
 import 'package:gift_grab/presentation/widgets/user_list_tile.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendListTile extends StatelessWidget {

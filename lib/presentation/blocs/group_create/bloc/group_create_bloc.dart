@@ -2,11 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
-import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
-import 'package:gift_grab/presentation/formz_inputs/slider/slider.dart';
-import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
 import 'package:gift_grab/presentation/utils/bloc_handler.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 part 'group_create_event.dart';
@@ -42,7 +39,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
         state.copyWith(
           name: ShortText.dirty(group!.name ?? ''),
           description: LongText.dirty(group!.description ?? ''),
-          maxCount: Slider.dirty(group!.maxCount!),
+          maxCount: Range.dirty(group!.maxCount!),
           isOpen: Toggle.dirty(group!.open!),
           status: FormzSubmissionStatus.initial,
         ),
@@ -78,7 +75,7 @@ class GroupCreateBloc extends Bloc<GroupCreateEvent, GroupCreateState> {
   ) {
     emit(
       state.copyWith(
-        maxCount: Slider.dirty(event.maxCount),
+        maxCount: Range.dirty(event.maxCount),
         status: FormzSubmissionStatus.initial,
       ),
     );

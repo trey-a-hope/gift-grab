@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 
 class LoginPage extends StatelessWidget {
   static const _usernameFormField = 'Username';

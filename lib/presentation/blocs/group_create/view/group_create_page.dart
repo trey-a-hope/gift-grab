@@ -3,12 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
-import 'package:gift_grab/presentation/formz_inputs/long_text/view.dart';
-import 'package:gift_grab/presentation/formz_inputs/short_text/view.dart';
-import 'package:gift_grab/presentation/formz_inputs/slider/slider_input.dart';
-import 'package:gift_grab/presentation/formz_inputs/toggle/view.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 import '../group_create.dart';
@@ -86,7 +81,7 @@ class GroupCreateView extends StatelessWidget {
                       if (state.isNew) ...[
                         Padding(
                           padding: EdgeInsetsGeometry.all(16),
-                          child: SliderInput(
+                          child: RangeInput(
                             state.maxCount,
                             title: 'Member Limit',
                             onChanged: (val) => context

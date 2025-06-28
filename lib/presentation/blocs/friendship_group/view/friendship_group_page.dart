@@ -4,7 +4,7 @@ import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
 import 'package:gift_grab/presentation/widgets/friends_list_tile.dart';
 import 'package:gift_grab/presentation/widgets/no_results_widget.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 import '../friendship_group.dart';

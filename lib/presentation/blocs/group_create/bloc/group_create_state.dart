@@ -4,7 +4,7 @@ class GroupCreateState extends Equatable with FormzMixin implements ErrorState {
   final bool isNew;
   final ShortText name;
   final LongText description;
-  final Slider maxCount;
+  final Range maxCount;
   final Toggle isOpen;
   final FormzSubmissionStatus status;
   final bool isLoading;
@@ -15,7 +15,7 @@ class GroupCreateState extends Equatable with FormzMixin implements ErrorState {
     required this.isNew,
     this.name = const ShortText.pure(),
     this.description = const LongText.pure(),
-    this.maxCount = const Slider.pure(),
+    this.maxCount = const Range.pure(),
     this.isOpen = const Toggle.pure(),
     this.status = FormzSubmissionStatus.initial,
     this.isLoading = false,
@@ -26,7 +26,7 @@ class GroupCreateState extends Equatable with FormzMixin implements ErrorState {
   GroupCreateState copyWith({
     ShortText? name,
     LongText? description,
-    Slider? maxCount,
+    Range? maxCount,
     Toggle? isOpen,
     FormzSubmissionStatus? status,
     bool? isLoading,

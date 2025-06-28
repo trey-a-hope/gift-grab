@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 
 import '../account.dart';
 

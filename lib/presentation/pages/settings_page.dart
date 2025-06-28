@@ -5,9 +5,8 @@ import 'package:gift_grab/data/constants/menu_button.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
 import 'package:gift_grab/presentation/widgets/menu_button_widget.dart';
-import 'package:gift_grab_ui/modal_util.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsPage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gift_grab/presentation/blocs/friendship_group/view/friendship_group_page.dart';
-import 'package:gift_grab/presentation/widgets/gg_scaffold_widget.dart';
+import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 
 class FriendsPage extends StatelessWidget {
