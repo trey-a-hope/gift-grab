@@ -12,10 +12,12 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final SessionService sessionService;
   final SocialAuthService socialAuthService;
+  final NakamaBaseClient nakamaBaseClient;
 
   AccountBloc(
     this.sessionService,
     this.socialAuthService,
+    this.nakamaBaseClient,
   ) : super(const AccountState()) {
     on<ReadAccount>(_onReadAccount);
     on<UpdateAccount>(_onUpdateAccount);
@@ -36,7 +38,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         action: () async {
           final session = await sessionService.getSession();
 
-          final account = await getNakamaClient().getAccount(session);
+          final account = await nakamaBaseClient.getAccount(session);
 
           emit(
             state.copyWith(
@@ -59,12 +61,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
             final session = await sessionService.getSession();
 
-            await getNakamaClient().updateAccount(
+            await nakamaBaseClient.updateAccount(
               session: session,
               username: event.username,
             );
 
-            final updatedAccount = await getNakamaClient().getAccount(
+            final updatedAccount = await nakamaBaseClient.getAccount(
               session,
             );
 
@@ -86,7 +88,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = await sessionService.getSession();
 
-          await getNakamaClient().rpc(
+          await nakamaBaseClient.rpc(
             session: session,
             id: 'account_delete_id',
           );
@@ -106,7 +108,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           final session = await sessionService.getSession();
 
-          await getNakamaClient().linkEmail(
+          await nakamaBaseClient.linkEmail(
             session: session,
             email: event.email,
             password: event.password,
@@ -137,7 +139,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             throw Exception('Email is null...');
           }
 
-          await getNakamaClient().unlinkEmail(
+          await nakamaBaseClient.unlinkEmail(
             session: session,
             email: email,
             password: '', //Note, password is not required to unlink email.
@@ -168,7 +170,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             return;
           }
 
-          await getNakamaClient().linkGoogle(session: session, token: idToken);
+          await nakamaBaseClient.linkGoogle(session: session, token: idToken);
 
           emit(state.copyWith(
             success: 'Google account linked successfully.',
@@ -195,8 +197,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             return;
           }
 
-          await getNakamaClient()
-              .unlinkGoogle(session: session, token: idToken);
+          await nakamaBaseClient.unlinkGoogle(session: session, token: idToken);
 
           emit(state.copyWith(
             success: 'Google account unlinked successfully.',
@@ -223,7 +224,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             return;
           }
 
-          await getNakamaClient().linkApple(session: session, token: idToken);
+          await nakamaBaseClient.linkApple(session: session, token: idToken);
 
           emit(state.copyWith(
             success: 'Apple account linked successfully.',
@@ -250,7 +251,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             return;
           }
 
-          await getNakamaClient().unlinkApple(session: session, token: idToken);
+          await nakamaBaseClient.unlinkApple(session: session, token: idToken);
 
           emit(state.copyWith(
             success: 'Apple account unlinked successfully.',

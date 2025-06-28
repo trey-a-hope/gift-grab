@@ -78,6 +78,7 @@ class MyAppPage extends StatelessWidget {
             create: (context) => AccountBloc(
               context.read<SessionService>(),
               context.read<SocialAuthService>(),
+              getNakamaClient(),
             ),
           ),
           BlocProvider<LeaderboardBloc>(
