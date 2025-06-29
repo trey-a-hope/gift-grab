@@ -1,7 +1,16 @@
 import 'package:cloudinary/cloudinary.dart';
 
+part 'feedback_messages.dart';
+part 'routes.dart';
+part 'rpc_ids.dart';
+
 class Globals {
   Globals._();
+
+  static final feedbackMessages = _FeedbackMessages();
+  static final routes = _Routes();
+  static final rpcIds = _RpcIds();
+
   static const lottieFriends =
       'https://lottie.host/1741de59-5532-45e4-b3f7-00ba3cfa92ad/0RBy5DNOHl.json';
 
@@ -57,61 +66,6 @@ class Globals {
     cloudName: 'dp6gsfu5c',
   );
 
-  static final routes = _Routes();
-  static final timeLimits = _TimeLimits();
-
-  /// Audio
-  static const String freezeSound = 'freeze-sound.wav';
-  static const String itemGrabSound = 'item-grab-sound.wav';
-  static const String flameSound = 'flame-sound.wav';
-
   static const String emptyProfile =
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-
-  /// Images
-  static const String santaIdle = 'santa-idle.png';
-  static const String santaFrozen = 'santa-frozen.png';
-  static const String santaSlideLeftSprite = 'santa-slide-left.png';
-  static const String santaSlideRightSprite = 'santa-slide-right.png';
-  static const String backgroundSprite = 'background-sprite.jpg';
-  static const String giftSprite = 'gift-sprite.png';
-  static const String iceSprite = 'ice-sprite.png';
-  static const String flameSprite = 'flame.png';
-  static const String cookieSprite = 'cookie.png';
-
-  /// One hour from now duration; used for token expiration.
-  static final inOneHour = DateTime.now().add(
-    const Duration(
-      hours: 1,
-    ),
-  );
-}
-
-class _Routes {
-  final String main = 'main';
-  final String login = 'login';
-  final String game = 'game';
-  final String leaderboard = 'leaderboard';
-  final String settings = 'settings';
-  final String editProfile = 'edit_profile';
-  final String groups = 'groups';
-  final String createGroup = 'create_group';
-  final String groupDetails = 'group_details';
-  final String editGroup = 'edit_group';
-  final String profile = 'profile';
-  final String linkedAccounts = 'linked_accounts';
-  final String notifications = 'notifications';
-  final String friends = 'friends';
-  final String searchUsers = 'search_users';
-  final String chatRooms = 'chat_rooms';
-  final String directChats = 'direct_chats';
-  final String chatRoom = 'chat_room';
-  final String createChatRoom = 'create_chat_room';
-  final String tournaments = 'tournaments';
-  final String tournament = 'tournament';
-}
-
-class _TimeLimits {
-  final int frozen = 3;
-  final int cookie = 10;
 }

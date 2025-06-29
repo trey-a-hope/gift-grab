@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/domain/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/utils/bloc_handler.dart';
@@ -71,7 +72,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             );
 
             emit(state.copyWith(
-              success: 'Username updated successfully.',
+              success: Globals.feedbackMessages.accountUpdateSuccess,
               account: updatedAccount,
             ));
           },
@@ -90,9 +91,17 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           await nakamaBaseClient.rpc(
             session: session,
-            id: 'account_delete_id',
+            id: Globals.rpcIds.accountDeleteId,
           );
-          sessionService.logout();
+
+          await sessionService.logout();
+
+          emit(
+            state.copyWith(
+              success: Globals.feedbackMessages.accountDeleteSuccess,
+              account: null,
+            ),
+          );
         },
         emit: emit,
         state: state,

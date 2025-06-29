@@ -9,7 +9,7 @@ class AccountState extends Equatable implements ErrorState {
 
   const AccountState({
     this.account,
-    this.status = FormzSubmissionStatus.inProgress,
+    this.status = FormzSubmissionStatus.initial,
     this.isLoading = true,
     this.error,
     this.success,

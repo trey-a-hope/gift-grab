@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_grab/data/constants/menu_button.dart';
+import 'package:gift_grab/data/enums/menu_button.dart';
 import 'package:lottie/lottie.dart';
 
 class MenuButtonWidget extends StatelessWidget {

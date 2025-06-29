@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/data/constants/menu_button.dart';
+import 'package:gift_grab/data/enums/menu_button.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/account.dart';
 import 'package:gift_grab/presentation/widgets/flex_gridview_widget.dart';
