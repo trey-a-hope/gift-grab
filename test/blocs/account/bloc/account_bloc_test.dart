@@ -22,47 +22,32 @@ void main() {
   group(
     AccountBloc,
     () {
-      late AccountBloc bloc;
-      late MockNakamaClient mockClient;
-      late MockSession mockSession;
-      late MockSessionService mockSessionService;
-      late MockSocialAuthService mockSocialAuthService;
-      late MockAccount mockAccount;
+      final mockClient = MockNakamaClient();
+      final mockSession = MockSession();
+      final mockSessionService = MockSessionService();
+      final mockSocialAuthService = MockSocialAuthService();
+      final mockAccount = MockAccount();
 
       final mockUsername = 'John Doe';
-
-      setUp(() async {
-        mockClient = MockNakamaClient();
-        mockSession = MockSession();
-        mockSessionService = MockSessionService();
-        mockAccount = MockAccount();
-        mockSocialAuthService = MockSocialAuthService();
-
-        when(
-          () => mockSessionService.getSession(),
-        ).thenAnswer((_) async => mockSession);
-      });
-
-      tearDown(() {
-        bloc.close();
-      });
 
       blocTest<AccountBloc, AccountState>(
         'ReadAccount: emits account data with initial status when ReadAccount event is successfully processed',
         setUp: () {
           when(
+            () => mockSessionService.getSession(),
+          ).thenAnswer((_) async => mockSession);
+
+          when(
             () => mockClient.getAccount(mockSession),
           ).thenAnswer((_) async => mockAccount);
         },
-        build: () {
-          bloc = AccountBloc(
-            mockSessionService,
-            mockSocialAuthService,
-            mockClient,
-          );
-          return bloc;
-        },
+        build: () => AccountBloc(
+          mockSessionService,
+          mockSocialAuthService,
+          mockClient,
+        ),
         act: (bloc) => bloc.add(ReadAccount()),
+        seed: () => AccountState(isLoading: true),
         expect: () => [
           AccountState(
             account: mockAccount,
@@ -78,6 +63,10 @@ void main() {
         'UpdateAccount: updates the username on a user\'s account',
         setUp: () {
           when(
+            () => mockSessionService.getSession(),
+          ).thenAnswer((_) async => mockSession);
+
+          when(
             () => mockClient.updateAccount(
               session: mockSession,
               username: mockUsername,
@@ -88,23 +77,14 @@ void main() {
             () => mockClient.getAccount(mockSession),
           ).thenAnswer((_) async => mockAccount);
         },
-        build: () {
-          bloc = AccountBloc(
-            mockSessionService,
-            mockSocialAuthService,
-            mockClient,
-          );
-          return bloc;
-        },
+        build: () => AccountBloc(
+          mockSessionService,
+          mockSocialAuthService,
+          mockClient,
+        ),
         act: (bloc) => bloc.add(UpdateAccount(username: mockUsername)),
+        seed: () => AccountState(isLoading: true),
         expect: () => [
-          AccountState(
-            account: null,
-            status: FormzSubmissionStatus.initial,
-            isLoading: true,
-            error: null,
-            success: null,
-          ),
           AccountState(
             account: mockAccount,
             status: FormzSubmissionStatus.initial,
@@ -118,6 +98,10 @@ void main() {
       blocTest<AccountBloc, AccountState>(
         'DeleteAccount: deletes the account',
         setUp: () {
+          when(
+            () => mockSessionService.getSession(),
+          ).thenAnswer((_) async => mockSession);
+
           when(
             () => mockClient.rpc(
               session: mockSession,
@@ -133,23 +117,14 @@ void main() {
 
           when(() => mockSessionService.logout()).thenAnswer((_) async => true);
         },
-        build: () {
-          bloc = AccountBloc(
-            mockSessionService,
-            mockSocialAuthService,
-            mockClient,
-          );
-          return bloc;
-        },
+        build: () => AccountBloc(
+          mockSessionService,
+          mockSocialAuthService,
+          mockClient,
+        ),
         act: (bloc) => bloc.add(DeleteAccount()),
+        seed: () => AccountState(isLoading: true),
         expect: () => [
-          AccountState(
-            account: null,
-            status: FormzSubmissionStatus.initial,
-            isLoading: true,
-            error: null,
-            success: null,
-          ),
           AccountState(
             account: null,
             status: FormzSubmissionStatus.initial,

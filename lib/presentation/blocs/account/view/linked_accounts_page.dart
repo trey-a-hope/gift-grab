@@ -6,14 +6,16 @@ import 'package:gift_grab_ui/gift_grab_ui.dart';
 
 import '../account.dart';
 
-class _ProviderInfo {
+part 'social_provider_tile.dart';
+
+class ProviderInfo {
   final String title;
   final String subtitle;
   final bool isLinked;
   final VoidCallback onLink;
   final VoidCallback onUnlink;
 
-  const _ProviderInfo({
+  const ProviderInfo({
     required this.title,
     required this.subtitle,
     required this.isLinked,
@@ -45,8 +47,8 @@ class LinkedAccountsPage extends StatelessWidget {
       builder: (context, state) {
         final accountBloc = context.read<AccountBloc>();
 
-        final providers = <_ProviderInfo>[
-          _ProviderInfo(
+        final providers = <ProviderInfo>[
+          ProviderInfo(
             title: 'Email',
             subtitle: state.account?.email ?? '',
             isLinked: state.account?.email != '',
@@ -67,7 +69,7 @@ class LinkedAccountsPage extends StatelessWidget {
             },
             onUnlink: () => accountBloc.add(UnlinkEmailAccount()),
           ),
-          _ProviderInfo(
+          ProviderInfo(
             title: 'Google',
             subtitle: state.account?.user.googleId ?? '',
             isLinked: state.account?.user.googleId != '',
@@ -75,7 +77,7 @@ class LinkedAccountsPage extends StatelessWidget {
             onUnlink: () => accountBloc.add(UnlinkGoogleAccount()),
           ),
           if (Platform.isIOS) ...{
-            _ProviderInfo(
+            ProviderInfo(
               title: 'Apple',
               subtitle: state.account?.user.appleId ?? '',
               isLinked: state.account?.user.appleId != '',
@@ -93,8 +95,9 @@ class LinkedAccountsPage extends StatelessWidget {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: providers
-                        .map((provider) =>
-                            _buildSocialProviderTile(context, provider))
+                        .map(
+                          (provider) => SocialProviderTile(provider),
+                        )
                         .toList(),
                   ),
           ),
@@ -102,25 +105,4 @@ class LinkedAccountsPage extends StatelessWidget {
       },
     );
   }
-}
-
-Widget _buildSocialProviderTile(BuildContext context, _ProviderInfo provider) {
-  final theme = Theme.of(context);
-
-  return Padding(
-    padding: const EdgeInsets.all(16),
-    child: Material(
-      borderRadius: BorderRadius.circular(16),
-      color: theme.colorScheme.onInverseSurface,
-      child: SwitchListTile(
-        title: Text(provider.title, style: theme.textTheme.headlineMedium),
-        subtitle: Text(provider.subtitle, style: theme.textTheme.headlineSmall),
-        value: provider.isLinked,
-        onChanged: (bool? value) {
-          if (value == null) return;
-          value ? provider.onLink() : provider.onUnlink();
-        },
-      ),
-    ),
-  );
 }

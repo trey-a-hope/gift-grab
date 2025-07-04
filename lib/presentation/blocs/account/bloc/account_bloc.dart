@@ -37,6 +37,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   ) async =>
       await BlocHandler<AccountState>().handle(
         action: () async {
+          emit(state.copyWith(isLoading: true));
+
           final session = await sessionService.getSession();
 
           final account = await nakamaBaseClient.getAccount(session);
