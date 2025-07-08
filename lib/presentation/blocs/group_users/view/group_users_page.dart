@@ -27,6 +27,7 @@ class GroupUsersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<GroupUsersBloc, GroupUsersState>(
       builder: (context, state) {
         final groupUsers = state.groupUsers;
@@ -41,12 +42,24 @@ class GroupUsersView extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          itemCount: groupUsers.length,
-          itemBuilder: (_, index) {
-            final groupUser = groupUsers[index];
-            return UserListTile(groupUser.user);
-          },
+        return Column(
+          children: [
+            Padding(
+                padding: EdgeInsetsGeometry.all(16),
+                child: Text(
+                  'Members',
+                  style: theme.textTheme.displayLarge,
+                )),
+            Expanded(
+                child: ListView.builder(
+              padding: EdgeInsets.all(16),
+              itemCount: groupUsers.length,
+              itemBuilder: (_, index) {
+                final groupUser = groupUsers[index];
+                return UserListTile(groupUser.user);
+              },
+            ))
+          ],
         );
       },
     );

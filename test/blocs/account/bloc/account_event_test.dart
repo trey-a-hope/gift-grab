@@ -37,6 +37,16 @@ void main() {
     });
   });
 
+  group(DeleteAccount(), () {
+    test('supports value equality', () {
+      expect(DeleteAccount(), equals(DeleteAccount()));
+    });
+
+    test('props are correct', () {
+      expect(DeleteAccount().props, isEmpty);
+    });
+  });
+
   group(LinkEmailAccount, () {
     final mockEmail1 = 'abc123@gmail.com';
     final mockEmail2 = 'xyz789@gmail.com';

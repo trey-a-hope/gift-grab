@@ -9,7 +9,7 @@ import 'package:gift_grab/presentation/blocs/edit_profile/view/edit_profile_page
 import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
 import 'package:gift_grab/presentation/blocs/group_create/view/group_create_page.dart';
 import 'package:gift_grab/presentation/blocs/groups_list/view/groups_page.dart';
-import 'package:gift_grab/presentation/blocs/groups_list/widgets/group_details_page.dart';
+import 'package:gift_grab/presentation/blocs/groups_list/view/group_details_page.dart';
 import 'package:gift_grab/presentation/blocs/leaderboard/view/leaderboard_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/profile_page.dart';
 import 'package:gift_grab/presentation/blocs/search_users/view/search_users_page.dart';

@@ -48,7 +48,7 @@ class MainMenuView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Welcome Back, ${state.account!.user.username}',
+                          'Welcome Back, ${state.account?.user.username}',
                           style: theme.textTheme.displayLarge!.copyWith(
                             fontSize: theme.textTheme.headlineLarge!.fontSize!,
                           ),

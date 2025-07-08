@@ -1,1 +1,1 @@
-export '../widgets/groups_list_page.dart';
+export 'groups_list_page.dart';

@@ -127,7 +127,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           emit(
             state.copyWith(
-              success: 'Email account linked successfully.',
+              success: Globals.feedbackMessages.accountLinkEmailSuccess,
             ),
           );
         },
@@ -147,7 +147,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           final email = state.account?.email;
 
           if (email == null) {
-            throw Exception('Email is null...');
+            throw Exception(
+              Globals.feedbackMessages.accountEmailNull,
+            );
           }
 
           await nakamaBaseClient.unlinkEmail(
@@ -157,7 +159,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           );
 
           emit(state.copyWith(
-            success: 'Email account unlinked successfully.',
+            success: Globals.feedbackMessages.accountUnlinkEmailSuccess,
           ));
         },
         emit: emit,
@@ -184,7 +186,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           await nakamaBaseClient.linkGoogle(session: session, token: idToken);
 
           emit(state.copyWith(
-            success: 'Google account linked successfully.',
+            success: Globals.feedbackMessages.accountLinkGoogle,
           ));
         },
         emit: emit,
@@ -211,7 +213,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           await nakamaBaseClient.unlinkGoogle(session: session, token: idToken);
 
           emit(state.copyWith(
-            success: 'Google account unlinked successfully.',
+            success: Globals.feedbackMessages.accountUnlinkGoogle,
           ));
         },
         emit: emit,
@@ -238,7 +240,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           await nakamaBaseClient.linkApple(session: session, token: idToken);
 
           emit(state.copyWith(
-            success: 'Apple account linked successfully.',
+            success: Globals.feedbackMessages.accountLinkApple,
           ));
         },
         emit: emit,
@@ -265,7 +267,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           await nakamaBaseClient.unlinkApple(session: session, token: idToken);
 
           emit(state.copyWith(
-            success: 'Apple account unlinked successfully.',
+            success: Globals.feedbackMessages.accountUnlinkApple,
           ));
         },
         emit: emit,

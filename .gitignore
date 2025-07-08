@@ -18,6 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
+/coverage/
+
 # Include only the web build directory.
 /build/*
 !/build/web/
