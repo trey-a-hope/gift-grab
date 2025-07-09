@@ -6,13 +6,9 @@ import 'package:gift_grab/data/configuration/app_routes.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/data/repositories/session_repository.dart';
 import 'package:gift_grab/data/repositories/social_auth_repository.dart';
-import 'package:gift_grab/data/repositories/storage_repository.dart';
-import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/domain/services/social_auth_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
-import 'package:gift_grab/presentation/blocs/friends/bloc/friends_bloc.dart';
-import 'package:gift_grab/presentation/blocs/leaderboard/bloc/leaderboard_bloc.dart';
 import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
 import 'package:toastification/toastification.dart';
@@ -64,13 +60,6 @@ class MyAppPage extends StatelessWidget {
             context.read<SocialAuthService>(),
           ),
         ),
-        RepositoryProvider<GamesPlayedStorageService>(
-          create: (context) => GamesPlayedStorageService(
-            StorageRepository(
-              getNakamaClient(),
-            ),
-          ),
-        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -79,17 +68,6 @@ class MyAppPage extends StatelessWidget {
               context.read<SessionService>(),
               context.read<SocialAuthService>(),
               getNakamaClient(),
-            ),
-          ),
-          BlocProvider<LeaderboardBloc>(
-            create: (context) => LeaderboardBloc(
-              context.read<SessionService>(),
-              context.read<GamesPlayedStorageService>(),
-            ),
-          ),
-          BlocProvider<FriendsBloc>(
-            create: (context) => FriendsBloc(
-              context.read<SessionService>(),
             ),
           ),
         ],
@@ -124,5 +102,3 @@ class MyAppView extends StatelessWidget {
     );
   }
 }
-
-// TODO: Move components, inputs, overlays, spawners -> gift_grab_ui

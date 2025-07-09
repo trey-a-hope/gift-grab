@@ -3,6 +3,7 @@ import 'package:cloudinary/cloudinary.dart';
 part 'feedback_messages.dart';
 part 'routes.dart';
 part 'rpc_ids.dart';
+part 'test_descriptions.dart';
 
 class Globals {
   Globals._();
@@ -10,6 +11,7 @@ class Globals {
   static final feedbackMessages = _FeedbackMessages();
   static final routes = _Routes();
   static final rpcIds = _RpcIds();
+  static final testDescriptions = _TestDescriptions();
 
   static const lottieFriends =
       'https://lottie.host/1741de59-5532-45e4-b3f7-00ba3cfa92ad/0RBy5DNOHl.json';

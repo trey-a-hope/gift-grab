@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:gift_grab/data/constants/globals.dart';
-import 'package:gift_grab/domain/services/games_played_storage_service.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
-import 'package:gift_grab/presentation/blocs/friends/friends.dart';
-import 'package:gift_grab/presentation/widgets/friendship_state_button.dart';
 import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nakama/nakama.dart';
@@ -25,10 +21,9 @@ class ProfilePage extends StatelessWidget {
     return BlocProvider<ProfileBloc>(
       create: (_) => ProfileBloc(
         context.read<SessionService>(),
-        context.read<GamesPlayedStorageService>(),
         uid,
         context.read<AccountBloc>(),
-        context.read<FriendsBloc>(),
+        getNakamaClient(),
       )..add(ReadProfile()),
       child: const ProfileView(),
     );
@@ -40,8 +35,6 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BlocConsumer<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.success != null) {
@@ -70,38 +63,6 @@ class ProfileView extends StatelessWidget {
                 icon: const Icon(Icons.edit),
               ),
             ],
-            if (state.friendshipState == FriendshipState.mutual) ...[
-              IconButton.filledTonal(
-                onPressed: () async {
-                  final confirm = await ModalUtil.showConfirmation(
-                    context,
-                    title: 'Block ${user?.username ?? ''}',
-                    message: 'Are you sure?',
-                  );
-
-                  if (confirm == null || confirm == false) return;
-
-                  profileBloc.add(BlockFriend());
-                },
-                icon: const Icon(Icons.block),
-              ),
-            ],
-            if (state.friendshipState == FriendshipState.blocked) ...[
-              IconButton.filledTonal(
-                onPressed: () async {
-                  final confirm = await ModalUtil.showConfirmation(
-                    context,
-                    title: 'Unblock ${user?.username ?? ''}',
-                    message: 'Are you sure?',
-                  );
-
-                  if (confirm == null || confirm == false) return;
-
-                  profileBloc.add(UnblockFriend());
-                },
-                icon: const Icon(Icons.lock_open),
-              ),
-            ]
           ],
           child: Center(
             child: state.isLoading
@@ -118,16 +79,6 @@ class ProfileView extends StatelessWidget {
                                 ? Globals.emptyProfile
                                 : user.avatarUrl!,
                           ).image,
-                        ),
-                        const Gap(16),
-                        FriendshipStateButton(
-                          isMyProfile: state.isMyProfile,
-                          friendshipState: state.friendshipState,
-                        ),
-                        const Gap(16),
-                        Text(
-                          'Games Played: ${state.gamesPlayed}',
-                          style: theme.textTheme.displayLarge,
                         ),
                       ],
                     ),

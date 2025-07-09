@@ -6,11 +6,6 @@ import 'package:gift_grab/data/constants/globals.dart';
 import 'package:gift_grab/data/repositories/auth_stream_repository.dart';
 import 'package:gift_grab/presentation/blocs/account/view/linked_accounts_page.dart';
 import 'package:gift_grab/presentation/blocs/edit_profile/view/edit_profile_page.dart';
-import 'package:gift_grab/presentation/blocs/friends/view/friends_page.dart';
-import 'package:gift_grab/presentation/blocs/group_create/view/group_create_page.dart';
-import 'package:gift_grab/presentation/blocs/groups_list/view/groups_page.dart';
-import 'package:gift_grab/presentation/blocs/groups_list/view/group_details_page.dart';
-import 'package:gift_grab/presentation/blocs/leaderboard/view/leaderboard_page.dart';
 import 'package:gift_grab/presentation/blocs/profile/view/profile_page.dart';
 import 'package:gift_grab/presentation/blocs/search_users/view/search_users_page.dart';
 import 'package:gift_grab/presentation/pages/game_page.dart';
@@ -18,7 +13,6 @@ import 'package:gift_grab/presentation/pages/login_page.dart';
 import 'package:gift_grab/presentation/pages/main_menu_page.dart';
 import 'package:gift_grab/presentation/pages/settings_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nakama/nakama.dart';
 
 class StreamToListenable extends ChangeNotifier {
   late final List<StreamSubscription> subscriptions;
@@ -97,47 +91,6 @@ GoRouter appRouter(AuthStreamRepository authRepository) => GoRouter(
           builder: (context, state) => const EditProfilePage(),
         ),
         GoRoute(
-          path: '/${Globals.routes.friends}',
-          name: Globals.routes.friends,
-          builder: (context, state) => const FriendsPage(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.groups}',
-          name: Globals.routes.groups,
-          builder: (context, state) => GroupsPage(),
-          routes: [
-            GoRoute(
-              path: '${Globals.routes.createGroup}',
-              name: Globals.routes.createGroup,
-              builder: (context, state) => const GroupCreatePage(),
-            ),
-            GoRoute(
-              path: '${Globals.routes.editGroup}/:groupId',
-              name: Globals.routes.editGroup,
-              builder: (context, state) {
-                final groupId = state.pathParameters['groupId']!;
-                final group = state.extra as Group;
-
-                debugPrint('Group ID: $groupId');
-
-                return GroupCreatePage(group: group);
-              },
-            ),
-            GoRoute(
-              path: '${Globals.routes.groupDetails}/:groupId',
-              name: Globals.routes.groupDetails,
-              builder: (context, state) {
-                final groupId = state.pathParameters['groupId']!;
-                final group = state.extra as Group;
-
-                debugPrint('Group ID: $groupId');
-
-                return GroupDetailsPage(group);
-              },
-            )
-          ],
-        ),
-        GoRoute(
           path: '/${Globals.routes.searchUsers}',
           name: Globals.routes.searchUsers,
           builder: (context, state) => const SearchUsersPage(),
@@ -146,15 +99,6 @@ GoRouter appRouter(AuthStreamRepository authRepository) => GoRouter(
           path: '/${Globals.routes.linkedAccounts}',
           name: Globals.routes.linkedAccounts,
           builder: (context, state) => LinkedAccountsPage(),
-        ),
-        GoRoute(
-          path: '/${Globals.routes.leaderboard}/:uid',
-          name: Globals.routes.leaderboard,
-          builder: (context, state) {
-            final uid = state.pathParameters['uid'];
-            if (uid == null) throw Exception();
-            return LeaderboardPage(uid);
-          },
         ),
       ],
     );
