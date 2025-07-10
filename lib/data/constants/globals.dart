@@ -1,5 +1,3 @@
-import 'package:cloudinary/cloudinary.dart';
-
 part 'feedback_messages.dart';
 part 'routes.dart';
 part 'rpc_ids.dart';
@@ -61,12 +59,6 @@ class Globals {
   // Limits
   static const int paginationLimit = 20;
   static const int gameTimeLimit = 10;
-
-  static final cloudinaryConfig = Cloudinary.signedConfig(
-    apiKey: '122467624349353',
-    apiSecret: 'EDmkapThOKoGGKKjKN4CYWPcPg8',
-    cloudName: 'dp6gsfu5c',
-  );
 
   static const String emptyProfile =
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
