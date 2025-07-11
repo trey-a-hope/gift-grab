@@ -44,7 +44,7 @@ class MenuButtonWidget extends StatelessWidget {
               ),
               Text(
                 menuButton.name,
-                style: theme.textTheme.displayLarge,
+                style: theme.textTheme.displaySmall,
                 textAlign: TextAlign.center,
               ),
             ],
