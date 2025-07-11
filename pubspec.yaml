@@ -21,7 +21,6 @@ dependencies:
   gift_grab_ui:
     # git: https://github.com/trey-a-hope/gift_grab_ui.git
     path: /Users/treyhope/Desktop/Development/gift_grab_ui
-  grpc: ^4.1.0
  
 dev_dependencies:
   flutter_test:
