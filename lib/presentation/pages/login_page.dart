@@ -19,6 +19,8 @@ class LoginPage extends StatelessWidget {
         title: 'Login',
         canPop: false,
         child: FlutterLogin(
+          savedEmail: 'trey.a.hope1@gmail.com',
+          savedPassword: 'Peachy5050',
           title: 'Gift Grab',
           additionalSignupFields: const [
             UserFormField(

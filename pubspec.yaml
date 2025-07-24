@@ -30,7 +30,19 @@ dependencies:
   google_sign_in: ^7.1.0
   font_awesome_flutter: ^10.8.0
   sign_in_with_apple: ^7.0.1
- 
+  formz: ^0.8.0
+  mason: ^0.1.1
+  animated_search_bar: ^2.8.0 
+  modal_util: 
+    # ^0.0.2
+    git: https://github.com/trey-a-hope/modal_util.git
+    # path: /Users/treyhope/Desktop/Development/modal_util
+  bloc_error_handler:
+    # ^0.0.3
+    # git: https://github.com/trey-a-hope/bloc_error_handler.git
+    path: /Users/treyhope/Desktop/Development/bloc_error_handler
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

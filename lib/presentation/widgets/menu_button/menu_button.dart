@@ -1,65 +1,65 @@
-import 'package:gift_grab/data/constants/globals.dart';
+part of 'menu_button_widget.dart';
 
 enum MenuButton {
   chatRooms(
     'Chat Rooms',
-    Globals.lottieChat,
+    Lotties.chat,
   ),
   deleteAccount(
     'Delete Account',
-    Globals.lottieDeleteAccount,
+    Lotties.deleteAccount,
   ),
   friends(
     'Friends',
-    Globals.lottieFriends,
+    Lotties.friends,
   ),
   editProfile(
     'Edit Profile',
-    Globals.lottieEditProfile,
+    Lotties.editProfile,
   ),
   groups(
     'Groups',
-    Globals.lottieGroups,
+    Lotties.groups,
   ),
   leaderboard(
     'Leaderboard',
-    Globals.lottieLeaderboard,
+    Lotties.leaderboard,
   ),
   licenses(
     'View Licenses',
-    Globals.lottieLicenses,
+    Lotties.licenses,
   ),
   linkedAccounts(
     'Linked Accounts',
-    Globals.lottieLinkedAccounts,
+    Lotties.linkedAccounts,
   ),
   logout(
     'Logout',
-    Globals.lottieLogout,
+    Lotties.logout,
   ),
   notifications(
     'Notifications',
-    Globals.lottieNotifications,
+    Lotties.notifications,
   ),
   play(
     'Play',
-    Globals.lottiePlay,
+    Lotties.play,
   ),
   profile(
     'Profile',
-    Globals.lottieProfile,
+    Lotties.profile,
   ),
   searchUsers(
     'Search Users',
-    Globals.lottieUsers,
+    Lotties.searchUsers,
   ),
   signOut(
     'Sign Out',
-    Globals.lottieSignOut,
+    Lotties.signOut,
   ),
   tournaments(
     'Tournaments',
-    Globals.lottieTournament,
+    Lotties.tournament,
   ),
   ;
 

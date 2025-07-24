@@ -8,9 +8,9 @@ import 'package:gift_grab/data/repositories/session_repository.dart';
 import 'package:gift_grab/data/repositories/social_auth_repository.dart';
 import 'package:gift_grab/domain/services/session_service.dart';
 import 'package:gift_grab/domain/services/social_auth_service.dart';
+import 'package:gift_grab/presentation/blocs/account/bloc/account_bloc.dart';
 import 'package:gift_grab_ui/gift_grab_ui.dart';
 import 'package:nakama/nakama.dart';
-import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +57,19 @@ class MyAppPage extends StatelessWidget {
           ),
         ),
       ],
-      child: MyAppView(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AccountBloc>(
+            create: (context) => AccountBloc(
+              context.read<SessionService>(),
+              getNakamaClient(),
+              context.read<AuthStreamRepository>(),
+              context.read<SocialAuthService>(),
+            ),
+          ),
+        ],
+        child: const MyAppView(),
+      ),
     );
   }
 }
@@ -73,17 +85,15 @@ class MyAppView extends StatelessWidget {
 
     final router = appRouter(authStreamRepo);
 
-    return ToastificationWrapper(
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: AppThemes.lightTheme,
-        darkTheme: AppThemes.darkTheme,
-        themeMode: ThemeMode.dark,
-        title: 'Gift Grab',
-        routeInformationProvider: router.routeInformationProvider,
-        routerDelegate: router.routerDelegate,
-        routeInformationParser: router.routeInformationParser,
-      ),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
+      themeMode: ThemeMode.dark,
+      title: 'Gift Grab',
+      routeInformationProvider: router.routeInformationProvider,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
     );
   }
 }
