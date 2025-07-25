@@ -221,26 +221,26 @@ packages:
     dependency: transitive
     description:
       name: flame
-      sha256: ec0d2a536b543ff7c611a6fd331c24004590b8d898b4bd2feef7fe29eeeb7eca
+      sha256: c50e2f39e118f5f6a6f3339ce6825ee803c7e5fada95ec50fb02eb27944e0e76
       url: "https://pub.dev"
     source: hosted
-    version: "1.30.0"
+    version: "1.30.1"
   flame_audio:
     dependency: transitive
     description:
       name: flame_audio
-      sha256: d5f8fa87f689d6fc305bdc097ef475a0d4c1c7bbb20d514b7fd33507e5971b56
+      sha256: c03d1cfb952805a14b5a2793181009a1510ab28c8d0d69cd150cefd17053c489
       url: "https://pub.dev"
     source: hosted
-    version: "2.11.7"
+    version: "2.11.8"
   flame_bloc:
     dependency: transitive
     description:
       name: flame_bloc
-      sha256: "868152d51ef1b5d1bb4631c9065a196371bcba835395bbe9a70bac4c5a476e01"
+      sha256: ebf19287035178396a2c08ba66204f48ed2d935f9eee761e2ce8524b816f6890
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.14"
+    version: "1.12.15"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -301,7 +301,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: d302e93dcd5d5c7936a44b28f4760b8c13205e24
+      resolved-ref: a8af12e104be603f732b1a2139e9e6740600b0a1
       url: "https://github.com/trey-a-hope/gift_grab_ui.git"
     source: git
     version: "0.0.1"
